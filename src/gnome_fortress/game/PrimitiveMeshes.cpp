@@ -11,6 +11,28 @@ namespace game {
 
 using namespace gnome_fortress::model;
 
+
+Mesh *CreatePlane(void) {
+    // Each face of the cube is defined by four vertices (with the same normal) and two triangles
+
+    // Vertices that form the plane
+    // 9 attributes per vertex: 3D position (3), 3D normal (3), RGB color (3)
+    GLfloat vertices[] = {
+        -0.5f,  0.0f, -0.5f,    0.0f,  1.0f,  0.0f,    0.0f, 0.0f, 1.0f,
+         0.5f,  0.0f, -0.5f,    0.0f,  1.0f,  0.0f,    1.0f, 0.0f, 1.0f,
+         0.5f,  0.0f,  0.5f,    0.0f,  1.0f,  0.0f,    1.0f, 1.0f, 0.0f,
+        -0.5f,  0.0f,  0.5f,    0.0f,  1.0f,  0.0f,    0.0f, 1.0f, 0.0f
+    };
+
+    GLuint elements[] = {
+        0, 2, 1,
+        0, 3, 2,
+    };
+
+    // Create mesh 
+    return new Mesh(vertices, sizeof(vertices), sizeof(GLfloat) * 9, elements, sizeof(elements), GL_TRIANGLES);
+}
+
 Mesh *CreateCube(void) {
     // Each face of the cube is defined by four vertices (with the same normal) and two triangles
 

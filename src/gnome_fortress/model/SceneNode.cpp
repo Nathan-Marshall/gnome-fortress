@@ -2,6 +2,7 @@
 
 #define GLEW_STATIC
 #include <GL/glew.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace gnome_fortress {
 namespace model {
@@ -170,19 +171,20 @@ glm::mat4 SceneNode::getTransformMatrix() const {
     const glm::vec3 &t = position;
     const glm::vec3 &s = scale_vec;
 
-    glm::mat4 local_translation_mat(
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        t.x, t.y, t.z, 1
-    );
+	// what look like rows here are actually columns
+	glm::mat4 local_translation_mat(
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		t.x, t.y, t.z, 1
+	);
 
-    glm::mat4 local_scale_mat(
-        s.x, 0, 0, 0,
-        0, s.y, 0, 0,
-        0, 0, s.z, 0,
-        0, 0, 0, 1
-    );
+	glm::mat4 local_scale_mat(
+		s.x, 0, 0, 0,
+		0, s.y, 0, 0,
+		0, 0, s.z, 0,
+		0, 0, 0, 1
+	);
 
     return local_translation_mat * getRotationMatrix() * local_scale_mat;
 }
@@ -208,12 +210,7 @@ glm::mat4 SceneNode::getGlobalTransform() const {
 }
 
 glm::mat4 SceneNode::getGlobalInverseTransform() const {
-    if (parent) {
-        return glm::inverse(getTransformMatrix()) * parent->getGlobalInverseTransform();
-    }
-    else {
-        return glm::inverse(getTransformMatrix());
-    }
+	return glm::inverse(getGlobalTransform());
 }
 
 // === CHILD MANAGEMENT ===

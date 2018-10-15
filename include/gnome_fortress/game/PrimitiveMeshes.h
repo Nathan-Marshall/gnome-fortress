@@ -11,6 +11,8 @@
 namespace gnome_fortress {
 namespace game {
 
+model::Mesh *CreatePlane(void);
+
 // Create the geometry of a cube centered at (0, 0, 0) with sides of length 1
 model::Mesh *CreateCube(void);
 

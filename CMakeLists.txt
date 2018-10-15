@@ -8,6 +8,7 @@ set(HDRS
     include/gnome_fortress/camera/Camera.h
     include/gnome_fortress/camera/SceneNodeCamera.h
     
+	include/gnome_fortress/game/Player.h
     include/gnome_fortress/game/PrimitiveMeshes.h
     include/gnome_fortress/game/Turret.h
    
@@ -28,6 +29,7 @@ set(SRCS
     src/gnome_fortress/camera/Camera.cpp
     src/gnome_fortress/camera/SceneNodeCamera.cpp
 
+	src/gnome_fortress/game/Player.cpp
     src/gnome_fortress/game/PrimitiveMeshes.cpp
     src/gnome_fortress/game/main.cpp
     src/gnome_fortress/game/Turret.cpp
