@@ -54,25 +54,35 @@ void SceneNode::setY(float y) {
 void SceneNode::setZ(float z) {
     position.z = z;
 }
+/*I think the second approach is easier to modify to give you the desired behavior. When the user translates, 
+try applying the transposed rotation matrix to the incremental translation vector before adding it to your total translation vector. 
+Say if your current translation vector is (Xposition, Yposition), your current rotation matrix mRotation, and the user translates by (XIncr, yIncr), 
+you would update the translation vector as:
+(Xposition, Yposition) = (Xposition, Yposition) + mRotation.transposed() * (XIncr, YIncr)*/
 
 void SceneNode::translate(const glm::vec3 &translation) {
-    position += translation;
+	position = position + (rotation * translation);
+    //position += translation;
 }
 
 void SceneNode::translate(float tx, float ty, float tz) {
-    position += glm::vec3(tx, ty, tz);
+	translate(glm::vec3(tx, ty, tz));
+    //position += glm::vec3(tx, ty, tz) * rotation;
 }
 
 void SceneNode::translateX(float tx) {
-    position.x += tx;
+	translate(glm::vec3(tx, 0, 0));
+    //position.x += tx;
 }
 
 void SceneNode::translateY(float ty) {
-    position.y += ty;
+	translate(glm::vec3(0, ty, 0));
+	//position.y += ty;
 }
 
 void SceneNode::translateZ(float tz) {
-    position.z += tz;
+	translate(glm::vec3(0, 0, tz));
+    //position.z += tz;
 }
 
 glm::quat SceneNode::getRotation() const {

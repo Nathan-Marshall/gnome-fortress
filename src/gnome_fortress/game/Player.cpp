@@ -8,11 +8,13 @@ namespace game {
 		  backward(false),
 		  left(false),
 		  right(false),
+		  up(false),
+		  down(false),
 		  velocity() {
 		//Nothing yet
 	}
 
-	const float Player::ACCELERATION = 5.0f;
+	const float Player::ACCELERATION = 7.0f;
 	const float Player::DECAY = 0.20f;
 
 	bool Player::IsForwardPressed() {
@@ -40,8 +42,15 @@ namespace game {
 	void Player::SetRightPressed(bool isPressed) {
 		right = isPressed;
 	}
+	void Player::SetUpPressed(bool isPressed) {
+		up = isPressed;
+	}
+	void Player::SetDownPressed(bool isPressed) {
+		down = isPressed;
+	}
 
 	void Player::onUpdateSelf(float dt) {
+
 		if (forward) {
 			velocity.z -= ACCELERATION * dt;
 		}
@@ -53,6 +62,12 @@ namespace game {
 		}
 		else if (right) {
 			velocity.x += ACCELERATION * dt;
+		}
+		else if (up) {
+			velocity.y += ACCELERATION * dt;
+		}
+		else if (down) {
+			velocity.y -= ACCELERATION * dt;
 		}
 		velocity *= glm::pow(DECAY, dt);
 

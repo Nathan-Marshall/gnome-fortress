@@ -41,7 +41,6 @@ const glm::vec3 viewport_background_color_g(0.0, 0.0, 0.0);
 // Globals that define the OpenGL camera view and projection
 camera::Camera main_camera_g(
     glm::lookAt(glm::vec3(0, 5, 10), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
-	//glm::lookAt(glm::vec3(-2, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
 );
 
 camera::SceneNodeCamera scene_camera_first_g;
@@ -92,6 +91,24 @@ void main()\n\
 
 #pragma endregion
 
+void CursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
+	double half_x = window_width_g / 2;
+	double half_y = window_height_g / 2;
+
+	//We get an angle to move for x and y
+	float x_angle = half_x - xpos;
+	float y_angle = half_y - ypos;
+
+	//We want to set the cursor back to the middle each time
+	glfwSetCursorPos(window, half_x, half_y);
+
+	//Then we can rotate the camera based off of the calculated value
+	//The offset from the middle will be larger based on how far they push the cursor to rotate
+	player->rotate(x_angle * 0.001, glm::vec3(0, 1, 0));
+
+	//TODO: Add in pitch rotation for just the camera
+}
+
 // Callback for when a key is pressed
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods){
     // Quit the program when pressing 'q'
@@ -132,15 +149,15 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 	}
 
 	if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS) {
-		//move up
+		player->SetUpPressed(true);
 	} else if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE) {
-		//move up
+		player->SetUpPressed(false);
 	}
 
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
-		//move down
+		player->SetDownPressed(true);
 	} else if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE) {
-		//move down
+		player->SetDownPressed(false);
 	}
 }
 
@@ -172,6 +189,7 @@ int MainFunction(void){
             glfwTerminate();
             throw(std::runtime_error(std::string("Could not create window")));
         }
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         // Make the window's OpenGL context the current one
         glfwMakeContextCurrent(window);
@@ -189,6 +207,7 @@ int MainFunction(void){
 
         // Set event callbacks for the window
         glfwSetKeyCallback(window, KeyCallback);
+		glfwSetCursorPosCallback(window, CursorPosCallback);
         glfwSetFramebufferSizeCallback(window, ResizeCallback);
 
         // Set up z-buffer for rendering

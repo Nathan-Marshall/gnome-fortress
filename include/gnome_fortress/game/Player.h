@@ -29,6 +29,8 @@ public:
 	void SetBackPressed(bool isPressed);
 	void SetLeftPressed(bool isPressed);
 	void SetRightPressed(bool isPressed);
+	void SetUpPressed(bool isPressed);
+	void SetDownPressed(bool isPressed);
 
 protected:
 	void onUpdateSelf(float dt) override;
@@ -38,6 +40,8 @@ private:
 	bool backward;
 	bool left;
 	bool right;
+	bool up;
+	bool down;
 
 	glm::vec3 velocity;
 };
