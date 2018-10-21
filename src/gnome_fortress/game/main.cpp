@@ -40,13 +40,18 @@ const glm::vec3 viewport_background_color_g(0.0, 0.0, 0.0);
 
 // Globals that define the OpenGL camera view and projection
 camera::Camera main_camera_g(
-    glm::lookAt(glm::vec3(-2, 2, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
+    glm::lookAt(glm::vec3(0, 5, 10), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
+	//glm::lookAt(glm::vec3(-2, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
 );
-camera::SceneNodeCamera scene_camera_g;
 
-camera::Camera *active_camera_g = &main_camera_g;
+camera::SceneNodeCamera scene_camera_first_g;
+camera::SceneNodeCamera scene_camera_third_g;
+
+camera::Camera *active_camera_g = &scene_camera_first_g;
 
 game::Player *player;
+
+#pragma region Shader_Source
 
 // Source code of vertex shader
 const char *source_vp =
@@ -85,6 +90,7 @@ void main()\n\
     gl_FragColor = color_interp;\n\
 }";
 
+#pragma endregion
 
 // Callback for when a key is pressed
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods){
@@ -94,10 +100,10 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     }
 
     if (key == GLFW_KEY_C && action == GLFW_PRESS) {
-        if (active_camera_g == &main_camera_g) {
-            active_camera_g = &scene_camera_g;
+        if (active_camera_g == &scene_camera_first_g) {
+            active_camera_g = &scene_camera_third_g;
         } else {
-            active_camera_g = &main_camera_g;
+            active_camera_g = &scene_camera_first_g;
         }
     }
 
@@ -146,7 +152,8 @@ void ResizeCallback(GLFWwindow* window, int width, int height){
 
     // Update projection matrix
     main_camera_g.setViewport(width, height);
-    scene_camera_g.setViewport(width, height);
+	scene_camera_first_g.setViewport(width, height);
+	scene_camera_third_g.setViewport(width, height);
 }
 
 
@@ -214,14 +221,21 @@ int MainFunction(void){
         technique->addVertexAttribute(renderer::VertexAttribute(color_attr_location, 3, GL_FLOAT, GL_FALSE));
 
         // Create turret
-        Turret *turret = new Turret(cube, cylinder, technique);
+        //Turret *turret = new Turret(cube, cylinder, technique);
         player = new game::Player(cube, technique);
-        player->setPosition(-2, 0.5f, 0);
+        player->setPosition(0, 0.5f, 0);
 
-        model::SceneNode *cameraNode = scene_camera_g.getNode();
-        cameraNode->setPosition(0, 3, 5);
-        cameraNode->rotate(-glm::pi<float>() / 6, glm::vec3(1, 0, 0));
-        player->appendChild(cameraNode);
+		//Create the third person camera
+        model::SceneNode *cameraNodeThird = scene_camera_third_g.getNode();
+        cameraNodeThird->setPosition(0, 1, 4);
+		//cameraNodeThird->rotate(-glm::pi<float>() / 60, glm::vec3(1, 0, 0));
+
+		//Create the first person camera
+		model::SceneNode *cameraNodeFirst = scene_camera_first_g.getNode();
+		cameraNodeFirst->setPosition(0, 0, -1);
+
+        player->appendChild(cameraNodeThird);
+		player->appendChild(cameraNodeFirst);
 
 		model::SceneNode *stick = new model::BasicMeshNode(plane, technique);
 		stick->setScale(50, 50, 50);
@@ -244,8 +258,8 @@ int MainFunction(void){
             technique->setProjectionMatrix(active_camera_g->getProjection());
             technique->setViewMatrix(active_camera_g->getView());
 
-            turret->update(delta_time);
-            turret->draw(glm::mat4());
+            //turret->update(delta_time);
+            //turret->draw(glm::mat4());
 
             player->update(delta_time);
 			player->draw(glm::mat4());
@@ -260,7 +274,7 @@ int MainFunction(void){
         }
 
         delete technique;
-        delete turret;
+        //delete turret;
         delete player;
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
