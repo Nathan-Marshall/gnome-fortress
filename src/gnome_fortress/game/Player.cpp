@@ -71,7 +71,7 @@ namespace game {
 		}
 		velocity *= glm::pow(DECAY, dt);
 
-		translate(velocity * dt);
+		translate(getRotation() * velocity * dt);
 	}
 }
 }

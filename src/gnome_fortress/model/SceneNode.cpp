@@ -56,28 +56,23 @@ void SceneNode::setZ(float z) {
 }
 
 void SceneNode::translate(const glm::vec3 &translation) {
-	position = position + (rotation * translation);
-    //position += translation;
+    position += translation;
 }
 
 void SceneNode::translate(float tx, float ty, float tz) {
 	translate(glm::vec3(tx, ty, tz));
-    //position += glm::vec3(tx, ty, tz) * rotation;
 }
 
 void SceneNode::translateX(float tx) {
 	translate(glm::vec3(tx, 0, 0));
-    //position.x += tx;
 }
 
 void SceneNode::translateY(float ty) {
 	translate(glm::vec3(0, ty, 0));
-	//position.y += ty;
 }
 
 void SceneNode::translateZ(float tz) {
 	translate(glm::vec3(0, 0, tz));
-    //position.z += tz;
 }
 
 glm::quat SceneNode::getRotation() const {

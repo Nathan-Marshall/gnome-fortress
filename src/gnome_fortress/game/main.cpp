@@ -208,7 +208,9 @@ int MainFunction(void){
             glfwTerminate();
             throw(std::runtime_error(std::string("Could not create window")));
         }
+
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		glfwSetCursorPos(window, window_width_g / 2, window_height_g / 2);
 
         // Make the window's OpenGL context the current one
         glfwMakeContextCurrent(window);
