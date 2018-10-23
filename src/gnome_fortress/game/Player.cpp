@@ -51,27 +51,36 @@ namespace game {
 
 	void Player::onUpdateSelf(float dt) {
 
+		glm::vec3 acceleration;
+
 		if (forward) {
-			velocity.z -= ACCELERATION * dt;
+			acceleration = getRotation() * glm::vec3(0, 0, 1);
+			velocity -= (acceleration * ACCELERATION) * dt;
 		}
 		else if (backward) {
-			velocity.z += ACCELERATION * dt;
+			acceleration = getRotation() * glm::vec3(0, 0, 1);
+			velocity += (acceleration * ACCELERATION) * dt;
 		}
 		else if (left) {
-			velocity.x -= ACCELERATION * dt;
+			acceleration = getRotation() * glm::vec3(1, 0, 0);
+			velocity -= (acceleration * ACCELERATION) * dt;
 		}
 		else if (right) {
-			velocity.x += ACCELERATION * dt;
+			acceleration = getRotation() * glm::vec3(1, 0, 0);
+			velocity += (acceleration * ACCELERATION) * dt;
 		}
 		else if (up) {
-			velocity.y += ACCELERATION * dt;
+			acceleration = getRotation() * glm::vec3(0, 1, 0);
+			velocity += (acceleration * ACCELERATION) * dt;
 		}
 		else if (down) {
-			velocity.y -= ACCELERATION * dt;
+			acceleration = getRotation() * glm::vec3(0, 1, 0);
+			velocity -= (acceleration * ACCELERATION) * dt;
 		}
+
 		velocity *= glm::pow(DECAY, dt);
 
-		translate(getRotation() * velocity * dt);
+		translate(velocity * dt);
 	}
 }
 }
