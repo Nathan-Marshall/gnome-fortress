@@ -8,11 +8,13 @@ namespace game {
 		  backward(false),
 		  left(false),
 		  right(false),
+		  up(false),
+		  down(false),
 		  velocity() {
 		//Nothing yet
 	}
 
-	const float Player::ACCELERATION = 5.0f;
+	const float Player::ACCELERATION = 7.0f;
 	const float Player::DECAY = 0.20f;
 
 	bool Player::IsForwardPressed() {
@@ -40,20 +42,42 @@ namespace game {
 	void Player::SetRightPressed(bool isPressed) {
 		right = isPressed;
 	}
+	void Player::SetUpPressed(bool isPressed) {
+		up = isPressed;
+	}
+	void Player::SetDownPressed(bool isPressed) {
+		down = isPressed;
+	}
 
 	void Player::onUpdateSelf(float dt) {
+
+		glm::vec3 acceleration;
+
 		if (forward) {
-			velocity.z -= ACCELERATION * dt;
+			acceleration = getRotation() * glm::vec3(0, 0, 1);
+			velocity -= (acceleration * ACCELERATION) * dt;
 		}
 		else if (backward) {
-			velocity.z += ACCELERATION * dt;
+			acceleration = getRotation() * glm::vec3(0, 0, 1);
+			velocity += (acceleration * ACCELERATION) * dt;
 		}
 		else if (left) {
-			velocity.x -= ACCELERATION * dt;
+			acceleration = getRotation() * glm::vec3(1, 0, 0);
+			velocity -= (acceleration * ACCELERATION) * dt;
 		}
 		else if (right) {
-			velocity.x += ACCELERATION * dt;
+			acceleration = getRotation() * glm::vec3(1, 0, 0);
+			velocity += (acceleration * ACCELERATION) * dt;
 		}
+		else if (up) {
+			acceleration = getRotation() * glm::vec3(0, 1, 0);
+			velocity += (acceleration * ACCELERATION) * dt;
+		}
+		else if (down) {
+			acceleration = getRotation() * glm::vec3(0, 1, 0);
+			velocity -= (acceleration * ACCELERATION) * dt;
+		}
+
 		velocity *= glm::pow(DECAY, dt);
 
 		translate(velocity * dt);
