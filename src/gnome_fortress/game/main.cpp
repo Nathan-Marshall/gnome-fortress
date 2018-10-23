@@ -91,7 +91,9 @@ void main()\n\
 
 #pragma endregion
 
+//Cursor callback function, called whenever the cursor position is updated
 void CursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
+	//Get the halfway coordinated in the window to use to find our cursor offset
 	double half_x = window_width_g / 2;
 	double half_y = window_height_g / 2;
 
@@ -106,7 +108,11 @@ void CursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
 	//The offset from the middle will be larger based on how far they push the cursor to rotate
 	player->rotate(x_angle * 0.001, glm::vec3(0, 1, 0));
 
-	//TODO: Add in pitch rotation for just the camera
+	//Rotate both the third and first person cameras. 
+	//This way, we won't have a shift when we toggle the camera mode.
+	scene_camera_first_g.getNode()->rotate(y_angle * 0.0005, glm::vec3(1.0, 0, 0));
+	scene_camera_third_g.getNode()->rotate(y_angle * 0.0005, glm::vec3(1.0, 0, 0));
+
 }
 
 // Callback for when a key is pressed
@@ -116,6 +122,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         glfwSetWindowShouldClose(window, true);
     }
 
+	// Toggle the camera (first/third person) when pressing 'c'
     if (key == GLFW_KEY_C && action == GLFW_PRESS) {
         if (active_camera_g == &scene_camera_first_g) {
             active_camera_g = &scene_camera_third_g;
@@ -124,40 +131,51 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         }
     }
 
+	// Move the player forward when pressing 'w'
 	if (key == GLFW_KEY_W && action == GLFW_PRESS) {
 		player->SetForwardPressed(true);
 	} else if (key == GLFW_KEY_W && action == GLFW_RELEASE) {
 		player->SetForwardPressed(false);
 	}
 
+	// Move the player backwards when pressing 's'
 	if (key == GLFW_KEY_S && action == GLFW_PRESS) {
 		player->SetBackPressed(true);
 	} else if (key == GLFW_KEY_S && action == GLFW_RELEASE) {
 		player->SetBackPressed(false);
 	}
 
+	// Move the player left when pressing 'a'
 	if (key == GLFW_KEY_A && action == GLFW_PRESS) {
 		player->SetLeftPressed(true);
 	} else if (key == GLFW_KEY_A && action == GLFW_RELEASE) {
 		player->SetLeftPressed(false);
 	}
 
+	// Move the player right when pressing 'd'
 	if (key == GLFW_KEY_D && action == GLFW_PRESS) {
 		player->SetRightPressed(true);
 	} else if (key == GLFW_KEY_D && action == GLFW_RELEASE) {
 		player->SetRightPressed(false);
 	}
 
+	// Move the player up when pressing 'left shift'
 	if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS) {
 		player->SetUpPressed(true);
 	} else if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE) {
 		player->SetUpPressed(false);
 	}
 
+	// Move the player down when pressing 'space'
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
 		player->SetDownPressed(true);
 	} else if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE) {
 		player->SetDownPressed(false);
+	}
+
+	// Exit the program when pressing 'esc'
+	if (key == GLFW_KEY_ESCAPE) {
+		exit(0);
 	}
 }
 
