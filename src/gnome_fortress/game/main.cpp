@@ -108,11 +108,12 @@ void CursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
 	//The offset from the middle will be larger based on how far they push the cursor to rotate
 	player->rotate(x_angle * 0.001, glm::vec3(0, 1, 0));
 
-	//Rotate both the third and first person cameras. 
-	//This way, we won't have a shift when we toggle the camera mode.
+	//Adjust both cameras so that there won't be any shift when we toggle between the two
+	
+	//Rotate the first person camera
 	scene_camera_first_g.getNode()->rotate(y_angle * 0.0005, glm::vec3(1.0, 0, 0));
-	scene_camera_third_g.getNode()->rotate(y_angle * 0.0005, glm::vec3(1.0, 0, 0));
-
+	//Orbit the third person camera about the origin to keep the player centered on the screen
+	scene_camera_third_g.getNode()->orbit(y_angle * 0.0005, glm::vec3(1.0, 0, 0), glm::vec3(0, 0, 0));
 }
 
 // Callback for when a key is pressed
