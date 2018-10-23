@@ -44,6 +44,8 @@ private:
 	bool down;
 
 	glm::vec3 velocity;
+
+	void CheckBounds(glm::vec3 translationAmount);
 };
 }
 }
