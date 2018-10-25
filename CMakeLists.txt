@@ -12,6 +12,7 @@ set(HDRS
     include/gnome_fortress/game/PrimitiveMeshes.h
     include/gnome_fortress/game/Turret.h
     include/gnome_fortress/game/Wall.h
+    include/gnome_fortress/game/Walls.h
    
     include/gnome_fortress/model/BasicMeshNode.h
     include/gnome_fortress/model/Mesh.h
@@ -35,6 +36,7 @@ set(SRCS
     src/gnome_fortress/game/main.cpp
     src/gnome_fortress/game/Turret.cpp
     src/gnome_fortress/game/Wall.cpp
+    src/gnome_fortress/game/Walls.cpp
 
     src/gnome_fortress/model/BasicMeshNode.cpp
     src/gnome_fortress/model/Mesh.cpp

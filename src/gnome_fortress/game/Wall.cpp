@@ -2,6 +2,7 @@
 
 namespace gnome_fortress {
 	namespace game {
+
 		Wall::Wall(const model::Mesh *mesh, renderer::BasicProjectionTechnique *technique, float wallHealth)
 			: model::BasicMeshNode(mesh, technique), health(wallHealth) {
 		}
