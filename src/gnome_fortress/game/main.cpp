@@ -24,6 +24,7 @@
 #include "gnome_fortress/game/Player.h"
 #include "gnome_fortress/game/PrimitiveMeshes.h"
 #include "gnome_fortress/game/Turret.h"
+#include "gnome_fortress/game/Weapon.h"
 #include "gnome_fortress/camera/SceneNodeCamera.h"
 #include "gnome_fortress/model/Mesh.h"
 #include "gnome_fortress/renderer/Technique.h"
@@ -49,6 +50,10 @@ camera::SceneNodeCamera scene_camera_third_g;
 camera::Camera *active_camera_g = &scene_camera_first_g;
 
 game::Player *player;
+
+game::Weapon *weapon;
+
+model::SceneNode *papaNode; //the Scene Node
 
 #pragma region Shader_Source
 
@@ -114,6 +119,23 @@ void CursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
 	scene_camera_first_g.getNode()->rotate(y_angle * 0.0005, glm::vec3(1.0, 0, 0));
 	//Orbit the third person camera about the origin to keep the player centered on the screen
 	scene_camera_third_g.getNode()->orbit(y_angle * 0.0005, glm::vec3(1.0, 0, 0), glm::vec3(0, 0, 0));
+}
+
+void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+{
+	// Fire gun when player left clicks
+	if (button == GLFW_MOUSE_BUTTON_LEFT) {
+		//This block shall be moved later to projectile 
+		std::cout << "Left Mouse Pressed " << std::endl;
+		if (weapon->getCooldown() <= 0) {
+			weapon->setCooldown(0.3f);
+			Projectile *p = weapon->fireBullet(weapon->getPosition()); 
+			papaNode->appendChild(p);
+		}
+		else {
+			std::cout << "COOLDOWN TOO HIGH" << std::endl;
+		}
+	}
 }
 
 // Callback for when a key is pressed
@@ -195,6 +217,8 @@ void ResizeCallback(GLFWwindow* window, int width, int height){
 
 // Main function that builds and runs the game
 int MainFunction(void){
+	//TESTING
+	//float sum = 0; 
     try {
         // Initialize the window management library (GLFW)
         if (!glfwInit()){
@@ -229,6 +253,7 @@ int MainFunction(void){
         // Set event callbacks for the window
         glfwSetKeyCallback(window, KeyCallback);
 		glfwSetCursorPosCallback(window, CursorPosCallback);
+		glfwSetMouseButtonCallback(window, MouseButtonCallback);
         glfwSetFramebufferSizeCallback(window, ResizeCallback);
 
         // Set up z-buffer for rendering
@@ -262,9 +287,16 @@ int MainFunction(void){
 
         // Create turret
         //Turret *turret = new Turret(cube, cylinder, technique);
+
+		papaNode = new model::SceneNode();
+
         player = new game::Player(cube, technique);
         player->setPosition(0, 0.5f, 0);
+		papaNode->appendChild(player);
 
+        //Create weapon
+        weapon = new Weapon(cube, cylinder, technique, player);
+		
 		//Create the third person camera
         model::SceneNode *cameraNodeThird = scene_camera_third_g.getNode();
         cameraNodeThird->setPosition(0, 1, 4);
@@ -276,10 +308,12 @@ int MainFunction(void){
 
         player->appendChild(cameraNodeThird);
 		player->appendChild(cameraNodeFirst);
+		player->appendChild(weapon);
 
-		model::SceneNode *stick = new model::BasicMeshNode(plane, technique);
-		stick->setScale(50, 50, 50);
-		stick->setPosition(0, 0, 0);
+		model::SceneNode *ground = new model::BasicMeshNode(plane, technique);
+		ground->setScale(50, 50, 50);
+		ground->setPosition(0, 0, 0);
+		papaNode->appendChild(ground);
 
         double prev_time = glfwGetTime();
         // Run the main loop
@@ -301,21 +335,34 @@ int MainFunction(void){
             //turret->update(delta_time);
             //turret->draw(glm::mat4());
 
-            player->update(delta_time);
+
+			papaNode->update(delta_time);
+            //player->update(delta_time);
+
+			papaNode->draw(glm::mat4());
+			/* No longer necessary because of papaNode
 			player->draw(glm::mat4());
 
-			stick->draw(glm::mat4());
+			ground->draw(glm::mat4());
+
+			weapon->draw(glm::mat4());*/
 
             // Push buffer drawn in the background onto the display
             glfwSwapBuffers(window);
 
             // Update other events like input handling
             glfwPollEvents();
+
+			/* TESTING
+			sum += delta_time;
+			std::cout << "Sum Time: " << sum << std::endl;*/
+
         }
 
         delete technique;
         //delete turret;
         delete player;
+		delete weapon;
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
