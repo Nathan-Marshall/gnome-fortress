@@ -22,7 +22,8 @@ protected:
 	void onUpdateSelf(float dt) override;
 
 private:
-
+	float health;
+	
 };
 
 
