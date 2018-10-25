@@ -26,6 +26,8 @@
 #include "gnome_fortress/game/Wall.h"
 #include "gnome_fortress/game/Walls.h"
 #include "gnome_fortress/game/Turret.h"
+#include "gnome_fortress/game/Enemies.h"
+#include "gnome_fortress/game/SiegeTurtle.h"
 #include "gnome_fortress/camera/SceneNodeCamera.h"
 #include "gnome_fortress/model/Mesh.h"
 #include "gnome_fortress/renderer/Technique.h"
@@ -270,6 +272,16 @@ int MainFunction(void){
         player = new game::Player(cube, technique);
         player->setPosition(0, 0.5f, 0);
 
+		Enemies* enemies = new Enemies();
+		SiegeTurtle* turtle1 = new SiegeTurtle(cube, technique);
+		SiegeTurtle* turtle2 = new SiegeTurtle(cube, technique);
+		SiegeTurtle* turtle3 = new SiegeTurtle(cube, technique);
+
+		enemies->turtles.push_back(turtle1);
+		enemies->turtles.push_back(turtle2);
+		enemies->turtles.push_back(turtle3);
+
+
 		//Create the third person camera
         model::SceneNode *cameraNodeThird = scene_camera_third_g.getNode();
         cameraNodeThird->setPosition(0, 1, 4);
@@ -313,6 +325,13 @@ int MainFunction(void){
 
 			// Draw the walls
 			walls->draw();
+
+			// Draw the enemies
+			for each (SiegeTurtle* turt in enemies->turtles)
+			{
+				turt->update(delta_time);
+				turt->draw(glm::mat4());
+			}
 
             // Push buffer drawn in the background onto the display
             glfwSwapBuffers(window);
