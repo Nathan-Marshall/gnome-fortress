@@ -23,6 +23,8 @@
 
 #include "gnome_fortress/game/Player.h"
 #include "gnome_fortress/game/PrimitiveMeshes.h"
+#include "gnome_fortress/game/Wall.h"
+#include "gnome_fortress/game/Walls.h"
 #include "gnome_fortress/game/Turret.h"
 #include "gnome_fortress/camera/SceneNodeCamera.h"
 #include "gnome_fortress/model/Mesh.h"
@@ -49,6 +51,8 @@ camera::SceneNodeCamera scene_camera_third_g;
 camera::Camera *active_camera_g = &scene_camera_first_g;
 
 game::Player *player;
+
+Walls* walls;
 
 #pragma region Shader_Source
 
@@ -260,8 +264,9 @@ int MainFunction(void){
         technique->addVertexAttribute(renderer::VertexAttribute(normal_attr_location, 3, GL_FLOAT, GL_FALSE));
         technique->addVertexAttribute(renderer::VertexAttribute(color_attr_location, 3, GL_FLOAT, GL_FALSE));
 
-        // Create turret
-        //Turret *turret = new Turret(cube, cylinder, technique);
+		// Create the walls
+		walls = new Walls(cube, technique);
+
         player = new game::Player(cube, technique);
         player->setPosition(0, 0.5f, 0);
 
@@ -305,6 +310,9 @@ int MainFunction(void){
 			player->draw(glm::mat4());
 
 			stick->draw(glm::mat4());
+
+			// Draw the walls
+			walls->draw();
 
             // Push buffer drawn in the background onto the display
             glfwSwapBuffers(window);
