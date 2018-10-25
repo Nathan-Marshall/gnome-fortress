@@ -9,25 +9,27 @@
 #include "Wall.h";
 
 namespace gnome_fortress {
-	namespace game {
+namespace game {
 
-		class Walls {
+class Walls {
 
-		public:
-			Walls(const model::Mesh *mesh, renderer::BasicProjectionTechnique *technique, int numRings = 3);
+public:
+	Walls(const model::Mesh *mesh, renderer::BasicProjectionTechnique *technique, int numRings = 3);
 
-			//Vector to define the walls
-			//Use a vector over an array so that the size can be dynamic, and we can change the number of rings, etc
-			std::vector<std::vector<Wall*>> walls;
+	//Vector to define the walls
+	std::vector<std::vector<Wall*>> walls;
 
-		protected:
+	void draw();
+protected:
 			
-		private:
-			const static float OUTER_RADIUS;
-			const static float INNER_RADIUS;
-			const static int WALLS_PER_RING;
+private:
+	const static float OUTER_RADIUS;
+	const static float INNER_RADIUS;
+	const static int WALLS_PER_RING;
 
-			void FillWalls(const model::Mesh *mesh, renderer::BasicProjectionTechnique *technique, int numRings);
-		};
-	}
+	void FillWalls(const model::Mesh *mesh, renderer::BasicProjectionTechnique *technique, int numRings);
+};
+
+
+}
 }

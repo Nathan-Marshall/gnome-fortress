@@ -9,18 +9,21 @@
 #include "gnome_fortress/model/BasicMeshNode.h"
 
 namespace gnome_fortress {
-	namespace game {
+namespace game {
 
-		class Wall : public model::BasicMeshNode {
 
-		public:
-			Wall(const model::Mesh *mesh, renderer::BasicProjectionTechnique *technique, float wallHealth = 100);
+class Wall : public model::BasicMeshNode {
 
-		protected:
-			void onUpdateSelf(float dt) override;
+public:
+	Wall(const model::Mesh *mesh, renderer::BasicProjectionTechnique *technique, float wallHealth = 100);
 
-		private:
-			float health;
-		};
-	}
+protected:
+	void onUpdateSelf(float dt) override;
+
+private:
+	float health;
+};
+
+
+}
 }

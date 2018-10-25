@@ -311,14 +311,8 @@ int MainFunction(void){
 
 			stick->draw(glm::mat4());
 
-			//For now we do this to draw all of the walls
-			for each (std::vector<Wall*> wallGroup in walls->walls)
-			{
-				for each (Wall* indWall in wallGroup)
-				{
-					indWall->draw(glm::mat4());
-				}
-			}
+			// Draw the walls
+			walls->draw();
 
             // Push buffer drawn in the background onto the display
             glfwSwapBuffers(window);
