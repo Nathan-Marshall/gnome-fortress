@@ -27,7 +27,6 @@
 #include "gnome_fortress/camera/SceneNodeCamera.h"
 #include "gnome_fortress/model/Mesh.h"
 #include "gnome_fortress/model/OBJParser.h"
-#include "gnome_fortress/renderer/Technique.h"
 #include "gnome_fortress/shader/Shader.h"
 
 namespace gnome_fortress {
@@ -41,50 +40,13 @@ const glm::vec3 viewport_background_color_g(0.5, 0.5, 0.5);
 
 // Globals that define the OpenGL camera view and projection
 camera::Camera main_camera_g(
-    glm::lookAt(glm::vec3(-2, 2, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
+    glm::lookAt(glm::vec3(-15, 15, 15), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
 );
 camera::SceneNodeCamera scene_camera_g;
 
 camera::Camera *active_camera_g = &main_camera_g;
 
 game::Player *player;
-
-// Source code of vertex shader
-const char *source_vp =
-"#version 130\n\
-\n\
-// Vertex buffer\n\
-in vec3 vertex;\n\
-in vec3 color;\n\
-\n\
-// Uniform (global) buffer\n\
-uniform mat4 world_mat;\n\
-uniform mat4 view_mat;\n\
-uniform mat4 projection_mat;\n\
-\n\
-// Attributes forwarded to the fragment shader\n\
-out vec4 color_interp;\n\
-\n\
-\n\
-void main()\n\
-{\n\
-    gl_Position = projection_mat * view_mat * world_mat * vec4(vertex, 1.0);\n\
-    color_interp = vec4(color, 1.0);\n\
-}";
-
-
-// Source code of fragment shader
-const char *source_fp =
-"#version 130\n\
-\n\
-// Attributes passed from the vertex shader\n\
-in vec4 color_interp;\n\
-\n\
-\n\
-void main()\n\
-{\n\
-    gl_FragColor = color_interp;\n\
-}";
 
 
 // Callback for when a key is pressed
@@ -197,42 +159,22 @@ int MainFunction(void){
 		model::Mesh plane = CreatePlane();
         model::Mesh cube = CreateCube();
         model::Mesh cylinder = CreateCylinder();
-        model::Mesh mushroom_gun = model::LoadMesh("/models/mushroom_gun/mushroom_gun.obj");
+        model::Mesh player_mesh = model::LoadMesh("/models/peanut_gun/peanut_gun.obj");
+
+        model::Texture mushroom_gun_texture = model::Texture("/models/mushroom_gun/Gun(Handle).png");
+        model::Texture player_texture = model::Texture("/models/peanut_gun/Gun_001.png");
 
         // Set up shaders
         GLuint program = shader::CreateShaderProgram("/shaders/textured_material");
-
-        {
-            GLint i;
-            GLint count;
-
-            GLint size; // size of the variable
-            GLenum type; // type of the variable (float, vec3 or mat4, etc)
-
-            const GLsizei bufSize = 16; // maximum name length
-            GLchar name[bufSize]; // variable name in GLSL
-            GLsizei length; // name length
-
-            glGetProgramiv(program, GL_ACTIVE_ATTRIBUTES, &count);
-            printf("Active Attributes: %d\n", count);
-
-            for (i = 0; i < count; i++)
-            {
-                glGetActiveAttrib(program, (GLuint)i, bufSize, &length, &size, &type, name);
-
-                printf("Attribute #%d Type: %u Name: %s\n", i, type, name);
-            }
-        }
-
-        auto technique = new renderer::BasicProjectionTechnique(program, "view_mat", "projection_mat", "world_mat");
+        auto technique = new renderer::BasicMeshNodeTechnique(program, "projection_mat", "view_mat", "world_mat", "diffuse_map");
         technique->addVertexAttribute(renderer::VertexAttribute(program, "vertex", 3, GL_FLOAT, GL_FALSE));
         technique->addVertexAttribute(renderer::VertexAttribute(program, "normal", 3, GL_FLOAT, GL_FALSE));
         technique->addVertexAttribute(renderer::VertexAttribute(program, "color", 3, GL_FLOAT, GL_FALSE));
         technique->addVertexAttribute(renderer::VertexAttribute(program, "uv", 2, GL_FLOAT, GL_FALSE));
 
         // Create turret
-        Turret *turret = new Turret(&cube, &cylinder, technique);
-        player = new game::Player(&cube, technique);
+        Turret *turret = new Turret(&cube, &cylinder, &mushroom_gun_texture, technique);
+        player = new game::Player(&player_mesh, &player_texture, technique);
         player->setPosition(-2, 0.5f, 0);
 
         model::SceneNode *cameraNode = scene_camera_g.getNode();
@@ -240,7 +182,7 @@ int MainFunction(void){
         cameraNode->rotate(-glm::pi<float>() / 6, glm::vec3(1, 0, 0));
         player->appendChild(cameraNode);
 
-		model::SceneNode *stick = new model::BasicMeshNode(&plane, technique);
+		model::SceneNode *stick = new model::BasicMeshNode(&plane, &mushroom_gun_texture, technique);
 		stick->setScale(50, 50, 50);
 		stick->setPosition(0, 0, 0);
 

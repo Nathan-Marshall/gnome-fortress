@@ -2,8 +2,8 @@
 
 namespace gnome_fortress {
 namespace game {
-	Player::Player(const model::Mesh *mesh, renderer::BasicProjectionTechnique *technique)
-		: model::BasicMeshNode(mesh, technique),
+	Player::Player(const model::Mesh *mesh, const model::Texture *texture, renderer::BasicMeshNodeTechnique *technique)
+		: model::BasicMeshNode(mesh, texture, technique),
 		  forward(false),
 		  backward(false),
 		  left(false),

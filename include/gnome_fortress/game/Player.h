@@ -15,7 +15,8 @@ class Player : public model::BasicMeshNode {
 
 public:
 	Player(const model::Mesh *mesh,
-		renderer::BasicProjectionTechnique *technique);
+            const model::Texture *texture,
+		    renderer::BasicMeshNodeTechnique *technique);
 
 	const static float ACCELERATION;
 	const static float DECAY;

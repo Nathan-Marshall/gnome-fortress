@@ -8,14 +8,13 @@ in vec2 uv_interp;
 in vec3 light_pos;
 
 // Uniform (global) buffer
-uniform sampler2D texture_map;
+uniform sampler2D diffuse_map;
 
 
 void main() 
 {
     // Retrieve texture value
-    //vec4 pixel = texture(texture_map, uv_interp);
-	vec4 pixel = color_interp;
+    vec4 pixel = texture(diffuse_map, uv_interp);
 
     // Use texture in determining fragment colour
     gl_FragColor = pixel;

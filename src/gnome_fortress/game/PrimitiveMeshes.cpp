@@ -15,13 +15,15 @@ using namespace gnome_fortress::model;
 Mesh CreatePlane(void) {
     // Each face of the cube is defined by four vertices (with the same normal) and two triangles
 
+    const int attr_count = 11;
+
     // Vertices that form the plane
-    // 9 attributes per vertex: 3D position (3), 3D normal (3), RGB color (3)
+    // 11 attributes per vertex: 3D position (3), 3D normal (3), RGB color (3), Texture Coordinates (2)
     GLfloat vertices[] = {
-        -0.5f,  0.0f, -0.5f,    0.0f,  1.0f,  0.0f,    0.0f, 0.0f, 1.0f,
-         0.5f,  0.0f, -0.5f,    0.0f,  1.0f,  0.0f,    1.0f, 0.0f, 1.0f,
-         0.5f,  0.0f,  0.5f,    0.0f,  1.0f,  0.0f,    1.0f, 1.0f, 0.0f,
-        -0.5f,  0.0f,  0.5f,    0.0f,  1.0f,  0.0f,    0.0f, 1.0f, 0.0f
+        -0.5f,  0.0f, -0.5f,    0.0f,  1.0f,  0.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+         0.5f,  0.0f, -0.5f,    0.0f,  1.0f,  0.0f,    1.0f, 0.0f, 1.0f,    1.0f, 0.0f,
+         0.5f,  0.0f,  0.5f,    0.0f,  1.0f,  0.0f,    1.0f, 1.0f, 0.0f,    1.0f, 1.0f,
+        -0.5f,  0.0f,  0.5f,    0.0f,  1.0f,  0.0f,    0.0f, 1.0f, 0.0f,    0.0f, 1.0f,
     };
 
     GLuint elements[] = {
@@ -30,7 +32,7 @@ Mesh CreatePlane(void) {
     };
 
     // Create mesh 
-    return Mesh(vertices, sizeof(vertices), sizeof(GLfloat) * 9, elements, sizeof(elements), GL_TRIANGLES);
+    return Mesh(vertices, sizeof(vertices), sizeof(GLfloat) * attr_count, elements, sizeof(elements), GL_TRIANGLES);
 }
 
 Mesh CreateCube(void) {
@@ -255,13 +257,13 @@ Mesh CreateCylinder(void) {
 	for (int i = 0; i < circle_resolution; i++) {
         elements[element_attr_offset + 0] = side_face_lower_vertex_offset + i;
         elements[element_attr_offset + 1] = side_face_upper_vertex_offset + i;
-        elements[element_attr_offset + 2] = side_face_lower_vertex_offset + (i + 1) % circle_resolution;
+        elements[element_attr_offset + 2] = side_face_lower_vertex_offset + i + 1;
 
         element_attr_offset += 3;
 
         elements[element_attr_offset + 0] = side_face_upper_vertex_offset + i;
-        elements[element_attr_offset + 1] = side_face_upper_vertex_offset + (i + 1) % circle_resolution;
-        elements[element_attr_offset + 2] = side_face_lower_vertex_offset + (i + 1) % circle_resolution;
+        elements[element_attr_offset + 1] = side_face_upper_vertex_offset + i + 1;
+        elements[element_attr_offset + 2] = side_face_lower_vertex_offset + i + 1;
 
         element_attr_offset += 3;
 	}

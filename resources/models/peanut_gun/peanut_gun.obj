@@ -1,7 +1,5 @@
-# Blender v2.79 (sub 0) OBJ File: 'DolPeanutpopgun.obj'
-# www.blender.org
-mtllib DolPeanutpopgun.mtl
-o polygon2
+mtllib peanut_gun.mtl
+o peanut_gun
 v 0.195570 3.141768 3.508111
 v 0.216842 3.292041 3.359811
 v -0.409946 3.367692 3.346561

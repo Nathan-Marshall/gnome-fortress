@@ -18,6 +18,7 @@ set(HDRS
     include/gnome_fortress/model/SceneNode.h
     include/gnome_fortress/model/Texture.h
     
+    include/gnome_fortress/renderer/BasicMeshNodeTechnique.h
     include/gnome_fortress/renderer/BasicProjectionTechnique.h
     include/gnome_fortress/renderer/Technique.h
     include/gnome_fortress/renderer/Uniform.h
@@ -41,7 +42,8 @@ set(SRCS
     src/gnome_fortress/model/OBJParser.cpp
     src/gnome_fortress/model/SceneNode.cpp
     src/gnome_fortress/model/Texture.cpp
-
+    
+    src/gnome_fortress/renderer/BasicMeshNodeTechnique.cpp
     src/gnome_fortress/renderer/BasicProjectionTechnique.cpp
     src/gnome_fortress/renderer/Technique.cpp
     src/gnome_fortress/renderer/Uniform.cpp

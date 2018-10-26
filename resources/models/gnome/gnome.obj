@@ -1,7 +1,5 @@
-# Blender v2.79 (sub 0) OBJ File: 'Dwarf.obj'
-# www.blender.org
-mtllib Dwarf.mtl
-o Dwarf_pivot
+mtllib gnome.mtl
+o gnome
 v -2.885288 4.028320 -0.153448
 v -2.850580 4.016117 -0.151742
 v -2.826401 4.075850 -0.165991
@@ -7551,7 +7549,7 @@ vn -0.4834 0.0987 0.8698
 vn -0.3729 0.3911 0.8414
 vn -0.4184 0.2680 0.8678
 vn -0.3750 0.1920 0.9069
-usemtl Dwarf
+usemtl gnome
 s 1
 f 1/1/1 2/2/2 3/3/3 4/4/4
 f 5/5/5 6/6/6 7/7/7 8/8/8
