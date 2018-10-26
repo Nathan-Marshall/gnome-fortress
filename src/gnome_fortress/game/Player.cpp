@@ -69,6 +69,7 @@ namespace game {
 			acceleration = getRotation() * glm::vec3(1, 0, 0);
 			velocity += (acceleration * ACCELERATION) * dt;
 		}
+
 		else if (up) {
 			acceleration = getRotation() * glm::vec3(0, 1, 0);
 			velocity += (acceleration * ACCELERATION) * dt;
@@ -80,7 +81,44 @@ namespace game {
 
 		velocity *= glm::pow(DECAY, dt);
 
+		CheckBounds(velocity * dt);
+
 		translate(velocity * dt);
+	}
+
+	void Player::CheckBounds(glm::vec3 translationAmount) {
+		glm::vec3 currentPos = getPosition();
+		glm::vec3 futurePos = currentPos += translationAmount;
+		glm::vec3 localScale = getScale();
+
+		float halfX = localScale.x / 2;
+		float halfY = localScale.y / 2;
+		float halfZ = localScale.z / 2;
+
+		float diffX = 0;
+		float diffY = 0;
+		float diffZ = 0;
+
+		if (futurePos.x + halfX > XBOUND_POS) {
+			diffX = futurePos.x + halfX - XBOUND_POS;
+		}
+		if (futurePos.x - halfX < XBOUND_NEG) {
+			diffX = futurePos.x - halfX - XBOUND_NEG;
+		}
+		if (futurePos.y  + halfY > YBOUND_POS) {
+			diffY = futurePos.y + halfY- YBOUND_POS;
+		}
+		if (futurePos.y - halfY < YBOUND_NEG) {
+			diffY = futurePos.y - halfY - YBOUND_NEG;
+		}
+		if (futurePos.z + halfZ > ZBOUND_POS) {
+			diffZ = futurePos.z + halfZ - ZBOUND_POS;
+		}
+		if (futurePos.z - halfZ < ZBOUND_NEG) {
+			diffZ = futurePos.z - halfZ - ZBOUND_NEG;
+		}
+
+		velocity -= glm::vec3(diffX, diffY, diffZ);
 	}
 }
 }

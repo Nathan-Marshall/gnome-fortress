@@ -21,6 +21,17 @@ public:
     // draws this node and all its children, applying the local transformation
     virtual void draw(const glm::mat4 &parent_transform) const;
 
+	//GLOBAL SCENE BOUNDS
+	const static float XBOUND_POS;
+	const static float XBOUND_NEG;
+
+	const static float YBOUND_POS;
+	const static float YBOUND_NEG;
+
+	const static float ZBOUND_POS;
+	const static float ZBOUND_NEG;
+
+
     // === LOCAL TRANSFORMATIONS ===
 
     // Returns the local position

@@ -23,8 +23,12 @@
 
 #include "gnome_fortress/game/Player.h"
 #include "gnome_fortress/game/PrimitiveMeshes.h"
+#include "gnome_fortress/game/Wall.h"
+#include "gnome_fortress/game/Walls.h"
 #include "gnome_fortress/game/Turret.h"
 #include "gnome_fortress/game/Weapon.h"
+#include "gnome_fortress/game/Enemies.h"
+#include "gnome_fortress/game/SiegeTurtle.h"
 #include "gnome_fortress/camera/SceneNodeCamera.h"
 #include "gnome_fortress/model/Mesh.h"
 #include "gnome_fortress/renderer/Technique.h"
@@ -54,6 +58,8 @@ game::Player *player;
 game::Weapon *weapon;
 
 model::SceneNode *papaNode; //the Scene Node
+
+Walls* walls;
 
 #pragma region Shader_Source
 
@@ -290,6 +296,9 @@ int MainFunction(void){
 
 		papaNode = new model::SceneNode();
 
+		// Create the walls
+		walls = new Walls(cube, technique);
+
         player = new game::Player(cube, technique);
         player->setPosition(0, 0.5f, 0);
 		papaNode->appendChild(player);
@@ -297,6 +306,15 @@ int MainFunction(void){
         //Create weapon
         weapon = new Weapon(cube, cylinder, technique, player);
 		
+		Enemies* enemies = new Enemies();
+		SiegeTurtle* turtle1 = new SiegeTurtle(cube, technique);
+		SiegeTurtle* turtle2 = new SiegeTurtle(cube, technique);
+		SiegeTurtle* turtle3 = new SiegeTurtle(cube, technique);
+
+		enemies->turtles.push_back(turtle1);
+		enemies->turtles.push_back(turtle2);
+		enemies->turtles.push_back(turtle3);
+
 		//Create the third person camera
         model::SceneNode *cameraNodeThird = scene_camera_third_g.getNode();
         cameraNodeThird->setPosition(0, 1, 4);
@@ -346,6 +364,16 @@ int MainFunction(void){
 			ground->draw(glm::mat4());
 
 			weapon->draw(glm::mat4());*/
+
+			// Draw the walls
+			walls->draw();
+
+			// Draw the enemies
+			for each (SiegeTurtle* turt in enemies->turtles)
+			{
+				turt->update(delta_time);
+				turt->draw(glm::mat4());
+			}
 
             // Push buffer drawn in the background onto the display
             glfwSwapBuffers(window);
