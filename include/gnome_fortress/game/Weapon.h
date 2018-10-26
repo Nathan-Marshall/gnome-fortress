@@ -31,7 +31,7 @@ public:
 	void setCooldown(float cd);
 
 	//Creating bullets 
-	Projectile* fireBullet(glm::vec3 position);
+	Projectile* fireBullet(glm::vec3 position, glm::quat cameraRotation);
 	
 
 	void onUpdateSelf(float dt) override;

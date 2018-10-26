@@ -39,8 +39,8 @@ void Weapon::setCooldown(float cd) {
 	cooldown = cd;
 }
 
-Projectile* Weapon::fireBullet(glm::vec3 position) {
-	glm::vec3 vel = glm::normalize(glm::vec3(getGlobalTransform() * glm::vec4(0, 0, -1, 0)));
+Projectile* Weapon::fireBullet(glm::vec3 position, glm::quat cameraRotation) {
+	glm::vec3 vel = glm::normalize(glm::vec3(getGlobalTransform() * glm::mat4_cast(cameraRotation) * glm::vec4(0, 0, -1, 0)));
 	vel.x *= 5.0; //FIRING_VELOCITY;
 	vel.y *= 5.0; //FIRING_VELOCITY;
 	vel.z *= 5.0; //FIRING_VELOCITY;

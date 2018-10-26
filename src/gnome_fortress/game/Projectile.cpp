@@ -9,7 +9,7 @@ namespace game {
         velocity(velocity), 
 		lifespan(0)
 	{
-		pointOfOrigin.z = pointOfOrigin.z  * 1.25; 
+		pointOfOrigin.z = pointOfOrigin.z;
 		setPosition(pointOfOrigin);
 
 		//Make the bullets nice and smol

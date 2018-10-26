@@ -135,7 +135,7 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 		std::cout << "Left Mouse Pressed " << std::endl;
 		if (weapon->getCooldown() <= 0) {
 			weapon->setCooldown(0.3f);
-			Projectile *p = weapon->fireBullet(weapon->getPosition()); 
+			Projectile *p = weapon->fireBullet(weapon->getPosition(), scene_camera_first_g.getNode()->getRotation()); //Sidenote: it doesn't matter which camera we use here since both rotate equally
 			papaNode->appendChild(p);
 		}
 		else {
