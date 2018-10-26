@@ -11,15 +11,21 @@ namespace game {
 	{
 		pointOfOrigin.z = pointOfOrigin.z  * 1.25; 
 		setPosition(pointOfOrigin);
-		//Removed while debugging for clarity
-		//setScale(0.09, 0.09, 0.09);
-		
-        glm::vec3 axis = glm::cross(glm::vec3(0, 0, -1), glm::normalize(velocity)); //axis to rotate around 
-		float angle = glm::asin(glm::length(axis));
-		glm::vec3 test = glm::normalize(axis);
-		rotate(angle + glm::pi<float>(), axis); //garbage that needs fixing
 
-		rotate(90 * glm::pi<float>() / 180.0f, glm::vec3(1.0, 0.0, 0.0));
+		//Make the bullets nice and smol
+		setScale(0.09, 0.09, 0.09);
+
+		//Get the axis we should rotate around
+        glm::vec3 axis = glm::cross(glm::vec3(0, 0, -1), velocity); //axis to rotate around 
+
+		//Get the angle we should rotate around this axis
+		float angle = acos((glm::dot(velocity, glm::vec3(0, 0, -1))) / glm::length(velocity));
+		
+		//Rotate around the axis
+		rotate(angle, glm::normalize(axis));
+
+		//Rotate by 90 degrees so the cylinder is 'facing forward'
+		rotate(90 * (glm::pi<float>() / 180.0f), glm::vec3(1.0, 0.0, 0.0));
 
     }
 
