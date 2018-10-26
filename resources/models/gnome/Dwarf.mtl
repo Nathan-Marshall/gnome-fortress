@@ -1,0 +1,15 @@
+# Blender MTL File: 'Dwarf.obj'
+# Material Count: 1
+
+newmtl Dwarf
+Ns 511.764706
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Dwarf_diffuse.tga
+map_Bump Dwarf_normals.tga
+refl Dwarf_reflect.tga

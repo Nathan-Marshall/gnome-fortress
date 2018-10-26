@@ -6,11 +6,11 @@ namespace gnome_fortress {
 namespace model {
 
 struct Mesh {
-    // Creates an empty mesh object, WITHOUT generating any GL buffers
-    Mesh();
+    // Creates a mesh with already-filled GL buffers
+    Mesh(GLuint vbo, GLuint ebo, GLuint num_vertices, GLuint num_elements, GLenum mode);
 
     // Generates GL buffers and stores the given vertices and elements in them
-    Mesh::Mesh(GLvoid *vertices, GLsizei verticesSize, GLsizei singleVertexSize, GLuint *elements, GLsizei elementsSize, GLenum mode);
+    Mesh::Mesh(const GLvoid *vertices, GLsizei verticesSize, GLsizei singleVertexSize, GLuint *elements, GLsizei elementsSize, GLenum mode);
 
     // OpenGL vertex buffer object ID
     GLuint vbo;

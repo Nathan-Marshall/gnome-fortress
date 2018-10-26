@@ -11,14 +11,14 @@
 namespace gnome_fortress {
 namespace game {
 
-model::Mesh *CreatePlane(void);
+model::Mesh CreatePlane(void);
 
 // Create the geometry of a cube centered at (0, 0, 0) with sides of length 1
-model::Mesh *CreateCube(void);
+model::Mesh CreateCube(void);
 
 
 // Create the geometry of a cylinder centered at (0, 0, 0) with diameter and height of 1
-model::Mesh *CreateCylinder(void);
+model::Mesh CreateCylinder(void);
 
 }
 }

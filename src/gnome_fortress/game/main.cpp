@@ -26,6 +26,7 @@
 #include "gnome_fortress/game/Turret.h"
 #include "gnome_fortress/camera/SceneNodeCamera.h"
 #include "gnome_fortress/model/Mesh.h"
+#include "gnome_fortress/model/OBJParser.h"
 #include "gnome_fortress/renderer/Technique.h"
 #include "gnome_fortress/shader/Shader.h"
 
@@ -36,7 +37,7 @@ namespace game {
 const std::string window_title_g = "Gnome Fortress";
 const unsigned int window_width_g = 800;
 const unsigned int window_height_g = 600;
-const glm::vec3 viewport_background_color_g(0.0, 0.0, 0.0);
+const glm::vec3 viewport_background_color_g(0.5, 0.5, 0.5);
 
 // Globals that define the OpenGL camera view and projection
 camera::Camera main_camera_g(
@@ -193,29 +194,45 @@ int MainFunction(void){
         glEnable(GL_CULL_FACE);
 
         // Create geometry of the cube and cylinder
-		model::Mesh *plane = CreatePlane();
-        model::Mesh *cube = CreateCube();
-        model::Mesh *cylinder = CreateCylinder();
+		model::Mesh plane = CreatePlane();
+        model::Mesh cube = CreateCube();
+        model::Mesh cylinder = CreateCylinder();
+        model::Mesh mushroom_gun = model::LoadMesh("/models/mushroom_gun/mushroom_gun.obj");
 
         // Set up shaders
-        GLuint program = shader::CreateShaderProgram(source_vp, source_fp);
+        GLuint program = shader::CreateShaderProgram("/shaders/textured_material");
 
-        GLint view_uni_location = glGetUniformLocation(program, "view_mat");
-        GLint projection_uni_location = glGetUniformLocation(program, "projection_mat");
-        GLint world_uni_location = glGetUniformLocation(program, "world_mat");
+        {
+            GLint i;
+            GLint count;
 
-        GLint vertex_attr_location = glGetAttribLocation(program, "vertex");
-        GLint normal_attr_location = glGetAttribLocation(program, "normal");
-        GLint color_attr_location = glGetAttribLocation(program, "color");
+            GLint size; // size of the variable
+            GLenum type; // type of the variable (float, vec3 or mat4, etc)
 
-        renderer::BasicProjectionTechnique *technique = new renderer::BasicProjectionTechnique(program, projection_uni_location, view_uni_location, world_uni_location);
-        technique->addVertexAttribute(renderer::VertexAttribute(vertex_attr_location, 3, GL_FLOAT, GL_FALSE));
-        technique->addVertexAttribute(renderer::VertexAttribute(normal_attr_location, 3, GL_FLOAT, GL_FALSE));
-        technique->addVertexAttribute(renderer::VertexAttribute(color_attr_location, 3, GL_FLOAT, GL_FALSE));
+            const GLsizei bufSize = 16; // maximum name length
+            GLchar name[bufSize]; // variable name in GLSL
+            GLsizei length; // name length
+
+            glGetProgramiv(program, GL_ACTIVE_ATTRIBUTES, &count);
+            printf("Active Attributes: %d\n", count);
+
+            for (i = 0; i < count; i++)
+            {
+                glGetActiveAttrib(program, (GLuint)i, bufSize, &length, &size, &type, name);
+
+                printf("Attribute #%d Type: %u Name: %s\n", i, type, name);
+            }
+        }
+
+        auto technique = new renderer::BasicProjectionTechnique(program, "view_mat", "projection_mat", "world_mat");
+        technique->addVertexAttribute(renderer::VertexAttribute(program, "vertex", 3, GL_FLOAT, GL_FALSE));
+        technique->addVertexAttribute(renderer::VertexAttribute(program, "normal", 3, GL_FLOAT, GL_FALSE));
+        technique->addVertexAttribute(renderer::VertexAttribute(program, "color", 3, GL_FLOAT, GL_FALSE));
+        technique->addVertexAttribute(renderer::VertexAttribute(program, "uv", 2, GL_FLOAT, GL_FALSE));
 
         // Create turret
-        Turret *turret = new Turret(cube, cylinder, technique);
-        player = new game::Player(cube, technique);
+        Turret *turret = new Turret(&cube, &cylinder, technique);
+        player = new game::Player(&cube, technique);
         player->setPosition(-2, 0.5f, 0);
 
         model::SceneNode *cameraNode = scene_camera_g.getNode();
@@ -223,7 +240,7 @@ int MainFunction(void){
         cameraNode->rotate(-glm::pi<float>() / 6, glm::vec3(1, 0, 0));
         player->appendChild(cameraNode);
 
-		model::SceneNode *stick = new model::BasicMeshNode(plane, technique);
+		model::SceneNode *stick = new model::BasicMeshNode(&plane, technique);
 		stick->setScale(50, 50, 50);
 		stick->setPosition(0, 0, 0);
 

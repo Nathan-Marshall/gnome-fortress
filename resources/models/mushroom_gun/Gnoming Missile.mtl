@@ -1,0 +1,38 @@
+# Blender MTL File: 'Gnoming Missile.blend'
+# Material Count: 3
+
+newmtl Material.052_Gun(Fron
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.635000 0.635000 0.635000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\LinkWolfen\Documents\Gnoming Missile\Textures\Gun(Front).png
+map_Tr C:\\Users\\LinkWolfen\\Documents\\Gnoming Missile\\Textures\\Gun(Front).png
+
+newmtl Material.053_Gun(Hand
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.635000 0.635000 0.635000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\LinkWolfen\Documents\Gnoming Missile\Textures\Gun(Handle).png
+map_Tr C:\\Users\\LinkWolfen\\Documents\\Gnoming Missile\\Textures\\Gun(Handle).png
+
+newmtl Material.054_Gun(Tip)
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.635000 0.635000 0.635000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\LinkWolfen\Documents\Gnoming Missile\Textures\Gun(Tip).png
+map_Tr C:\\Users\\LinkWolfen\\Documents\\Gnoming Missile\\Textures\\Gun(Tip).png
