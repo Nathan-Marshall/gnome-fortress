@@ -11,7 +11,7 @@
 namespace gnome_fortress {
 namespace game {
 
-class Walls {
+class Walls : public model::SceneNode {
 
 public:
 	Walls(const model::Mesh *mesh, renderer::BasicProjectionTechnique *technique, int numRings = 3);
@@ -19,7 +19,8 @@ public:
 	//Vector to define the walls
 	std::vector<std::vector<Wall*>> walls;
 
-	void draw();
+	void onDrawSelf(const glm::mat4 &parent_transform) const override;
+	void onUpdateSelf(float delta_time) override;
 protected:
 			
 private:

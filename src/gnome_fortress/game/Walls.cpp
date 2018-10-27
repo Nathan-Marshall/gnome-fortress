@@ -44,7 +44,7 @@ void Walls::FillWalls(const model::Mesh *mesh, renderer::BasicProjectionTechniqu
 	}
 }
 
-void Walls::draw() {
+void Walls::onDrawSelf(const glm::mat4 &parentTransform) const {
 	//For now we do this to draw all of the walls
 	for each (std::vector<Wall*> wallGroup in walls)
 	{
@@ -53,6 +53,10 @@ void Walls::draw() {
 			indWall->draw(glm::mat4());
 		}
 	}
+}
+
+void Walls::onUpdateSelf(float dt) {
+	//Walls don't do anything to update at all yet
 }
 
 

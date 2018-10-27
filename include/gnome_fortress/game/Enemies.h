@@ -14,12 +14,15 @@ namespace gnome_fortress {
 namespace game {
 
 
-class Enemies {
+class Enemies : public model::SceneNode {
 
 public:
 	Enemies();
 
 	std::vector<SiegeTurtle*> turtles;
+
+	void onDrawSelf(const glm::mat4 &parent_transform) const override;
+	void onUpdateSelf(float delta_time) override;
 
 protected:
 

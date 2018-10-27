@@ -48,18 +48,19 @@ camera::Camera main_camera_g(
     glm::lookAt(glm::vec3(0, 5, 10), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
 );
 
+//Camera globals
 camera::SceneNodeCamera scene_camera_first_g;
 camera::SceneNodeCamera scene_camera_third_g;
-
 camera::Camera *active_camera_g = &scene_camera_first_g;
 
+//The root scene node
+model::SceneNode *papaNode;
+
+//References to the player, weapons, walls, and enemies
 game::Player *player;
-
 game::Weapon *weapon;
-
-model::SceneNode *papaNode; //the Scene Node
-
-Walls* walls;
+game::Walls* walls;
+game::Enemies* enemies;
 
 #pragma region Shader_Source
 
@@ -208,7 +209,6 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 	}
 }
 
-
 // Callback for when the window is resized
 void ResizeCallback(GLFWwindow* window, int width, int height){
     // Set OpenGL viewport based on framebuffer width and height
@@ -220,11 +220,8 @@ void ResizeCallback(GLFWwindow* window, int width, int height){
 	scene_camera_third_g.setViewport(width, height);
 }
 
-
 // Main function that builds and runs the game
 int MainFunction(void){
-	//TESTING
-	//float sum = 0; 
     try {
         // Initialize the window management library (GLFW)
         if (!glfwInit()){
@@ -291,34 +288,38 @@ int MainFunction(void){
         technique->addVertexAttribute(renderer::VertexAttribute(normal_attr_location, 3, GL_FLOAT, GL_FALSE));
         technique->addVertexAttribute(renderer::VertexAttribute(color_attr_location, 3, GL_FLOAT, GL_FALSE));
 
-        // Create turret
-        //Turret *turret = new Turret(cube, cylinder, technique);
-
+		//Create the main scene node
 		papaNode = new model::SceneNode();
 
-		// Create the walls
+		//Create the walls
 		walls = new Walls(cube, technique);
+		papaNode->appendChild(walls);
 
+		//Create the player
         player = new game::Player(cube, technique);
         player->setPosition(0, 0.5f, 0);
 		papaNode->appendChild(player);
 
         //Create weapon
         weapon = new Weapon(cube, cylinder, technique, player);
-		
+		player->appendChild(weapon);
+
+		//Create the enemies
 		Enemies* enemies = new Enemies();
+		papaNode->appendChild(enemies);
+
+		//Add some turtles to the enemies for now
 		SiegeTurtle* turtle1 = new SiegeTurtle(cube, technique);
 		SiegeTurtle* turtle2 = new SiegeTurtle(cube, technique);
 		SiegeTurtle* turtle3 = new SiegeTurtle(cube, technique);
 
 		enemies->turtles.push_back(turtle1);
-		enemies->turtles.push_back(turtle2);
+		enemies->turtles.push_back(turtle2); 
 		enemies->turtles.push_back(turtle3);
 
 		//Create the third person camera
         model::SceneNode *cameraNodeThird = scene_camera_third_g.getNode();
         cameraNodeThird->setPosition(0, 1, 4);
-		//cameraNodeThird->rotate(-glm::pi<float>() / 60, glm::vec3(1, 0, 0));
 
 		//Create the first person camera
 		model::SceneNode *cameraNodeFirst = scene_camera_first_g.getNode();
@@ -326,8 +327,8 @@ int MainFunction(void){
 
         player->appendChild(cameraNodeThird);
 		player->appendChild(cameraNodeFirst);
-		player->appendChild(weapon);
 
+		//Create the ground plane
 		model::SceneNode *ground = new model::BasicMeshNode(plane, technique);
 		ground->setScale(50, 50, 50);
 		ground->setPosition(0, 0, 0);
@@ -350,47 +351,25 @@ int MainFunction(void){
             technique->setProjectionMatrix(active_camera_g->getProjection());
             technique->setViewMatrix(active_camera_g->getView());
 
-            //turret->update(delta_time);
-            //turret->draw(glm::mat4());
-
-
+			//Update the scene nodes
 			papaNode->update(delta_time);
-            //player->update(delta_time);
 
+			//Draw the scene nodes
 			papaNode->draw(glm::mat4());
-			/* No longer necessary because of papaNode
-			player->draw(glm::mat4());
-
-			ground->draw(glm::mat4());
-
-			weapon->draw(glm::mat4());*/
-
-			// Draw the walls
-			walls->draw();
-
-			// Draw the enemies
-			for each (SiegeTurtle* turt in enemies->turtles)
-			{
-				turt->update(delta_time);
-				turt->draw(glm::mat4());
-			}
 
             // Push buffer drawn in the background onto the display
             glfwSwapBuffers(window);
 
             // Update other events like input handling
             glfwPollEvents();
-
-			/* TESTING
-			sum += delta_time;
-			std::cout << "Sum Time: " << sum << std::endl;*/
-
         }
 
         delete technique;
-        //delete turret;
         delete player;
 		delete weapon;
+		delete walls;
+		delete enemies;
+
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
