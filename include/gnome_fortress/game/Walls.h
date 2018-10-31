@@ -14,7 +14,10 @@ namespace game {
 class Walls {
 
 public:
-	Walls(const model::Mesh *mesh, renderer::BasicProjectionTechnique *technique, int numRings = 3);
+	Walls(const model::Mesh *mesh,
+            const model::Texture *diffuse_texture,
+            renderer::BasicMeshNodeTechnique *technique,
+            int numRings = 3);
 
 	//Vector to define the walls
 	std::vector<std::vector<Wall*>> walls;
@@ -27,7 +30,11 @@ private:
 	const static float INNER_RADIUS;
 	const static int WALLS_PER_RING;
 
-	void FillWalls(const model::Mesh *mesh, renderer::BasicProjectionTechnique *technique, int numRings);
+	void FillWalls(
+            const model::Mesh *mesh,
+            const model::Texture *diffuse_texture,
+            renderer::BasicMeshNodeTechnique *technique,
+            int numRings);
 };
 
 

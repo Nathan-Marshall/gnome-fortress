@@ -233,10 +233,10 @@ int MainFunction(void){
 		model::Mesh plane = CreatePlane();
         model::Mesh cube = CreateCube();
         model::Mesh cylinder = CreateCylinder();
-        model::Mesh player_mesh = model::LoadMesh("/models/peanut_gun/peanut_gun.obj");
+        model::Mesh peanutGunMesh = model::LoadMesh("/models/peanut_gun/peanut_gun.obj");
 
         model::Texture mushroom_gun_texture = model::Texture("/models/mushroom_gun/Gun(Handle).png");
-        model::Texture player_texture = model::Texture("/models/peanut_gun/Gun_001.png");
+        model::Texture peanutGunTexture = model::Texture("/models/peanut_gun/Gun_001.png");
 
         // Set up shaders
         GLuint program = shader::CreateShaderProgram("/shaders/textured_material");
@@ -252,19 +252,19 @@ int MainFunction(void){
 		papaNode = new model::SceneNode();
 
 		// Create the walls
-		walls = new Walls(&cube, technique);
+		walls = new Walls(&cube, &mushroom_gun_texture, technique);
 
-        player = new game::Player(&player_mesh, &player_texture, technique);
+        player = new game::Player(&cube, &mushroom_gun_texture, technique);
         player->setPosition(0, 0.5f, 0);
 		papaNode->appendChild(player);
 
         //Create weapon
-        weapon = new Weapon(&cube, &cylinder, technique, player);
+        weapon = new Weapon(&peanutGunMesh, &cylinder, &peanutGunTexture, &mushroom_gun_texture, technique, player);
 		
 		Enemies* enemies = new Enemies();
-		SiegeTurtle* turtle1 = new SiegeTurtle(&cube, technique);
-		SiegeTurtle* turtle2 = new SiegeTurtle(&cube, technique);
-		SiegeTurtle* turtle3 = new SiegeTurtle(&cube, technique);
+		SiegeTurtle* turtle1 = new SiegeTurtle(&cube, &mushroom_gun_texture, technique);
+		SiegeTurtle* turtle2 = new SiegeTurtle(&cube, &mushroom_gun_texture, technique);
+		SiegeTurtle* turtle3 = new SiegeTurtle(&cube, &mushroom_gun_texture, technique);
 
 		enemies->turtles.push_back(turtle1);
 		enemies->turtles.push_back(turtle2);

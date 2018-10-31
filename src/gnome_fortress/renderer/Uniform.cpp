@@ -27,7 +27,7 @@ Uniform::Uniform(
     }
 
     location = glGetUniformLocation(shader_program, name.c_str());
-    if (!location) {
+    if (location < 0) {
         throw(std::exception((std::string("Failed to find uniform \"") + name + "\" in shader program.").c_str()));
     }
 }
