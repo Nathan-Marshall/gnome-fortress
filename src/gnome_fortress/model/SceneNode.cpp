@@ -14,10 +14,15 @@ SceneNode::SceneNode()
       rotation(),
       scale_vec(1, 1, 1),
       parent(nullptr),
-      children() {
-
+      children() {	
 }
 
+const float SceneNode::XBOUND_POS = 25.0f;
+const float SceneNode::XBOUND_NEG = -25.0f;
+const float SceneNode::YBOUND_POS = 50.0f;
+const float SceneNode::YBOUND_NEG = 0.0f;
+const float SceneNode::ZBOUND_POS = 25.0f;
+const float SceneNode::ZBOUND_NEG = -25.0f;
 
 void SceneNode::update(float delta_time) {
     onUpdateSelf(delta_time);
@@ -60,19 +65,19 @@ void SceneNode::translate(const glm::vec3 &translation) {
 }
 
 void SceneNode::translate(float tx, float ty, float tz) {
-    position += glm::vec3(tx, ty, tz);
+	translate(glm::vec3(tx, ty, tz));
 }
 
 void SceneNode::translateX(float tx) {
-    position.x += tx;
+	translate(glm::vec3(tx, 0, 0));
 }
 
 void SceneNode::translateY(float ty) {
-    position.y += ty;
+	translate(glm::vec3(0, ty, 0));
 }
 
 void SceneNode::translateZ(float tz) {
-    position.z += tz;
+	translate(glm::vec3(0, 0, tz));
 }
 
 glm::quat SceneNode::getRotation() const {
