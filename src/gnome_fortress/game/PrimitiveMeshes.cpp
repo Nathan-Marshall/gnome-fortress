@@ -12,16 +12,18 @@ namespace game {
 using namespace gnome_fortress::model;
 
 
-Mesh *CreatePlane(void) {
+Mesh CreatePlane(void) {
     // Each face of the cube is defined by four vertices (with the same normal) and two triangles
 
+    const int attr_count = 11;
+
     // Vertices that form the plane
-    // 9 attributes per vertex: 3D position (3), 3D normal (3), RGB color (3)
+    // 11 attributes per vertex: 3D position (3), 3D normal (3), RGB color (3), Texture Coordinates (2)
     GLfloat vertices[] = {
-        -0.5f,  0.0f, -0.5f,    0.0f,  1.0f,  0.0f,    0.0f, 0.0f, 1.0f,
-         0.5f,  0.0f, -0.5f,    0.0f,  1.0f,  0.0f,    1.0f, 0.0f, 1.0f,
-         0.5f,  0.0f,  0.5f,    0.0f,  1.0f,  0.0f,    1.0f, 1.0f, 0.0f,
-        -0.5f,  0.0f,  0.5f,    0.0f,  1.0f,  0.0f,    0.0f, 1.0f, 0.0f
+        -0.5f,  0.0f, -0.5f,    0.0f,  1.0f,  0.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+         0.5f,  0.0f, -0.5f,    0.0f,  1.0f,  0.0f,    1.0f, 0.0f, 1.0f,    1.0f, 0.0f,
+         0.5f,  0.0f,  0.5f,    0.0f,  1.0f,  0.0f,    1.0f, 1.0f, 0.0f,    1.0f, 1.0f,
+        -0.5f,  0.0f,  0.5f,    0.0f,  1.0f,  0.0f,    0.0f, 1.0f, 0.0f,    0.0f, 1.0f,
     };
 
     GLuint elements[] = {
@@ -30,45 +32,47 @@ Mesh *CreatePlane(void) {
     };
 
     // Create mesh 
-    return new Mesh(vertices, sizeof(vertices), sizeof(GLfloat) * 9, elements, sizeof(elements), GL_TRIANGLES);
+    return Mesh(vertices, sizeof(vertices), sizeof(GLfloat) * attr_count, elements, sizeof(elements), GL_TRIANGLES);
 }
 
-Mesh *CreateCube(void) {
+Mesh CreateCube(void) {
     // Each face of the cube is defined by four vertices (with the same normal) and two triangles
 
+    const int attr_count = 11;
+
     // Vertices that form the cube
-    // 9 attributes per vertex: 3D position (3), 3D normal (3), RGB color (3)
+    // 11 attributes per vertex: 3D position (3), 3D normal (3), RGB color (3), Texture Coordinates (2)
     GLfloat vertices[] = {
         // First cube face
-        -0.5f, -0.5f,  0.5f,    0.0f,  0.0f,  1.0f,    0.0f, 0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,    0.0f,  0.0f,  1.0f,    1.0f, 0.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,    0.0f,  0.0f,  1.0f,    1.0f, 1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,    0.0f,  0.0f,  1.0f,    0.0f, 1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,    0.0f,  0.0f,  1.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,    0.0f,  0.0f,  1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,    0.0f,  0.0f,  1.0f,    1.0f, 1.0f, 1.0f,    1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,    0.0f,  0.0f,  1.0f,    0.0f, 1.0f, 0.0f,    0.0f, 1.0f,
         // Second cube face
-         0.5f, -0.5f,  0.5f,    1.0f,  0.0f,  0.0f,    1.0f, 0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,    1.0f,  0.0f,  0.0f,    1.0f, 0.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,    1.0f,  0.0f,  0.0f,    1.0f, 1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,    1.0f,  0.0f,  0.0f,    1.0f, 1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,    1.0f,  0.0f,  0.0f,    1.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,    1.0f,  0.0f,  0.0f,    1.0f, 0.0f, 0.0f,    1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,    1.0f,  0.0f,  0.0f,    1.0f, 1.0f, 0.0f,    1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,    1.0f,  0.0f,  0.0f,    1.0f, 1.0f, 1.0f,    0.0f, 1.0f,
         // Third cube face
-         0.5f, -0.5f, -0.5f,    0.0f,  0.0f, -1.0f,    1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,    0.0f,  0.0f, -1.0f,    0.0f, 0.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,    0.0f,  0.0f, -1.0f,    0.0f, 1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,    0.0f,  0.0f, -1.0f,    1.0f, 1.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,    0.0f,  0.0f, -1.0f,    1.0f, 0.0f, 0.0f,    0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,    0.0f,  0.0f, -1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,    0.0f,  0.0f, -1.0f,    0.0f, 1.0f, 0.0f,    1.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,    0.0f,  0.0f, -1.0f,    1.0f, 1.0f, 0.0f,    0.0f, 1.0f,
         // Fourth cube face
-        -0.5f, -0.5f, -0.5f,   -1.0f,  0.0f,  0.0f,    0.0f, 0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,   -1.0f,  0.0f,  0.0f,    0.0f, 0.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,   -1.0f,  0.0f,  0.0f,    0.0f, 1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,   -1.0f,  0.0f,  0.0f,    0.0f, 1.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,   -1.0f,  0.0f,  0.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,   -1.0f,  0.0f,  0.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,   -1.0f,  0.0f,  0.0f,    0.0f, 1.0f, 0.0f,    1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,   -1.0f,  0.0f,  0.0f,    0.0f, 1.0f, 0.0f,    0.0f, 1.0f,
         // Fifth cube face
-        -0.5f,  0.5f,  0.5f,    0.0f,  1.0f,  0.0f,    0.0f, 1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,    0.0f,  1.0f,  0.0f,    1.0f, 1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,    0.0f,  1.0f,  0.0f,    1.0f, 1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,    0.0f,  1.0f,  0.0f,    0.0f, 1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,    0.0f,  1.0f,  0.0f,    0.0f, 1.0f, 0.0f,    0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,    0.0f,  1.0f,  0.0f,    1.0f, 1.0f, 1.0f,    1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,    0.0f,  1.0f,  0.0f,    1.0f, 1.0f, 0.0f,    1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,    0.0f,  1.0f,  0.0f,    0.0f, 1.0f, 0.0f,    0.0f, 1.0f,
         // Sixth cube face
-         0.5f, -0.5f,  0.5f,    0.0f, -1.0f,  0.0f,    1.0f, 0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,    0.0f, -1.0f,  0.0f,    0.0f, 0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,    0.0f, -1.0f,  0.0f,    0.0f, 0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,    0.0f, -1.0f,  0.0f,    1.0f, 0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,    0.0f, -1.0f,  0.0f,    1.0f, 0.0f, 1.0f,    0.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,    0.0f, -1.0f,  0.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,    0.0f, -1.0f,  0.0f,    0.0f, 0.0f, 1.0f,    1.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,    0.0f, -1.0f,  0.0f,    1.0f, 0.0f, 0.0f,    0.0f, 1.0f,
     };
 
     GLuint elements[] = {
@@ -93,22 +97,22 @@ Mesh *CreateCube(void) {
     };
 
     // Create mesh 
-    return new Mesh(vertices, sizeof(vertices), sizeof(GLfloat) * 9, elements, sizeof(elements), GL_TRIANGLES);
+    return Mesh(vertices, sizeof(vertices), sizeof(GLfloat) * attr_count, elements, sizeof(elements), GL_TRIANGLES);
 }
 
 
-Mesh *CreateCylinder(void) {
+Mesh CreateCylinder(void) {
 	// The top and bottom faces of the cylinder are each defined by n vertices and (n - 2) triangles, where n is circle_resolution
 	// The side (curved) face is defined by 2n vertices and 2n triangles
 
 	// the circle will have this many vertices/edges
 	const int circle_resolution = 24;
 
-	const int num_vertices = circle_resolution * 4;
+	const int num_vertices = circle_resolution * 2 + (circle_resolution + 1) * 2;
 	const int num_triangles = (circle_resolution - 2) * 2 + circle_resolution * 2;
 
-	// 9 attributes per vertex: 3D position (3), 3D normal (3), RGB color (3)
-	const int attr_count = 9;
+	// 11 attributes per vertex: 3D position (3), 3D normal (3), RGB color (3), Texture Coordinates (2)
+	const int attr_count = 11;
 
 	// Vertices that form the cylinder
 	GLfloat vertices[num_vertices * attr_count];
@@ -137,6 +141,9 @@ Mesh *CreateCylinder(void) {
         vertices[attr_index + 6] = 0.5f + 0.5f * sin(angle + glm::pi<float>());
         vertices[attr_index + 7] = 0.5f + 0.5f * cos(angle + glm::pi<float>());
         vertices[attr_index + 8] = 1.0f;
+        // bottom face vertex texture coords
+        vertices[attr_index + 9] = 0.5f + 0.5f * cos(angle + glm::pi<float>());
+        vertices[attr_index + 10] = 0.5f + 0.5f * sin(angle + glm::pi<float>());
 
         attr_index += attr_count;
         vertex_index++;
@@ -145,7 +152,7 @@ Mesh *CreateCylinder(void) {
 	int side_face_lower_vertex_offset = vertex_index;
 
 	// lower vertices for side face
-	for (int i = 0; i < circle_resolution; i++) {
+	for (int i = 0; i <= circle_resolution; i++) {
         float angle = 2 * glm::pi<float>() / circle_resolution * i;
 
         float vertex_x = cos(angle) * 0.5f;
@@ -166,6 +173,9 @@ Mesh *CreateCylinder(void) {
         vertices[attr_index + 6] = 0.5f + 0.5f * sin(static_cast<float>(i) / circle_resolution * 2 * glm::pi<float>());
         vertices[attr_index + 7] = 1.0f;
         vertices[attr_index + 8] = 0.5f + 0.5f * cos(static_cast<float>(i) / circle_resolution * 2 * glm::pi<float>());
+        // bottom face vertex texture coords
+        vertices[attr_index + 9] = static_cast<float>(i) / circle_resolution;
+        vertices[attr_index + 10] = 0.0f;
 
         attr_index += attr_count;
         vertex_index++;
@@ -174,7 +184,7 @@ Mesh *CreateCylinder(void) {
 	int side_face_upper_vertex_offset = vertex_index;
 
 	// upper vertices for side face
-	for (int i = 0; i < circle_resolution; i++) {
+	for (int i = 0; i <= circle_resolution; i++) {
         float angle = 2 * glm::pi<float>() / circle_resolution * i;
 
         float vertex_x = cos(angle) * 0.5f;
@@ -195,6 +205,9 @@ Mesh *CreateCylinder(void) {
         vertices[attr_index + 6] = 0.5f + 0.5f * cos(static_cast<float>(i) / circle_resolution * 2 * glm::pi<float>());
         vertices[attr_index + 7] = 0.5f + 0.5f * sin(static_cast<float>(i) / circle_resolution * 2 * glm::pi<float>());
         vertices[attr_index + 8] = 1.0f;
+        // bottom face vertex texture coords
+        vertices[attr_index + 9] = static_cast<float>(i) / circle_resolution;
+        vertices[attr_index + 10] = 1.0f;
 
         attr_index += attr_count;
         vertex_index++;
@@ -221,6 +234,9 @@ Mesh *CreateCylinder(void) {
         vertices[attr_index + 6] = 0.5f + 0.5f * sin(angle + glm::pi<float>());
         vertices[attr_index + 7] = 1.0f;
         vertices[attr_index + 8] = 0.5f + 0.5f * cos(angle + glm::pi<float>());
+        // bottom face vertex texture coords
+        vertices[attr_index + 9] = 0.5f + 0.5f * cos(angle + glm::pi<float>());
+        vertices[attr_index + 10] = 0.5f + 0.5f * sin(angle + glm::pi<float>());
 
         attr_index += attr_count;
         vertex_index++;
@@ -241,13 +257,13 @@ Mesh *CreateCylinder(void) {
 	for (int i = 0; i < circle_resolution; i++) {
         elements[element_attr_offset + 0] = side_face_lower_vertex_offset + i;
         elements[element_attr_offset + 1] = side_face_upper_vertex_offset + i;
-        elements[element_attr_offset + 2] = side_face_lower_vertex_offset + (i + 1) % circle_resolution;
+        elements[element_attr_offset + 2] = side_face_lower_vertex_offset + i + 1;
 
         element_attr_offset += 3;
 
         elements[element_attr_offset + 0] = side_face_upper_vertex_offset + i;
-        elements[element_attr_offset + 1] = side_face_upper_vertex_offset + (i + 1) % circle_resolution;
-        elements[element_attr_offset + 2] = side_face_lower_vertex_offset + (i + 1) % circle_resolution;
+        elements[element_attr_offset + 1] = side_face_upper_vertex_offset + i + 1;
+        elements[element_attr_offset + 2] = side_face_lower_vertex_offset + i + 1;
 
         element_attr_offset += 3;
 	}
@@ -261,7 +277,7 @@ Mesh *CreateCylinder(void) {
         element_attr_offset += 3;
 	}
 
-	return new Mesh(vertices, sizeof(vertices), sizeof(GLfloat) * attr_count, elements, sizeof(elements), GL_TRIANGLES);
+	return Mesh(vertices, sizeof(vertices), sizeof(GLfloat) * attr_count, elements, sizeof(elements), GL_TRIANGLES);
 }
 
 }

@@ -8,12 +8,20 @@ const float Walls::INNER_RADIUS = 7.0f;
 const float Walls::OUTER_RADIUS = 22.0f;
 const int Walls::WALLS_PER_RING = 15;
 
-Walls::Walls(const model::Mesh *mesh, renderer::BasicProjectionTechnique *technique, int numRings){
-	FillWalls(mesh, technique, numRings);
+Walls::Walls(
+        const model::Mesh *mesh,
+        const model::Texture *diffuse_texture,
+        renderer::BasicMeshNodeTechnique *technique,
+        int numRings){
+	FillWalls(mesh, diffuse_texture, technique, numRings);
 }
 
 //Add the walls to the walls vector, based off of the number of rings and the defined constants
-void Walls::FillWalls(const model::Mesh *mesh, renderer::BasicProjectionTechnique *technique, int numRings) {
+void Walls::FillWalls(
+        const model::Mesh *mesh,
+        const model::Texture *diffuse_texture,
+        renderer::BasicMeshNodeTechnique *technique,
+        int numRings) {
 	//Calculate the distance between each ring
 	float distPerRing = (OUTER_RADIUS - INNER_RADIUS) / numRings;
 			
@@ -29,7 +37,7 @@ void Walls::FillWalls(const model::Mesh *mesh, renderer::BasicProjectionTechniqu
 
 		//Create, move and orient the walls for this ring
 		for (int j = 0; j < WALLS_PER_RING; j++) {
-			Wall *wall = new Wall(mesh, technique);
+			Wall *wall = new Wall(mesh, diffuse_texture, technique);
 
 			float angle = j * ((2 * glm::pi<float>()) / WALLS_PER_RING);
 			float orientAngle = ((90 - j * (360 / WALLS_PER_RING)) * glm::pi<float>() / 180.0f);

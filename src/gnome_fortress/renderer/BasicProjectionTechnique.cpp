@@ -7,17 +7,17 @@ namespace renderer {
 
 BasicProjectionTechnique::BasicProjectionTechnique(
         GLuint program,
-        GLint proj_var_loc,
-        GLint view_var_loc,
-        GLint model_var_loc)
+        const std::string &proj_name,
+        const std::string &view_name,
+        const std::string &model_name)
     : Technique(program),
       projection(),
       view(),
       model() {
 
-    addUniform(Uniform(proj_var_loc, GL_FLOAT, 1, 4, 4), glm::value_ptr(projection));
-    addUniform(Uniform(view_var_loc, GL_FLOAT, 1, 4, 4), glm::value_ptr(view));
-    addUniform(Uniform(model_var_loc, GL_FLOAT, 1, 4, 4), glm::value_ptr(model));
+    addUniform(Uniform(program, proj_name, GL_FLOAT, 1, 4, 4), glm::value_ptr(projection));
+    addUniform(Uniform(program, view_name, GL_FLOAT, 1, 4, 4), glm::value_ptr(view));
+    addUniform(Uniform(program, model_name, GL_FLOAT, 1, 4, 4), glm::value_ptr(model));
 }
 
 void BasicProjectionTechnique::setProjectionMatrix(const glm::mat4 &matrix) {

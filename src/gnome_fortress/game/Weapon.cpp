@@ -1,24 +1,26 @@
 #include "gnome_fortress/game/Weapon.h"
 #include <iostream>
 
+//These should be set based on the kind of gun created 
+int FIRING_RATE = 5;
+double FIRING_VELOCITY = 5.0;
+
 namespace gnome_fortress {
 namespace game {
- Weapon::Weapon(const model::Mesh *gunMesh, const model::Mesh *bMesh,
-    renderer::BasicProjectionTechnique *technique, Player *player)
-    : model::BasicMeshNode(gunMesh, technique),
-     firing(false)
- {
-    bulletMesh = bMesh;
+
+Weapon::Weapon(
+        const model::Mesh *gunMesh,
+        const model::Mesh *bMesh,
+        const model::Texture *gun_diffuse_texture,
+        const model::Texture *bullet_diffuse_texture,
+        renderer::BasicMeshNodeTechnique *technique,
+        Player *player)
+    : model::BasicMeshNode(gunMesh, gun_diffuse_texture, technique),
+      firing(false),
+      bulletMesh(bMesh),
+      bullet_diffuse_texture(bullet_diffuse_texture) {
     setPosition(0.8, 0, 0);
-    setScale(0.2, 0.4, 0.8);
-
-	/* Potential scaling for gnome-sized guns
-		setScale(0.1, 0.2, 0.5);*/
 }
-
-    //These should be set based on the kind of gun created 
-    int FIRING_RATE = 5;
-	double FIRING_VELOCITY = 5.0;
 
 Weapon::~Weapon() { 
 }
@@ -44,7 +46,7 @@ Projectile* Weapon::fireBullet(glm::vec3 position, glm::quat cameraRotation) {
 	vel.x *= 5.0; //FIRING_VELOCITY;
 	vel.y *= 5.0; //FIRING_VELOCITY;
 	vel.z *= 5.0; //FIRING_VELOCITY;
-	Projectile *p = new Projectile(bulletMesh, getTechnique(),
+	Projectile *p = new Projectile(bulletMesh, bullet_diffuse_texture, getTechnique(),
 		glm::vec3(getGlobalTransform() * glm::vec4(0,0,0,1)), vel);
 	return p;
 }

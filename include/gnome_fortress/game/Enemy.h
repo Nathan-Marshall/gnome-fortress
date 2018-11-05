@@ -16,7 +16,8 @@ class Enemy : public model::BasicMeshNode {
 
 public:
 	Enemy(const model::Mesh *mesh,
-		renderer::BasicProjectionTechnique *technique);
+        const model::Texture *diffuse_texture,
+		renderer::BasicMeshNodeTechnique *technique);
 
 protected:
 	void onUpdateSelf(float dt) override;

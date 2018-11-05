@@ -9,7 +9,8 @@ namespace renderer {
 
 class Uniform {
 public:
-    Uniform(GLint location,
+    Uniform(GLuint shader_program,
+            const std::string &name,
             GLenum type,
             GLsizei count,
             GLuint rows,

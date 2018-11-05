@@ -4,8 +4,11 @@ namespace gnome_fortress {
 namespace game {
 
 
-SiegeTurtle::SiegeTurtle(const model::Mesh *mesh, renderer::BasicProjectionTechnique *technique)
-	: game::Enemy(mesh, technique) {
+SiegeTurtle::SiegeTurtle(
+        const model::Mesh *mesh,
+        const model::Texture *diffuse_texture,
+        renderer::BasicMeshNodeTechnique *technique)
+	: game::Enemy(mesh, diffuse_texture, technique) {
 	setScale(2, 2, 2);
 	//Get an angle for the random placement of the siege turtle 
 	//Random is temporary
