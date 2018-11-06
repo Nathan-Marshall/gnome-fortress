@@ -19,11 +19,17 @@ public:
         const model::Texture *diffuse_texture,
 		renderer::BasicMeshNodeTechnique *technique);
 
+	float GetBoundingRadius();
+	float GetHealth();
+	void DoDamage(float damage);
+
 protected:
 	void onUpdateSelf(float dt) override;
 
-private:
 	float health;
+	float boundingRadius;
+
+private:
 	
 };
 

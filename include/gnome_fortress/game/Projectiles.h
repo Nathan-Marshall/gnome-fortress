@@ -6,7 +6,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 #include <vector>
-#include <algorithm>
 
 #include "Projectile.h"
 
@@ -14,12 +13,15 @@ namespace gnome_fortress {
 	namespace game {
 
 
-		class Projectiles {
+		class Projectiles : public model::SceneNode {
 
 		public:
 			Projectiles();
 
 			std::vector<Projectile*> projectiles;
+
+			void onDrawSelf(const glm::mat4 &parent_transform) const override;
+			void onUpdateSelf(float delta_time) override;
 
 		protected:
 

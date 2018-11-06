@@ -28,6 +28,7 @@
 #include "gnome_fortress/game/Turret.h"
 #include "gnome_fortress/game/Weapon.h"
 #include "gnome_fortress/game/Enemies.h"
+#include "gnome_fortress/game/Projectiles.h"
 #include "gnome_fortress/game/SiegeTurtle.h"
 #include "gnome_fortress/camera/SceneNodeCamera.h"
 #include "gnome_fortress/model/Mesh.h"
@@ -61,6 +62,7 @@ game::Player *player;
 game::Weapon *weapon;
 game::Walls* walls;
 game::Enemies* enemies;
+game::Projectiles* playerProjectiles;
 
 
 //Cursor callback function, called whenever the cursor position is updated
@@ -96,8 +98,7 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 		std::cout << "Left Mouse Pressed " << std::endl;
 		if (weapon->getCooldown() <= 0) {
 			weapon->setCooldown(0.3f);
-			Projectile *p = weapon->fireBullet(weapon->getPosition(), scene_camera_first_g.getNode()->getRotation()); //Sidenote: it doesn't matter which camera we use here since both rotate equally
-			papaNode->appendChild(p);
+			playerProjectiles->projectiles.push_back(weapon->fireBullet(weapon->getPosition(), scene_camera_first_g.getNode()->getRotation())); //Sidenote: it doesn't matter which camera we use here since both rotate equally
 		}
 		else {
 			std::cout << "COOLDOWN TOO HIGH" << std::endl;
@@ -261,6 +262,9 @@ int MainFunction(void){
         weapon = new Weapon(&peanutGunMesh, &cylinder, &peanutGunTexture, &mushroom_gun_texture, technique, player);
 		player->appendChild(weapon);
 
+		playerProjectiles = new Projectiles();
+		papaNode->appendChild(playerProjectiles);
+
 		Enemies* enemies = new Enemies();
 		papaNode->appendChild(enemies);
 
@@ -304,6 +308,8 @@ int MainFunction(void){
 
             technique->setProjectionMatrix(active_camera_g->getProjection());
             technique->setViewMatrix(active_camera_g->getView());
+
+			enemies->ProcessCollisions(playerProjectiles);
 
 			//Update the scene nodes
 			papaNode->update(delta_time);

@@ -14,6 +14,9 @@ SiegeTurtle::SiegeTurtle(
 	//Random is temporary
 	float angle = (rand() % 360) * (glm::pi<float>() / 180.0f);
 	setPosition(glm::vec3(30 * cos(angle), 1, 30 * sin(angle)));
+
+	health = 100.0f;
+	boundingRadius = sqrt(2);
 }
 
 

@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "Enemy.h"
+#include "Projectiles.h"
 #include "SiegeTurtle.h"
 
 namespace gnome_fortress {
@@ -20,6 +21,8 @@ public:
 	Enemies();
 
 	std::vector<SiegeTurtle*> turtles;
+
+	void ProcessCollisions(Projectiles *projectiles);
 
 	void onDrawSelf(const glm::mat4 &parent_transform) const override;
 	void onUpdateSelf(float delta_time) override;

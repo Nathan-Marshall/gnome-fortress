@@ -13,6 +13,8 @@ namespace game {
 
 class Projectile : public model::BasicMeshNode {
 public: 
+	const static float DAMAGE;
+
     Projectile(const model::Mesh *mesh,
         const model::Texture *diffuse_texture,
         renderer::BasicMeshNodeTechnique *technique,
@@ -24,8 +26,9 @@ public:
 
     void onUpdateSelf(float delta_time) override;
 
+	float GetDamage();
+
 private:
-	const static int DAMAGE;
 	double lifespan;
 	glm::vec3 velocity;
 

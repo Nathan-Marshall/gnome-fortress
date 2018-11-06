@@ -33,7 +33,7 @@ namespace game {
 
     }
 
-	const int DAMAGE = 10; //SHOULD BE BASED ON WEAPON, WHO CARES RN THO
+	const float Projectile::DAMAGE = 10; //SHOULD BE BASED ON WEAPON, WHO CARES RN THO
 
 	Projectile::~Projectile() {
 		delete this->mesh;
@@ -41,6 +41,10 @@ namespace game {
 
 	glm::vec3 Projectile::getVelocity(){
 		return velocity;
+	}
+
+	float Projectile::GetDamage() {
+		return DAMAGE;
 	}
 
 	void Projectile::onUpdateSelf(float dt) {
