@@ -1,21 +1,26 @@
 #include "gnome_fortress/renderer/VertexAttribute.h"
 
 #include <exception>
+#include <iostream>
 
 namespace gnome_fortress {
 namespace renderer {
 
 VertexAttribute::VertexAttribute(
-        GLuint index,
+        GLuint shader_program,
+        const std::string &name,
         GLint component_count,
         GLenum type,
         GLboolean normalized)
-    : index(index),
-      component_count(component_count),
+    : component_count(component_count),
       type(type),
       normalized(normalized) {
-
     total_size = component_count * SizeOfGLType(type);
+
+    index = glGetAttribLocation(shader_program, name.c_str());
+    if (index < 0) {
+        std::cerr << "Failed to find vertex attribute \"" << name << "\" in shader program." << std::endl;
+    }
 }
 
 GLsizei VertexAttribute::SizeOfGLType(GLenum type) {
@@ -51,7 +56,7 @@ GLsizei VertexAttribute::SizeOfGLType(GLenum type) {
     }
 }
 
-GLuint VertexAttribute::getIndex() const {
+GLint VertexAttribute::getIndex() const {
     return index;
 }
 

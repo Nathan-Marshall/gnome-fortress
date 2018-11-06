@@ -8,18 +8,27 @@ namespace model {
 
 BasicMeshNode::BasicMeshNode(
         const Mesh *mesh,
-        renderer::BasicProjectionTechnique *technique)
+        const Texture *diffuse_texture,
+        renderer::BasicMeshNodeTechnique *technique)
     : mesh(mesh),
+      diffuse_texture(diffuse_texture),
       technique(technique) {
 
 }
 
 void BasicMeshNode::onDrawSelf(const glm::mat4 &parent_transform) const {
     if (mesh) {
+        // bind buffers for mesh
         glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
+        
+        // bind textures
+        technique->bindDiffuseTexture(diffuse_texture);
 
+        // update model matrix
         technique->setModelMatrix(parent_transform * getTransformMatrix());
+
+        // draw using technique
         technique->activate();
         glDrawElements(mesh->mode, mesh->num_elements, GL_UNSIGNED_INT, 0);
         technique->deactivate();
@@ -30,7 +39,7 @@ const Mesh *BasicMeshNode::getMesh() const {
     return mesh;
 }
 
-renderer::BasicProjectionTechnique *BasicMeshNode::getTechnique() const {
+renderer::BasicMeshNodeTechnique *BasicMeshNode::getTechnique() const {
     return technique;
 }
 

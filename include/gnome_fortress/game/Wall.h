@@ -15,7 +15,10 @@ namespace game {
 class Wall : public model::BasicMeshNode {
 
 public:
-	Wall(const model::Mesh *mesh, renderer::BasicProjectionTechnique *technique, float wallHealth = 100);
+	Wall(const model::Mesh *mesh,
+            const model::Texture *diffuse_texture,
+            renderer::BasicMeshNodeTechnique *technique,
+            float wallHealth = 100);
 
 protected:
 	void onUpdateSelf(float dt) override;

@@ -11,9 +11,9 @@ class BasicProjectionTechnique : public Technique {
 public:
     BasicProjectionTechnique(
             GLuint program,
-            GLint proj_var_loc,
-            GLint view_var_loc,
-            GLint model_var_loc);
+            const std::string &proj_name,
+            const std::string &view_name,
+            const std::string &model_name);
 
     void setProjectionMatrix(const glm::mat4 &matrix);
 

@@ -31,7 +31,7 @@
 #include "gnome_fortress/game/SiegeTurtle.h"
 #include "gnome_fortress/camera/SceneNodeCamera.h"
 #include "gnome_fortress/model/Mesh.h"
-#include "gnome_fortress/renderer/Technique.h"
+#include "gnome_fortress/model/OBJParser.h"
 #include "gnome_fortress/shader/Shader.h"
 
 namespace gnome_fortress {
@@ -41,11 +41,11 @@ namespace game {
 const std::string window_title_g = "Gnome Fortress";
 const unsigned int window_width_g = 800;
 const unsigned int window_height_g = 600;
-const glm::vec3 viewport_background_color_g(0.0, 0.0, 0.0);
+const glm::vec3 viewport_background_color_g(0.5, 0.5, 0.5);
 
 // Globals that define the OpenGL camera view and projection
 camera::Camera main_camera_g(
-    glm::lookAt(glm::vec3(0, 5, 10), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
+    glm::lookAt(glm::vec3(-15, 15, 15), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
 );
 
 //Camera globals
@@ -62,46 +62,6 @@ game::Weapon *weapon;
 game::Walls* walls;
 game::Enemies* enemies;
 
-#pragma region Shader_Source
-
-// Source code of vertex shader
-const char *source_vp =
-"#version 130\n\
-\n\
-// Vertex buffer\n\
-in vec3 vertex;\n\
-in vec3 color;\n\
-\n\
-// Uniform (global) buffer\n\
-uniform mat4 world_mat;\n\
-uniform mat4 view_mat;\n\
-uniform mat4 projection_mat;\n\
-\n\
-// Attributes forwarded to the fragment shader\n\
-out vec4 color_interp;\n\
-\n\
-\n\
-void main()\n\
-{\n\
-    gl_Position = projection_mat * view_mat * world_mat * vec4(vertex, 1.0);\n\
-    color_interp = vec4(color, 1.0);\n\
-}";
-
-
-// Source code of fragment shader
-const char *source_fp =
-"#version 130\n\
-\n\
-// Attributes passed from the vertex shader\n\
-in vec4 color_interp;\n\
-\n\
-\n\
-void main()\n\
-{\n\
-    gl_FragColor = color_interp;\n\
-}";
-
-#pragma endregion
 
 //Cursor callback function, called whenever the cursor position is updated
 void CursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
@@ -268,50 +228,45 @@ int MainFunction(void){
         glEnable(GL_CULL_FACE);
 
         // Create geometry of the cube and cylinder
-		model::Mesh *plane = CreatePlane();
-        model::Mesh *cube = CreateCube();
-        model::Mesh *cylinder = CreateCylinder();
+		model::Mesh plane = CreatePlane();
+        model::Mesh cube = CreateCube();
+        model::Mesh cylinder = CreateCylinder();
+        model::Mesh peanutGunMesh = model::LoadMesh("/models/peanut_gun/peanut_gun.obj");
+
+        model::Texture mushroom_gun_texture = model::Texture("/models/mushroom_gun/Gun(Handle).png");
+        model::Texture peanutGunTexture = model::Texture("/models/peanut_gun/Gun_001.png");
 
         // Set up shaders
-        GLuint program = shader::CreateShaderProgram(source_vp, source_fp);
+        GLuint program = shader::CreateShaderProgram("/shaders/textured_material");
+        auto technique = new renderer::BasicMeshNodeTechnique(program, "projection_mat", "view_mat", "world_mat", "diffuse_map");
+        technique->addVertexAttribute(renderer::VertexAttribute(program, "vertex", 3, GL_FLOAT, GL_FALSE));
+        technique->addVertexAttribute(renderer::VertexAttribute(program, "normal", 3, GL_FLOAT, GL_FALSE));
+        technique->addVertexAttribute(renderer::VertexAttribute(program, "color", 3, GL_FLOAT, GL_FALSE));
+        technique->addVertexAttribute(renderer::VertexAttribute(program, "uv", 2, GL_FLOAT, GL_FALSE));
 
-        GLint view_uni_location = glGetUniformLocation(program, "view_mat");
-        GLint projection_uni_location = glGetUniformLocation(program, "projection_mat");
-        GLint world_uni_location = glGetUniformLocation(program, "world_mat");
+        // Create turret
+        //Turret *turret = new Turret(&cube, &cylinder, &mushroom_gun_texture, technique);
 
-        GLint vertex_attr_location = glGetAttribLocation(program, "vertex");
-        GLint normal_attr_location = glGetAttribLocation(program, "normal");
-        GLint color_attr_location = glGetAttribLocation(program, "color");
-
-        renderer::BasicProjectionTechnique *technique = new renderer::BasicProjectionTechnique(program, projection_uni_location, view_uni_location, world_uni_location);
-        technique->addVertexAttribute(renderer::VertexAttribute(vertex_attr_location, 3, GL_FLOAT, GL_FALSE));
-        technique->addVertexAttribute(renderer::VertexAttribute(normal_attr_location, 3, GL_FLOAT, GL_FALSE));
-        technique->addVertexAttribute(renderer::VertexAttribute(color_attr_location, 3, GL_FLOAT, GL_FALSE));
-
-		//Create the main scene node
 		papaNode = new model::SceneNode();
 
-		//Create the walls
-		walls = new Walls(cube, technique);
+		// Create the walls
+		walls = new Walls(&cube, &mushroom_gun_texture, technique);
 		papaNode->appendChild(walls);
 
-		//Create the player
-        player = new game::Player(cube, technique);
+        player = new game::Player(&cube, &mushroom_gun_texture, technique);
         player->setPosition(0, 0.5f, 0);
 		papaNode->appendChild(player);
 
         //Create weapon
-        weapon = new Weapon(cube, cylinder, technique, player);
+        weapon = new Weapon(&peanutGunMesh, &cylinder, &peanutGunTexture, &mushroom_gun_texture, technique, player);
 		player->appendChild(weapon);
 
-		//Create the enemies
 		Enemies* enemies = new Enemies();
 		papaNode->appendChild(enemies);
 
-		//Add some turtles to the enemies for now
-		SiegeTurtle* turtle1 = new SiegeTurtle(cube, technique);
-		SiegeTurtle* turtle2 = new SiegeTurtle(cube, technique);
-		SiegeTurtle* turtle3 = new SiegeTurtle(cube, technique);
+		SiegeTurtle* turtle1 = new SiegeTurtle(&cube, &mushroom_gun_texture, technique);
+		SiegeTurtle* turtle2 = new SiegeTurtle(&cube, &mushroom_gun_texture, technique);
+		SiegeTurtle* turtle3 = new SiegeTurtle(&cube, &mushroom_gun_texture, technique);
 
 		enemies->turtles.push_back(turtle1);
 		enemies->turtles.push_back(turtle2); 
@@ -328,8 +283,7 @@ int MainFunction(void){
         player->appendChild(cameraNodeThird);
 		player->appendChild(cameraNodeFirst);
 
-		//Create the ground plane
-		model::SceneNode *ground = new model::BasicMeshNode(plane, technique);
+		model::SceneNode *ground = new model::BasicMeshNode(&plane, &mushroom_gun_texture, technique);
 		ground->setScale(50, 50, 50);
 		ground->setPosition(0, 0, 0);
 		papaNode->appendChild(ground);

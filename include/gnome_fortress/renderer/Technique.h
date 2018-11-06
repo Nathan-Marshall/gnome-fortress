@@ -40,6 +40,8 @@ public:
 
     void addUniform(const Uniform &uni, const GLuint *uivalues);
 
+    //void addTexture(const std::string &uniform_name, );
+
     void addVertexAttribute(const VertexAttribute &attr);
 
     void activate() const;

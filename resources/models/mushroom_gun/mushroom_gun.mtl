@@ -1,0 +1,35 @@
+newmtl gun_front
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.635000 0.635000 0.635000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Gun(Front).png
+map_Tr Gun(Front).png
+
+newmtl gun_handle
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.635000 0.635000 0.635000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Gun(Handle).png
+map_Tr Gun(Handle).png
+
+newmtl gun_tip
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.635000 0.635000 0.635000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Gun(Tip).png
+map_Tr Gun(Tip).png

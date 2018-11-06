@@ -21,8 +21,11 @@ set(HDRS
    
     include/gnome_fortress/model/BasicMeshNode.h
     include/gnome_fortress/model/Mesh.h
+    include/gnome_fortress/model/OBJParser.h
     include/gnome_fortress/model/SceneNode.h
+    include/gnome_fortress/model/Texture.h
     
+    include/gnome_fortress/renderer/BasicMeshNodeTechnique.h
     include/gnome_fortress/renderer/BasicProjectionTechnique.h
     include/gnome_fortress/renderer/Technique.h
     include/gnome_fortress/renderer/Uniform.h
@@ -50,8 +53,11 @@ set(SRCS
 
     src/gnome_fortress/model/BasicMeshNode.cpp
     src/gnome_fortress/model/Mesh.cpp
+    src/gnome_fortress/model/OBJParser.cpp
     src/gnome_fortress/model/SceneNode.cpp
-
+    src/gnome_fortress/model/Texture.cpp
+    
+    src/gnome_fortress/renderer/BasicMeshNodeTechnique.cpp
     src/gnome_fortress/renderer/BasicProjectionTechnique.cpp
     src/gnome_fortress/renderer/Technique.cpp
     src/gnome_fortress/renderer/Uniform.cpp
@@ -60,12 +66,15 @@ set(SRCS
     src/gnome_fortress/shader/Shader.cpp
 )
 
+# The following config header will be evaluated and added to "bin"
+configure_file("resources_config.h.in" "resources_config.h")
+
 # Add executable based on the source files, using the project name as the executable name
 set(MAIN_EXECUTABLE ${PROJECT_NAME})
 add_executable(${MAIN_EXECUTABLE} ${HDRS} ${SRCS})
 
-# search for headers in the "include" directory
-include_directories(include)
+# search for headers in the "include" directory, and also the "bin" directory, since that's where config headers will go
+include_directories("include" "bin")
 
 # Require OpenGL library
 find_package(OpenGL REQUIRED)

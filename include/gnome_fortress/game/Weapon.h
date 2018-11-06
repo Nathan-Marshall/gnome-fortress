@@ -16,8 +16,11 @@ namespace game {
 class Weapon : public model::BasicMeshNode {
 	
 public: 
-    Weapon(const model::Mesh *gunMesh, const model::Mesh *bMesh,
-        renderer::BasicProjectionTechnique *technique, 
+    Weapon(const model::Mesh *gunMesh,
+        const model::Mesh *bMesh,
+        const model::Texture *gun_diffuse_texture,
+        const model::Texture *bullet_diffuse_texture,
+        renderer::BasicMeshNodeTechnique *technique, 
         Player *player);
 
     ~Weapon();
@@ -41,6 +44,7 @@ private:
 	static double FIRING_VELOCITY; //speed of individual bullets 
 
 	const model::Mesh *bulletMesh;
+    const model::Texture *bullet_diffuse_texture;
 	
 	bool firing;
 	float cooldown;

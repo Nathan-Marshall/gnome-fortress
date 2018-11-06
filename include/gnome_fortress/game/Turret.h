@@ -7,12 +7,13 @@
 namespace gnome_fortress {
 namespace game {
 
-class Turret : public model::BasicMeshNode {
+class Turret : public model::SceneNode {
 public:
     Turret(
         const model::Mesh *cube_mesh,
         const model::Mesh *cylinder_mesh,
-        renderer::BasicProjectionTechnique *technique);
+        const model::Texture *texture,
+        renderer::BasicMeshNodeTechnique *technique);
 
     ~Turret();
 

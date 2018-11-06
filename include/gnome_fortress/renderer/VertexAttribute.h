@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include <GL/glew.h>
 
 namespace gnome_fortress {
@@ -8,14 +10,15 @@ namespace renderer {
 class VertexAttribute {
 public:
     VertexAttribute(
-            GLuint index,
+            GLuint shader_program,
+            const std::string &name,
             GLint component_count,
             GLenum type,
             GLboolean normalized);
 
     static GLsizei SizeOfGLType(GLenum type);
 
-    GLuint getIndex() const;
+    GLint getIndex() const;
 
     GLint getComponentCount() const;
 
@@ -26,7 +29,7 @@ public:
     GLsizei getTotalSize() const;
 
 private:
-    GLuint index;
+    GLint index;
     GLint component_count;
     GLenum type;
     GLboolean normalized;

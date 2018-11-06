@@ -14,7 +14,8 @@ namespace game {
 class Projectile : public model::BasicMeshNode {
 public: 
     Projectile(const model::Mesh *mesh,
-        renderer::BasicProjectionTechnique *technique,
+        const model::Texture *diffuse_texture,
+        renderer::BasicMeshNodeTechnique *technique,
         glm::vec3 pointOfOrigin, glm::vec3 velocity);
 
     ~Projectile();

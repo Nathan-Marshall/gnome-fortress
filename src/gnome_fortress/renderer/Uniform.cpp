@@ -6,13 +6,13 @@ namespace gnome_fortress {
 namespace renderer {
 
 Uniform::Uniform(
-        GLint location,
+        GLuint shader_program,
+        const std::string &name,
         GLenum type,
         GLsizei count,
         GLuint rows,
         GLuint columns)
-    : location(location),
-      type(type),
+    : type(type),
       count(count),
       rows(rows),
       columns(columns) {
@@ -24,6 +24,11 @@ Uniform::Uniform(
     }
     if (type != GL_FLOAT && rows > 1 && columns > 1) {
         throw std::exception("Only a uniform with float values can be a matrix. Set either rows or columns equal to 1.");
+    }
+
+    location = glGetUniformLocation(shader_program, name.c_str());
+    if (location < 0) {
+        throw(std::exception((std::string("Failed to find uniform \"") + name + "\" in shader program.").c_str()));
     }
 }
 
