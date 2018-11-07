@@ -107,7 +107,7 @@ struct TriMesh {
     std::vector<Face> face;
 };
 
-Mesh LoadMesh(const std::string &partial_filename);
+Mesh LoadMesh(const std::string &filename);
 // Helper functions 
 // Trim any character in to_trim from the beginning and end of str
 void string_trim(std::string str, std::string to_trim);

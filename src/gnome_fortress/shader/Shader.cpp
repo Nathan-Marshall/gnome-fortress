@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Nathan Marshall <Nathagnome_fortress@cmail.carleton.ca>,
+ * Copyright (c) 2018 Nathan Marshall <NathanMarshall@cmail.carleton.ca>,
  * Oliver van Kaick <Oliver.vanKaick@carleton.ca>, David Mould <mould@scs.carleton.ca>
  */
 
@@ -9,16 +9,14 @@
 #include <iostream>
 #include <sstream>
 
-#include "resources_config.h"
-
 namespace gnome_fortress {
 namespace shader {
 
 // Compiles and links a vertex shader and fragment shader from the given source code.
 GLuint CreateShaderProgram(const std::string &shader_prefix) {
-    std::string vp_source_str = LoadTextFile(std::string(RESOURCES_DIRECTORY) + shader_prefix + "_vp.glsl");
+    std::string vp_source_str = LoadTextFile(shader_prefix + "_vp.glsl");
     const GLchar *vp_source = vp_source_str.c_str();
-    std::string fp_source_str = LoadTextFile(std::string(RESOURCES_DIRECTORY) + shader_prefix + "_fp.glsl");
+    std::string fp_source_str = LoadTextFile(shader_prefix + "_fp.glsl");
     const GLchar *fp_source = fp_source_str.c_str();
 
     // Create a shader from vertex program source code
