@@ -9,6 +9,7 @@
 
 #include "Enemy.h"
 #include "Projectiles.h"
+#include "Walls.h"
 #include "SiegeTurtle.h"
 
 namespace gnome_fortress {
@@ -22,8 +23,9 @@ public:
 
     std::vector<SiegeTurtle*> turtles;
 
-    void ProcessCollisions(Projectiles *projectiles);
-
+    void ProcessCollisions(Projectiles *projectiles, Walls *walls);
+    void ProcessProjectileCollisions(Projectiles *projectiles);
+    void ProcessWallCollisions(Walls *walls);
 protected:
 
 
