@@ -311,19 +311,6 @@ int MainFunction(void){
 
 			//Draw the scene nodes
 			papaNode->draw(glm::mat4());
-			/* No longer necessary because of papaNode
-			player->draw(glm::mat4());
-
-			ground->draw(glm::mat4());
-
-			weapon->draw(glm::mat4());*/
-
-			// Draw the enemies
-			for each (SiegeTurtle* turt in enemies->turtles)
-			{
-				turt->update(delta_time);
-				turt->draw(glm::mat4());
-			}
 
             // Push buffer drawn in the background onto the display
             glfwSwapBuffers(window);
