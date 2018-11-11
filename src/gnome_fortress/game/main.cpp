@@ -21,13 +21,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
 
-#include "gnome_fortress/game/Player.h"
-#include "gnome_fortress/game/Wall.h"
-#include "gnome_fortress/game/Walls.h"
-#include "gnome_fortress/game/Weapon.h"
+
 #include "gnome_fortress/game/Enemies.h"
+#include "gnome_fortress/game/MushroomGun.h"
+#include "gnome_fortress/game/PeanutGun.h"
+#include "gnome_fortress/game/Player.h"
 #include "gnome_fortress/game/Resources.h"
-#include "gnome_fortress/game/SiegeTurtle.h"
+#include "gnome_fortress/game/Walls.h"
+#include "gnome_fortress/game/Wall.h"
 #include "gnome_fortress/camera/SceneNodeCamera.h"
 #include "gnome_fortress/model/Mesh.h"
 #include "gnome_fortress/model/OBJParser.h"
@@ -60,7 +61,8 @@ model::SceneNode *papaNode;
 
 //References to the player, weapons, walls, and enemies
 game::Player *player;
-game::Weapon *weapon;
+game::Weapon *peanutGun;
+game::Weapon *mushroomGun;
 game::Walls* walls;
 game::Enemies* enemies;
 game::Projectiles* playerProjectiles;
@@ -98,16 +100,29 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
     if (button == GLFW_MOUSE_BUTTON_LEFT) {
         //This block shall be moved later to projectile 
         std::cout << "Left Mouse Pressed " << std::endl;
-        if (weapon->getCooldown() <= 0) {
-            weapon->setCooldown(0.3f);
-            Projectile* p = weapon->fireBullet(weapon->getPosition(), scene_camera_first_g.getNode()->getRotation());
-            playerProjectiles->projectiles.push_back(p); //Sidenote: it doesn't matter which camera we use here since both rotate equally
-            playerProjectiles->appendChild(p);
-        }
+		if (player->getCurrentWeapon()->getCooldown() <= 0) {
+			player->getCurrentWeapon()->setCooldown(0.3f);
+			Projectile* p = player->getCurrentWeapon()->fireBullet(player->getCurrentWeapon()->getPosition(), scene_camera_first_g.getNode()->getRotation());
+			playerProjectiles->projectiles.push_back(p); //Sidenote: it doesn't matter which camera we use here since both rotate equally
+			playerProjectiles->appendChild(p);
+		}
         else {
             std::cout << "COOLDOWN TOO HIGH" << std::endl;
         }
     }
+}
+
+void SetScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
+	if (yoffset > 0) {
+		if (player->getCurrentWeapon() != mushroomGun) {
+			player->setCurrentWeapon(mushroomGun);
+		}
+	}
+	if (yoffset < 0) {
+		if (player->getCurrentWeapon() != peanutGun) {
+			player->setCurrentWeapon(peanutGun);
+		}
+	}
 }
 
 // Callback for when a key is pressed
@@ -223,6 +238,7 @@ int MainFunction(void){
         glfwSetCursorPosCallback(window, CursorPosCallback);
         glfwSetMouseButtonCallback(window, MouseButtonCallback);
         glfwSetFramebufferSizeCallback(window, ResizeCallback);
+		glfwSetScrollCallback(window, SetScrollCallback);
 
         // Set up z-buffer for rendering
         glEnable(GL_DEPTH_TEST);
@@ -234,12 +250,7 @@ int MainFunction(void){
 
         // Create geometry of the cube and cylinder
         model::Mesh *plane = resource_manager_g.getOrLoadMesh(resources::models::plane);
-        model::Mesh *rock1 = resource_manager_g.getOrLoadMesh(resources::models::rock1);
-        model::Mesh *peanutGunMesh = resource_manager_g.getOrLoadMesh(resources::models::peanut_gun);
-
-        model::Texture *redChecker = resource_manager_g.getOrLoadTexture("/models/plane/checker.png");
-        model::Texture *rock1Texture = resource_manager_g.getOrLoadTexture("/models/rocks/rock1.png");
-        model::Texture *peanutGunTexture = resource_manager_g.getOrLoadTexture("/models/peanut_gun/Gun_001.png");
+		model::Texture *redChecker = resource_manager_g.getOrLoadTexture("/models/plane/checker.png");
 
         // Set up shaders
         GLuint program = resource_manager_g.getOrLoadShaderProgram(resources::shaders::textured_material);
@@ -255,13 +266,16 @@ int MainFunction(void){
         walls = new Walls(resource_manager_g, technique);
         papaNode->appendChild(walls);
 
-        player = new game::Player(resource_manager_g, technique);
-        player->setPosition(0, 0.5f, 0);
-        papaNode->appendChild(player);
+		player = new game::Player(resource_manager_g, technique);
+		player->setPosition(0, 0.5f, 0);
+		papaNode->appendChild(player);
 
-        //Create weapon
-        weapon = new Weapon(peanutGunMesh, rock1, peanutGunTexture, rock1Texture, technique, player);
-        player->appendChild(weapon);
+		//Create weapons
+		peanutGun = new PeanutGun(resource_manager_g, technique, player);
+		mushroomGun = new MushroomGun(resource_manager_g, technique, player);
+
+		//setCurrentWeapon also appends as the gun as a child to player
+		player->setCurrentWeapon(peanutGun);
 
         playerProjectiles = new Projectiles();
         papaNode->appendChild(playerProjectiles);
@@ -333,7 +347,8 @@ int MainFunction(void){
         delete technique;
         delete player;
         delete enemies;
-        delete weapon;
+		delete peanutGun;
+		delete mushroomGun;
         delete walls;
 
     } catch (std::exception &e) {

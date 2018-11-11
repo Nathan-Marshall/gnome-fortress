@@ -1,5 +1,5 @@
 #include "gnome_fortress/game/Player.h"
-
+#include "gnome_fortress/game/Weapon.h"
 #include "gnome_fortress/game/Resources.h"
 
 namespace gnome_fortress {
@@ -18,7 +18,8 @@ namespace game {
           right(false),
           up(false),
           down(false),
-          velocity() {
+          velocity(),
+          currentWeapon(nullptr){
         //Nothing yet
     }
 
@@ -56,6 +57,21 @@ namespace game {
     void Player::SetDownPressed(bool isPressed) {
         down = isPressed;
     }
+
+	void Player::setCurrentWeapon(Weapon *newWeapon) {
+		if (!currentWeapon) {
+			this->appendChild(newWeapon);
+		}
+		else {
+			this->replaceChild(newWeapon, this->indexOf(currentWeapon));
+		}
+		
+		currentWeapon = newWeapon;
+	}
+
+	Weapon* Player::getCurrentWeapon() {
+		return currentWeapon;
+	}
 
     void Player::onUpdateSelf(float dt) {
 

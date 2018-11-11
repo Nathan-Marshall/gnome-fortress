@@ -6,7 +6,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 
-#include "gnome_fortress/model/BasicMeshNode.h"
 #include "gnome_fortress/game/Player.h"
 #include "gnome_fortress/game/Projectile.h"
 
@@ -39,7 +38,7 @@ public:
 
     void onUpdateSelf(float dt) override;
 
-private:
+protected:
     static int FIRING_RATE; //number of bullets per second 
     static double FIRING_VELOCITY; //speed of individual bullets 
 
