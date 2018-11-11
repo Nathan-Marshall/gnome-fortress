@@ -9,8 +9,11 @@
 #include "gnome_fortress/model/BasicMeshNode.h"
 #include "gnome_fortress/resource/ResourceManager.h"
 
+
 namespace gnome_fortress{
 namespace game{
+
+class Weapon;
 
 class Player : public model::BasicMeshNode {
 
@@ -33,6 +36,9 @@ public:
     void SetUpPressed(bool isPressed);
     void SetDownPressed(bool isPressed);
 
+    void setCurrentWeapon(Weapon *weapon);
+    Weapon* getCurrentWeapon();
+
 protected:
     void onUpdateSelf(float dt) override;
 
@@ -43,6 +49,9 @@ private:
     bool right;
     bool up;
     bool down;
+
+    Weapon *currentWeapon;
+
 
     glm::vec3 velocity;
 
