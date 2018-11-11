@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 
-#include "Wall.h";
+#include "Wall.h"
 
 namespace gnome_fortress {
 namespace game {
@@ -14,8 +14,7 @@ namespace game {
 class Walls : public model::SceneNode {
 
 public:
-	Walls(const model::Mesh *mesh,
-            const model::Texture *diffuse_texture,
+	Walls(  resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique,
             int numRings = 3);
 
@@ -32,8 +31,7 @@ private:
 	const static int WALLS_PER_RING;
 
 	void FillWalls(
-            const model::Mesh *mesh,
-            const model::Texture *diffuse_texture,
+            resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique,
             int numRings);
 };

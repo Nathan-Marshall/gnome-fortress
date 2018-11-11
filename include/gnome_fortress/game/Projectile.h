@@ -13,12 +13,15 @@ namespace game {
 
 class Projectile : public model::BasicMeshNode {
 public: 
+
 	const static float DAMAGE;
 
-    Projectile(const model::Mesh *mesh,
-        const model::Texture *diffuse_texture,
-        renderer::BasicMeshNodeTechnique *technique,
-        glm::vec3 pointOfOrigin, glm::vec3 velocity);
+    Projectile(
+            const model::Mesh *mesh,
+            const model::Texture *diffuse_texture,
+            renderer::BasicMeshNodeTechnique *technique,
+            glm::vec3 pointOfOrigin,
+            glm::vec3 velocity);
 
     ~Projectile();
 
@@ -31,8 +34,6 @@ public:
 private:
 	double lifespan;
 	glm::vec3 velocity;
-
-	model::BasicMeshNode *mesh;
 
 };
 

@@ -4,8 +4,6 @@
 #include <fstream>
 #include <sstream>
 
-#include "resources_config.h"
-
 namespace gnome_fortress {
 namespace model {
 
@@ -94,9 +92,7 @@ void UseMaterial(OBJParserState &state, const std::string &args) {
 
 
 
-Mesh LoadMesh(const std::string &partial_filename){
-    std::string filename = std::string(RESOURCES_DIRECTORY) + partial_filename;
-
+Mesh LoadMesh(const std::string &filename){
     // First load model into memory. If that goes well, we transfer the
     // mesh to an OpenGL buffer
     TriMesh mesh;

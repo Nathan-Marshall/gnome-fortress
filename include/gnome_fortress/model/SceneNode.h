@@ -110,6 +110,9 @@ public:
     // Sets the local scale
     void setScale(float sx, float sy, float sz);
 
+    // Sets the local scale x, y, and z to the same value
+    void setScale(float sxyz);
+
     // Sets the local scale x
     void setScaleX(float sx);
 
@@ -124,6 +127,9 @@ public:
 
     // Multiplies the local scale by the given scale values
     void scale(float sx, float sy, float sz);
+
+    // Multiplies the local scale x, y, and z by the given scale value
+    void scale(float sxyz);
 
     // Multiplies the local scale x by the given scale x
     void scaleX(float sx);

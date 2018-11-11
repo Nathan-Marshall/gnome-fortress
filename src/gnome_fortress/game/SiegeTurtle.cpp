@@ -1,15 +1,20 @@
 #include "gnome_fortress/game/SiegeTurtle.h"
 
+#include "gnome_fortress/game/Resources.h"
+
 namespace gnome_fortress {
 namespace game {
 
 
 SiegeTurtle::SiegeTurtle(
-        const model::Mesh *mesh,
-        const model::Texture *diffuse_texture,
+        resource::ResourceManager &resourceManager,
         renderer::BasicMeshNodeTechnique *technique)
-	: game::Enemy(mesh, diffuse_texture, technique) {
-	setScale(2, 2, 2);
+	: game::Enemy(
+        resourceManager.getOrLoadMesh(resources::models::siege_turtle),
+        resourceManager.getOrLoadTexture("models/siege_turtle/siege_turtle.png"),
+        technique
+      ) {
+	setScale(1.0f);
 	//Get an angle for the random placement of the siege turtle 
 	//Random is temporary
 	float angle = (rand() % 360) * (glm::pi<float>() / 180.0f);
