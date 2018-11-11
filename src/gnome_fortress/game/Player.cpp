@@ -58,20 +58,20 @@ namespace game {
         down = isPressed;
     }
 
-	void Player::setCurrentWeapon(Weapon *newWeapon) {
-		if (!currentWeapon) {
-			this->appendChild(newWeapon);
-		}
-		else {
-			this->replaceChild(newWeapon, this->indexOf(currentWeapon));
-		}
-		
-		currentWeapon = newWeapon;
-	}
+    void Player::setCurrentWeapon(Weapon *newWeapon) {
+        if (!currentWeapon) {
+            this->appendChild(newWeapon);
+        }
+        else {
+            this->replaceChild(newWeapon, this->indexOf(currentWeapon));
+        }
+        
+        currentWeapon = newWeapon;
+    }
 
-	Weapon* Player::getCurrentWeapon() {
-		return currentWeapon;
-	}
+    Weapon* Player::getCurrentWeapon() {
+        return currentWeapon;
+    }
 
     void Player::onUpdateSelf(float dt) {
 

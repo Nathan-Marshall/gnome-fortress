@@ -14,13 +14,13 @@ namespace game {
 class MushroomGun : public game::Weapon {
 
 public:
-	MushroomGun(
-		resource::ResourceManager &resourceManager,
-		renderer::BasicMeshNodeTechnique *technique,
-		Player *player);
+    MushroomGun(
+        resource::ResourceManager &resourceManager,
+        renderer::BasicMeshNodeTechnique *technique,
+        Player *player);
 
 protected:
-	void onUpdateSelf(float dt) override;
+    void onUpdateSelf(float dt) override;
 };
 
 }

@@ -14,13 +14,13 @@ namespace game {
 class PeanutGun : public game::Weapon {
 
 public:
-	PeanutGun(
+    PeanutGun(
         resource::ResourceManager &resourceManager,
-		renderer::BasicMeshNodeTechnique *technique,
-		Player *player);
+        renderer::BasicMeshNodeTechnique *technique,
+        Player *player);
 
 protected:
-	void onUpdateSelf(float dt) override;
+    void onUpdateSelf(float dt) override;
 
 };
 }

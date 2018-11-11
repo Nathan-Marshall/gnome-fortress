@@ -100,12 +100,12 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
     if (button == GLFW_MOUSE_BUTTON_LEFT) {
         //This block shall be moved later to projectile 
         std::cout << "Left Mouse Pressed " << std::endl;
-		if (player->getCurrentWeapon()->getCooldown() <= 0) {
-			player->getCurrentWeapon()->setCooldown(0.3f);
-			Projectile* p = player->getCurrentWeapon()->fireBullet(player->getCurrentWeapon()->getPosition(), scene_camera_first_g.getNode()->getRotation());
-			playerProjectiles->projectiles.push_back(p); //Sidenote: it doesn't matter which camera we use here since both rotate equally
-			playerProjectiles->appendChild(p);
-		}
+        if (player->getCurrentWeapon()->getCooldown() <= 0) {
+            player->getCurrentWeapon()->setCooldown(0.3f);
+            Projectile* p = player->getCurrentWeapon()->fireBullet(player->getCurrentWeapon()->getPosition(), scene_camera_first_g.getNode()->getRotation());
+            playerProjectiles->projectiles.push_back(p); //Sidenote: it doesn't matter which camera we use here since both rotate equally
+            playerProjectiles->appendChild(p);
+        }
         else {
             std::cout << "COOLDOWN TOO HIGH" << std::endl;
         }
@@ -113,16 +113,16 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 }
 
 void SetScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
-	if (yoffset > 0) {
-		if (player->getCurrentWeapon() != mushroomGun) {
-			player->setCurrentWeapon(mushroomGun);
-		}
-	}
-	if (yoffset < 0) {
-		if (player->getCurrentWeapon() != peanutGun) {
-			player->setCurrentWeapon(peanutGun);
-		}
-	}
+    if (yoffset > 0) {
+        if (player->getCurrentWeapon() != mushroomGun) {
+            player->setCurrentWeapon(mushroomGun);
+        }
+    }
+    if (yoffset < 0) {
+        if (player->getCurrentWeapon() != peanutGun) {
+            player->setCurrentWeapon(peanutGun);
+        }
+    }
 }
 
 // Callback for when a key is pressed
@@ -238,7 +238,7 @@ int MainFunction(void){
         glfwSetCursorPosCallback(window, CursorPosCallback);
         glfwSetMouseButtonCallback(window, MouseButtonCallback);
         glfwSetFramebufferSizeCallback(window, ResizeCallback);
-		glfwSetScrollCallback(window, SetScrollCallback);
+        glfwSetScrollCallback(window, SetScrollCallback);
 
         // Set up z-buffer for rendering
         glEnable(GL_DEPTH_TEST);
@@ -250,7 +250,7 @@ int MainFunction(void){
 
         // Create geometry of the cube and cylinder
         model::Mesh *plane = resource_manager_g.getOrLoadMesh(resources::models::plane);
-		model::Texture *redChecker = resource_manager_g.getOrLoadTexture("/models/plane/checker.png");
+        model::Texture *redChecker = resource_manager_g.getOrLoadTexture("/models/plane/checker.png");
 
         // Set up shaders
         GLuint program = resource_manager_g.getOrLoadShaderProgram(resources::shaders::textured_material);
@@ -266,16 +266,16 @@ int MainFunction(void){
         walls = new Walls(resource_manager_g, technique);
         papaNode->appendChild(walls);
 
-		player = new game::Player(resource_manager_g, technique);
-		player->setPosition(0, 0.5f, 0);
-		papaNode->appendChild(player);
+        player = new game::Player(resource_manager_g, technique);
+        player->setPosition(0, 0.5f, 0);
+        papaNode->appendChild(player);
 
-		//Create weapons
-		peanutGun = new PeanutGun(resource_manager_g, technique, player);
-		mushroomGun = new MushroomGun(resource_manager_g, technique, player);
+        //Create weapons
+        peanutGun = new PeanutGun(resource_manager_g, technique, player);
+        mushroomGun = new MushroomGun(resource_manager_g, technique, player);
 
-		//setCurrentWeapon also appends as the gun as a child to player
-		player->setCurrentWeapon(peanutGun);
+        //setCurrentWeapon also appends as the gun as a child to player
+        player->setCurrentWeapon(peanutGun);
 
         playerProjectiles = new Projectiles();
         papaNode->appendChild(playerProjectiles);
@@ -347,8 +347,8 @@ int MainFunction(void){
         delete technique;
         delete player;
         delete enemies;
-		delete peanutGun;
-		delete mushroomGun;
+        delete peanutGun;
+        delete mushroomGun;
         delete walls;
 
     } catch (std::exception &e) {

@@ -36,8 +36,8 @@ public:
     void SetUpPressed(bool isPressed);
     void SetDownPressed(bool isPressed);
 
-	void setCurrentWeapon(Weapon *weapon);
-	Weapon* getCurrentWeapon();
+    void setCurrentWeapon(Weapon *weapon);
+    Weapon* getCurrentWeapon();
 
 protected:
     void onUpdateSelf(float dt) override;
@@ -50,7 +50,7 @@ private:
     bool up;
     bool down;
 
-	Weapon *currentWeapon;
+    Weapon *currentWeapon;
 
 
     glm::vec3 velocity;
