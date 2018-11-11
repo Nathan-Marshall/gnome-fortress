@@ -10,7 +10,7 @@ namespace resource {
 
 ResourceManager::ResourceManager(const std::string &inResourcesDirectory)
     : resourcesDirectory(inResourcesDirectory),
-      meshes(),
+      meshGroups(),
       shaderPrograms(),
       textures() {
     if (resourcesDirectory.back() != '/') {
@@ -21,23 +21,26 @@ ResourceManager::~ResourceManager() {
     unloadAll();
 }
 
-void ResourceManager::loadMesh(const std::string &relativePath) {
+void ResourceManager::loadMeshGroup(const std::string &relativePath) {
     std::string fullPath = resourcesDirectory + relativePath;
-    model::Mesh *mesh = new model::Mesh(model::LoadMesh(fullPath));
-    meshes[relativePath] = mesh;
+    model::LoadMesh(fullPath, *this);
+    model::MeshGroup *meshGroup = new model::MeshGroup();
+    meshGroups[relativePath] = meshGroup;
 }
-model::Mesh *ResourceManager::getOrLoadMesh(const std::string &relativePath) {
-    if (meshes.find(relativePath) == meshes.end()) {
-        loadMesh(relativePath);
+model::MeshGroup *ResourceManager::getOrLoadMeshGroup(const std::string &relativePath) {
+    if (meshGroups.find(relativePath) == meshGroups.end()) {
+        loadMeshGroup(relativePath);
     }
-    return meshes[relativePath];
+    return meshGroups[relativePath];
 }
-void ResourceManager::unloadMesh(const std::string &relativePath) {
-    model::Mesh *mesh = meshes[relativePath];
-    glDeleteBuffers(1, &mesh->vbo);
-    glDeleteBuffers(1, &mesh->ebo);
-    delete mesh;
-    meshes.erase(relativePath);
+void ResourceManager::unloadMeshGroup(const std::string &relativePath) {
+    model::MeshGroup *meshGroup = meshGroups[relativePath];
+    for (auto &mesh : meshGroup->meshes) {
+        glDeleteBuffers(1, &mesh.vbo);
+        glDeleteBuffers(1, &mesh.ebo);
+    }
+    delete meshGroup;
+    meshGroups.erase(relativePath);
 }
 
 void ResourceManager::loadShaderProgram(const std::string &relativePath) {
@@ -79,8 +82,8 @@ void ResourceManager::unloadTexture(const std::string &relativePath) {
 }
 
 void ResourceManager::unloadAll() {
-    while (!meshes.empty()) {
-        unloadMesh(meshes.begin()->first);
+    while (!meshGroups.empty()) {
+        unloadMeshGroup(meshGroups.begin()->first);
     }
     while (!shaderPrograms.empty()) {
         unloadShaderProgram(shaderPrograms.begin()->first);

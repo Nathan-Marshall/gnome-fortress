@@ -19,7 +19,9 @@ set(HDRS
     include/gnome_fortress/game/Walls.h
    
     include/gnome_fortress/model/BasicMeshNode.h
+    include/gnome_fortress/model/Material.h
     include/gnome_fortress/model/Mesh.h
+    include/gnome_fortress/model/MeshGroup.h
     include/gnome_fortress/model/OBJParser.h
     include/gnome_fortress/model/SceneNode.h
     include/gnome_fortress/model/Texture.h
@@ -51,7 +53,9 @@ set(SRCS
     src/gnome_fortress/game/Walls.cpp
 
     src/gnome_fortress/model/BasicMeshNode.cpp
+    src/gnome_fortress/model/Material.cpp
     src/gnome_fortress/model/Mesh.cpp
+    src/gnome_fortress/model/MeshGroup.cpp
     src/gnome_fortress/model/OBJParser.cpp
     src/gnome_fortress/model/SceneNode.cpp
     src/gnome_fortress/model/Texture.cpp

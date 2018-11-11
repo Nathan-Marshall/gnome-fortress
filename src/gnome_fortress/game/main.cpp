@@ -234,9 +234,9 @@ int MainFunction(void){
         glEnable(GL_CULL_FACE);
 
         // Create geometry of the cube and cylinder
-		model::Mesh *plane = resource_manager_g.getOrLoadMesh(resources::models::plane);
-        model::Mesh *rock1 = resource_manager_g.getOrLoadMesh(resources::models::rock1);
-        model::Mesh *peanutGunMesh = resource_manager_g.getOrLoadMesh(resources::models::peanut_gun);
+		model::MeshGroup *plane = resource_manager_g.getOrLoadMeshGroup(resources::models::plane);
+        model::MeshGroup *rock1 = resource_manager_g.getOrLoadMeshGroup(resources::models::rock1);
+        model::MeshGroup *peanutGunMesh = resource_manager_g.getOrLoadMeshGroup(resources::models::peanut_gun);
 
         model::Texture *redChecker = resource_manager_g.getOrLoadTexture("/models/plane/checker.png");
         model::Texture *rock1Texture = resource_manager_g.getOrLoadTexture("/models/rocks/rock1.png");
@@ -260,7 +260,7 @@ int MainFunction(void){
 		papaNode->appendChild(player);
 
         //Create weapon
-        weapon = new Weapon(peanutGunMesh, rock1, peanutGunTexture, rock1Texture, technique, player);
+        weapon = new Weapon(&peanutGunMesh->meshes[0], &rock1->meshes[0], technique, player);
 		
 		Enemies* enemies = new Enemies();
 		enemies->turtles.push_back(new SiegeTurtle(resource_manager_g, technique));
@@ -279,7 +279,7 @@ int MainFunction(void){
 		player->appendChild(cameraNodeFirst);
 		player->appendChild(weapon);
 
-		model::SceneNode *ground = new model::BasicMeshNode(plane, redChecker, technique);
+		model::SceneNode *ground = new model::BasicMeshNode(&plane->meshes[0], technique);
 		ground->setScale(50);
 		ground->setPosition(0, 0, 0);
 		papaNode->appendChild(ground);

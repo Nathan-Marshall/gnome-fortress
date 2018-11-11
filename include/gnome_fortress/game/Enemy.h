@@ -16,7 +16,6 @@ class Enemy : public model::BasicMeshNode {
 
 public:
 	Enemy(const model::Mesh *mesh,
-        const model::Texture *diffuse_texture,
 		renderer::BasicMeshNodeTechnique *technique);
 
 protected:

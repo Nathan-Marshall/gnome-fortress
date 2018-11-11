@@ -8,8 +8,7 @@ namespace game {
             resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique)
 		: model::BasicMeshNode(
-            resourceManager.getOrLoadMesh(resources::models::gnome),
-            resourceManager.getOrLoadTexture("models/gnome/gnome_diffuse.tga"),
+            &resourceManager.getOrLoadMeshGroup(resources::models::gnome)->meshes[0],
             technique
           ),
 		  forward(false),

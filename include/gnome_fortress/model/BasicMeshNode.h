@@ -12,7 +12,6 @@ class BasicMeshNode : public SceneNode {
 public:
     BasicMeshNode(
             const model::Mesh *mesh,
-            const Texture *diffuse_texture,
             renderer::BasicMeshNodeTechnique *technique);
 
     void onDrawSelf(const glm::mat4 &parent_transform) const override;
@@ -23,7 +22,6 @@ public:
 
 private:
     const model::Mesh *mesh;
-    const Texture *diffuse_texture;
     renderer::BasicMeshNodeTechnique *technique;
 };
 

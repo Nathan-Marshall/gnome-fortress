@@ -4,8 +4,8 @@ namespace gnome_fortress {
 namespace game {
 
 
-Enemy::Enemy(const model::Mesh *mesh, const model::Texture *diffuse_texture, renderer::BasicMeshNodeTechnique *technique)
-	: model::BasicMeshNode(mesh, diffuse_texture, technique) {
+Enemy::Enemy(const model::Mesh *mesh, renderer::BasicMeshNodeTechnique *technique)
+	: model::BasicMeshNode(mesh, technique) {
 	//Nothing yet
 }
 

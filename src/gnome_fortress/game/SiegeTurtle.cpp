@@ -10,8 +10,7 @@ SiegeTurtle::SiegeTurtle(
         resource::ResourceManager &resourceManager,
         renderer::BasicMeshNodeTechnique *technique)
 	: game::Enemy(
-        resourceManager.getOrLoadMesh(resources::models::siege_turtle),
-        resourceManager.getOrLoadTexture("models/siege_turtle/siege_turtle.png"),
+        &resourceManager.getOrLoadMeshGroup(resources::models::siege_turtle)->meshes[0],
         technique
       ) {
 	setScale(1.0f);
