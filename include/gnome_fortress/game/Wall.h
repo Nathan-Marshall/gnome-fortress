@@ -17,11 +17,22 @@ public:
             renderer::BasicMeshNodeTechnique *technique,
             float wallHealth = 100);
 
+    void SetDimensions(float l, float h, float w);
+    float GetLength();
+    float GetHeight();
+    float GetWidth();
+
+    void DoDamage(float d);
+
+    float GetHealth();
 protected:
     void onUpdateSelf(float dt) override;
 
 private:
     float health;
+    float length;
+    float height;
+    float width;
 };
 
 

@@ -7,6 +7,8 @@ namespace game {
 const float Walls::INNER_RADIUS = 7.0f;
 const float Walls::OUTER_RADIUS = 22.0f;
 const int Walls::WALLS_PER_RING = 15;
+const float Walls::WALL_HEIGHT = 3.0f;
+const float Walls::WALL_WIDTH = 0.5f;
 
 Walls::Walls(
         resource::ResourceManager &resourceManager,
@@ -28,7 +30,7 @@ void Walls::FillWalls(
         float ringRadius = distPerRing * i + INNER_RADIUS;
 
         //Calculate the width of each wall for this ring to remove large gaps between the walls
-        float wallWidth = (2 * glm::pi<float>() * ringRadius) / WALLS_PER_RING;
+        float wallLength = (2 * glm::pi<float>() * ringRadius) / WALLS_PER_RING;
   
         //Create a new vector to store this ring
         std::vector<Wall*> *wallRing = new std::vector<Wall*>();
@@ -39,9 +41,12 @@ void Walls::FillWalls(
 
             float angle = j * ((2 * glm::pi<float>()) / WALLS_PER_RING);
             float orientAngle = ((90 - j * (360 / WALLS_PER_RING)) * glm::pi<float>() / 180.0f);
+
+            wall->SetDimensions(wallLength, WALL_HEIGHT, WALL_WIDTH);
             wall->rotate(orientAngle, glm::vec3(0, 1, 0));
             wall->setPosition(glm::vec3(ringRadius * (cos(angle)), 0.5, ringRadius * sin(angle)));
-            wall->setScale(glm::vec3(wallWidth, 3, 0.5));
+            wall->setScale(glm::vec3(wallLength, WALL_HEIGHT, WALL_WIDTH));
+
             wallRing->push_back(wall);
             this->appendChild(wall);
         }
@@ -53,6 +58,14 @@ void Walls::FillWalls(
 
 void Walls::onUpdateSelf(float dt) {
     //Walls don't do anything to update at all yet
+}
+
+std::vector<std::vector<Wall*>>* Walls::GetWalls() {
+    return &walls;
+}
+
+int Walls::NumWalls() {
+    return WALLS_PER_RING;
 }
 
 }
