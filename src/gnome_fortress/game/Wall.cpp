@@ -13,7 +13,7 @@ Wall::Wall(
         resource::ResourceManager &resourceManager,
         renderer::BasicMeshNodeTechnique *technique,
         float wallHealth)
-	: model::BasicMeshNode(
+    : model::BasicMeshNode(
         resourceManager.getOrLoadMesh(resources::models::cube),
         resourceManager.getOrLoadTexture("models/cube/checker.png"),
         technique
@@ -22,7 +22,7 @@ Wall::Wall(
 }
 
 void Wall::onUpdateSelf(float dt) {
-	//Nothing yet for the walls
+    //Nothing yet for the walls
 }
 
 

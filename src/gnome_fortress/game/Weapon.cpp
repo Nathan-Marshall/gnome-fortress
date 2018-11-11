@@ -26,44 +26,44 @@ Weapon::~Weapon() {
 }
 
 bool Weapon::isFiring() {
-	return firing;
+    return firing;
 }
 
 void Weapon::setFiring(bool isPressed) {
-	firing = isPressed;
+    firing = isPressed;
 }
 
 float Weapon::getCooldown() {
-	return cooldown;
+    return cooldown;
 }
 
 void Weapon::setCooldown(float cd) {
-	cooldown = cd;
+    cooldown = cd;
 }
 
 Projectile* Weapon::fireBullet(glm::vec3 position, glm::quat cameraRotation) {
-	glm::vec3 vel = glm::normalize(glm::vec3(getGlobalTransform() * glm::mat4_cast(cameraRotation) * glm::vec4(0, 0, -1, 0)));
-	vel.x *= 5.0; //FIRING_VELOCITY;
-	vel.y *= 5.0; //FIRING_VELOCITY;
-	vel.z *= 5.0; //FIRING_VELOCITY;
-	Projectile *p = new Projectile(bulletMesh, bullet_diffuse_texture, getTechnique(),
-		glm::vec3(getGlobalTransform() * glm::vec4(0,0,0,1)), vel);
-	return p;
+    glm::vec3 vel = glm::normalize(glm::vec3(getGlobalTransform() * glm::mat4_cast(cameraRotation) * glm::vec4(0, 0, -1, 0)));
+    vel.x *= 5.0; //FIRING_VELOCITY;
+    vel.y *= 5.0; //FIRING_VELOCITY;
+    vel.z *= 5.0; //FIRING_VELOCITY;
+    Projectile *p = new Projectile(bulletMesh, bullet_diffuse_texture, getTechnique(),
+        glm::vec3(getGlobalTransform() * glm::vec4(0,0,0,1)), vel);
+    return p;
 }
 
 void Weapon::onUpdateSelf(float delta_time) {
     cooldown -= delta_time;
 
-	// DEBUG stuff
-	/*std::cout << "WEAPON POSITION-- x: " << getPosition().x
-		<< ", y: " << getPosition().y
-		<< ", z: " << getPosition().z
-		<< std::endl;*/
+    // DEBUG stuff
+    /*std::cout << "WEAPON POSITION-- x: " << getPosition().x
+        << ", y: " << getPosition().y
+        << ", z: " << getPosition().z
+        << std::endl;*/
 
-/*	std::cout << "VELOCITY-- x: " << velocity.x
-		<< ", y: " << velocity.y
-		<< ", z: " << velocity.z
-		<< std::endl;*/
+/*    std::cout << "VELOCITY-- x: " << velocity.x
+        << ", y: " << velocity.y
+        << ", z: " << velocity.z
+        << std::endl;*/
 }
 
 

@@ -12,9 +12,10 @@ set(HDRS
     include/gnome_fortress/game/Enemies.h
     include/gnome_fortress/game/Enemy.h
     include/gnome_fortress/game/SiegeTurtle.h
-	include/gnome_fortress/game/Projectile.h
-	include/gnome_fortress/game/Resources.h
-	include/gnome_fortress/game/Weapon.h
+    include/gnome_fortress/game/Projectile.h
+    include/gnome_fortress/game/Projectiles.h
+    include/gnome_fortress/game/Resources.h
+    include/gnome_fortress/game/Weapon.h
     include/gnome_fortress/game/Wall.h
     include/gnome_fortress/game/Walls.h
    
@@ -44,9 +45,10 @@ set(SRCS
     src/gnome_fortress/game/Enemies.cpp
     src/gnome_fortress/game/Enemy.cpp
     src/gnome_fortress/game/SiegeTurtle.cpp
-	src/gnome_fortress/game/Projectile.cpp
+    src/gnome_fortress/game/Projectile.cpp
+    src/gnome_fortress/game/Projectiles.cpp
     src/gnome_fortress/game/main.cpp
-	src/gnome_fortress/game/Weapon.cpp
+    src/gnome_fortress/game/Weapon.cpp
     src/gnome_fortress/game/Wall.cpp
     src/gnome_fortress/game/Walls.cpp
 

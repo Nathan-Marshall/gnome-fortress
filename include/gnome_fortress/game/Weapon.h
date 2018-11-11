@@ -14,7 +14,7 @@ namespace gnome_fortress {
 namespace game {
 
 class Weapon : public model::BasicMeshNode {
-	
+    
 public: 
     Weapon(const model::Mesh *gunMesh,
         const model::Mesh *bMesh,
@@ -27,27 +27,27 @@ public:
 
     //Whether the weapon is firing
     bool isFiring();
-	void setFiring(bool isPressed);
+    void setFiring(bool isPressed);
 
-	//Gun cooldown 
-	float getCooldown();
-	void setCooldown(float cd);
+    //Gun cooldown 
+    float getCooldown();
+    void setCooldown(float cd);
 
-	//Creating bullets 
-	Projectile* fireBullet(glm::vec3 position, glm::quat cameraRotation);
-	
+    //Creating bullets 
+    Projectile* fireBullet(glm::vec3 position, glm::quat cameraRotation);
+    
 
-	void onUpdateSelf(float dt) override;
+    void onUpdateSelf(float dt) override;
 
 private:
-	static int FIRING_RATE; //number of bullets per second 
-	static double FIRING_VELOCITY; //speed of individual bullets 
+    static int FIRING_RATE; //number of bullets per second 
+    static double FIRING_VELOCITY; //speed of individual bullets 
 
-	const model::Mesh *bulletMesh;
+    const model::Mesh *bulletMesh;
     const model::Texture *bullet_diffuse_texture;
-	
-	bool firing;
-	float cooldown;
+    
+    bool firing;
+    float cooldown;
 
 };
 }

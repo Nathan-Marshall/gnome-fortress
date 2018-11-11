@@ -14,7 +14,7 @@ SceneNode::SceneNode()
       rotation(),
       scale_vec(1, 1, 1),
       parent(nullptr),
-      children() {	
+      children() {    
 }
 
 const float SceneNode::XBOUND_POS = 25.0f;
@@ -65,19 +65,19 @@ void SceneNode::translate(const glm::vec3 &translation) {
 }
 
 void SceneNode::translate(float tx, float ty, float tz) {
-	translate(glm::vec3(tx, ty, tz));
+    translate(glm::vec3(tx, ty, tz));
 }
 
 void SceneNode::translateX(float tx) {
-	translate(glm::vec3(tx, 0, 0));
+    translate(glm::vec3(tx, 0, 0));
 }
 
 void SceneNode::translateY(float ty) {
-	translate(glm::vec3(0, ty, 0));
+    translate(glm::vec3(0, ty, 0));
 }
 
 void SceneNode::translateZ(float tz) {
-	translate(glm::vec3(0, 0, tz));
+    translate(glm::vec3(0, 0, tz));
 }
 
 glm::quat SceneNode::getRotation() const {
@@ -184,20 +184,20 @@ glm::mat4 SceneNode::getTransformMatrix() const {
     const glm::vec3 &t = position;
     const glm::vec3 &s = scale_vec;
 
-	// what look like rows here are actually columns
-	glm::mat4 local_translation_mat(
-		1, 0, 0, 0,
-		0, 1, 0, 0,
-		0, 0, 1, 0,
-		t.x, t.y, t.z, 1
-	);
+    // what look like rows here are actually columns
+    glm::mat4 local_translation_mat(
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        t.x, t.y, t.z, 1
+    );
 
-	glm::mat4 local_scale_mat(
-		s.x, 0, 0, 0,
-		0, s.y, 0, 0,
-		0, 0, s.z, 0,
-		0, 0, 0, 1
-	);
+    glm::mat4 local_scale_mat(
+        s.x, 0, 0, 0,
+        0, s.y, 0, 0,
+        0, 0, s.z, 0,
+        0, 0, 0, 1
+    );
 
     return local_translation_mat * getRotationMatrix() * local_scale_mat;
 }
@@ -223,7 +223,7 @@ glm::mat4 SceneNode::getGlobalTransform() const {
 }
 
 glm::mat4 SceneNode::getGlobalInverseTransform() const {
-	return glm::inverse(getGlobalTransform());
+    return glm::inverse(getGlobalTransform());
 }
 
 // === CHILD MANAGEMENT ===

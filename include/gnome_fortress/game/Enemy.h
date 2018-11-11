@@ -15,16 +15,22 @@ namespace game {
 class Enemy : public model::BasicMeshNode {
 
 public:
-	Enemy(const model::Mesh *mesh,
+    Enemy(const model::Mesh *mesh,
         const model::Texture *diffuse_texture,
-		renderer::BasicMeshNodeTechnique *technique);
+        renderer::BasicMeshNodeTechnique *technique);
+
+    float GetBoundingRadius();
+    float GetHealth();
+    void DoDamage(float damage);
 
 protected:
-	void onUpdateSelf(float dt) override;
+    void onUpdateSelf(float dt) override;
+
+    float health;
+    float boundingRadius;
 
 private:
-	float health;
-	
+    
 };
 
 

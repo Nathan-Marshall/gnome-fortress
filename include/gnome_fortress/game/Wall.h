@@ -13,15 +13,15 @@ namespace game {
 class Wall : public model::BasicMeshNode {
 
 public:
-	Wall(   resource::ResourceManager &resourceManager,
+    Wall(   resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique,
             float wallHealth = 100);
 
 protected:
-	void onUpdateSelf(float dt) override;
+    void onUpdateSelf(float dt) override;
 
 private:
-	float health;
+    float health;
 };
 
 
