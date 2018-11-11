@@ -11,8 +11,7 @@
 
 namespace gnome_fortress {
     namespace game {
-
-
+ 
         class Projectiles : public model::SceneNode {
 
         public:

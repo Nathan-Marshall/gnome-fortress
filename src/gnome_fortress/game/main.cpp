@@ -315,7 +315,7 @@ int MainFunction(void){
             technique->setProjectionMatrix(active_camera_g->getProjection());
             technique->setViewMatrix(active_camera_g->getView());
 
-            enemies->ProcessCollisions(playerProjectiles);
+            enemies->ProcessCollisions(playerProjectiles, walls);
 
             //Update the scene nodes
             papaNode->update(delta_time);
