@@ -71,6 +71,7 @@ void Enemies::ProcessWallCollisions(Walls *walls) {
 
                 float distance = glm::length(turtlePos - wallPos);
 
+                //Need to change this back later once nathans stuff is working
                 //if (distance < (*turtleIt)->GetBoundingRadius()){
                 if (distance < 1.5f && (*turtleIt)->hittingWall == false) {
                     //We have a collision
