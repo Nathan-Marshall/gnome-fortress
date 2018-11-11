@@ -7,20 +7,5 @@ namespace gnome_fortress {
         Projectiles::Projectiles() {
             //Nothing yet
         }
-
-        void Projectiles::onDrawSelf(const glm::mat4 &parentTransform) const {
-            for each (Projectile* proj in projectiles)
-            {
-                proj->draw(glm::mat4());
-            }
-        }
-
-        void Projectiles::onUpdateSelf(float dt) {
-            for each (Projectile* proj in projectiles)
-            {
-                proj->update(dt);
-            }
-        }
-
     }
 }

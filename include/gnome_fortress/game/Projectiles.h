@@ -20,9 +20,6 @@ namespace gnome_fortress {
 
             std::vector<Projectile*> projectiles;
 
-            void onDrawSelf(const glm::mat4 &parent_transform) const override;
-            void onUpdateSelf(float delta_time) override;
-
         protected:
 
 
