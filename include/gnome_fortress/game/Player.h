@@ -15,38 +15,38 @@ namespace game{
 class Player : public model::BasicMeshNode {
 
 public:
-	Player( resource::ResourceManager &resourceManager,
-		    renderer::BasicMeshNodeTechnique *technique);
+    Player( resource::ResourceManager &resourceManager,
+            renderer::BasicMeshNodeTechnique *technique);
 
-	const static float ACCELERATION;
-	const static float DECAY;
-	
-	bool IsForwardPressed();
-	bool IsBackPressed();
-	bool IsLeftPressed();
-	bool IsRightPressed();
+    const static float ACCELERATION;
+    const static float DECAY;
+    
+    bool IsForwardPressed();
+    bool IsBackPressed();
+    bool IsLeftPressed();
+    bool IsRightPressed();
 
-	void SetForwardPressed(bool isPressed);
-	void SetBackPressed(bool isPressed);
-	void SetLeftPressed(bool isPressed);
-	void SetRightPressed(bool isPressed);
-	void SetUpPressed(bool isPressed);
-	void SetDownPressed(bool isPressed);
+    void SetForwardPressed(bool isPressed);
+    void SetBackPressed(bool isPressed);
+    void SetLeftPressed(bool isPressed);
+    void SetRightPressed(bool isPressed);
+    void SetUpPressed(bool isPressed);
+    void SetDownPressed(bool isPressed);
 
 protected:
-	void onUpdateSelf(float dt) override;
+    void onUpdateSelf(float dt) override;
 
 private:
-	bool forward;
-	bool backward;
-	bool left;
-	bool right;
-	bool up;
-	bool down;
+    bool forward;
+    bool backward;
+    bool left;
+    bool right;
+    bool up;
+    bool down;
 
-	glm::vec3 velocity;
+    glm::vec3 velocity;
 
-	void CheckBounds(glm::vec3 translationAmount);
+    void CheckBounds(glm::vec3 translationAmount);
 };
 }
 }

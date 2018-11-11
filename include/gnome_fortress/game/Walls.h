@@ -14,23 +14,23 @@ namespace game {
 class Walls : public model::SceneNode {
 
 public:
-	Walls(  resource::ResourceManager &resourceManager,
+    Walls(  resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique,
             int numRings = 3);
 
-	//Vector to define the walls
-	std::vector<std::vector<Wall*>> walls;
+    //Vector to define the walls
+    std::vector<std::vector<Wall*>> walls;
 
-	void onDrawSelf(const glm::mat4 &parent_transform) const override;
-	void onUpdateSelf(float delta_time) override;
+    void onDrawSelf(const glm::mat4 &parent_transform) const override;
+    void onUpdateSelf(float delta_time) override;
 protected:
-			
+            
 private:
-	const static float OUTER_RADIUS;
-	const static float INNER_RADIUS;
-	const static int WALLS_PER_RING;
+    const static float OUTER_RADIUS;
+    const static float INNER_RADIUS;
+    const static int WALLS_PER_RING;
 
-	void FillWalls(
+    void FillWalls(
             resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique,
             int numRings);

@@ -17,12 +17,12 @@ namespace game {
 class SiegeTurtle : public game::Enemy {
 
 public:
-	SiegeTurtle(
+    SiegeTurtle(
             resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique);
 
 protected:
-	void onUpdateSelf(float dt) override;
+    void onUpdateSelf(float dt) override;
 
 private:
 

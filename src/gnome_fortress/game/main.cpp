@@ -69,43 +69,43 @@ resource::ResourceManager resource_manager_g(RESOURCES_DIRECTORY);
 
 //Cursor callback function, called whenever the cursor position is updated
 void CursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
-	//Get the halfway coordinated in the window to use to find our cursor offset
-	double half_x = window_width_g / 2;
-	double half_y = window_height_g / 2;
+    //Get the halfway coordinated in the window to use to find our cursor offset
+    double half_x = window_width_g / 2;
+    double half_y = window_height_g / 2;
 
-	//We get an angle to move for x and y
-	float x_angle = half_x - xpos;
-	float y_angle = half_y - ypos;
+    //We get an angle to move for x and y
+    float x_angle = half_x - xpos;
+    float y_angle = half_y - ypos;
 
-	//We want to set the cursor back to the middle each time
-	glfwSetCursorPos(window, half_x, half_y);
+    //We want to set the cursor back to the middle each time
+    glfwSetCursorPos(window, half_x, half_y);
 
-	//Then we can rotate the camera based off of the calculated value
-	//The offset from the middle will be larger based on how far they push the cursor to rotate
-	player->rotate(x_angle * 0.001, glm::vec3(0, 1, 0));
+    //Then we can rotate the camera based off of the calculated value
+    //The offset from the middle will be larger based on how far they push the cursor to rotate
+    player->rotate(x_angle * 0.001, glm::vec3(0, 1, 0));
 
-	//Adjust both cameras so that there won't be any shift when we toggle between the two
-	
-	//Rotate the first person camera
-	scene_camera_first_g.getNode()->rotate(y_angle * 0.0005, glm::vec3(1.0, 0, 0));
-	//Orbit the third person camera about the origin to keep the player centered on the screen
-	scene_camera_third_g.getNode()->orbit(y_angle * 0.0005, glm::vec3(1.0, 0, 0), glm::vec3(0, 0, 0));
+    //Adjust both cameras so that there won't be any shift when we toggle between the two
+    
+    //Rotate the first person camera
+    scene_camera_first_g.getNode()->rotate(y_angle * 0.0005, glm::vec3(1.0, 0, 0));
+    //Orbit the third person camera about the origin to keep the player centered on the screen
+    scene_camera_third_g.getNode()->orbit(y_angle * 0.0005, glm::vec3(1.0, 0, 0), glm::vec3(0, 0, 0));
 }
 
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 {
-	// Fire gun when player left clicks
-	if (button == GLFW_MOUSE_BUTTON_LEFT) {
-		//This block shall be moved later to projectile 
-		std::cout << "Left Mouse Pressed " << std::endl;
-		if (weapon->getCooldown() <= 0) {
-			weapon->setCooldown(0.3f);
-			playerProjectiles->projectiles.push_back(weapon->fireBullet(weapon->getPosition(), scene_camera_first_g.getNode()->getRotation())); //Sidenote: it doesn't matter which camera we use here since both rotate equally
-		}
-		else {
-			std::cout << "COOLDOWN TOO HIGH" << std::endl;
-		}
-	}
+    // Fire gun when player left clicks
+    if (button == GLFW_MOUSE_BUTTON_LEFT) {
+        //This block shall be moved later to projectile 
+        std::cout << "Left Mouse Pressed " << std::endl;
+        if (weapon->getCooldown() <= 0) {
+            weapon->setCooldown(0.3f);
+            playerProjectiles->projectiles.push_back(weapon->fireBullet(weapon->getPosition(), scene_camera_first_g.getNode()->getRotation())); //Sidenote: it doesn't matter which camera we use here since both rotate equally
+        }
+        else {
+            std::cout << "COOLDOWN TOO HIGH" << std::endl;
+        }
+    }
 }
 
 // Callback for when a key is pressed
@@ -115,7 +115,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         glfwSetWindowShouldClose(window, true);
     }
 
-	// Toggle the camera (first/third person) when pressing 'c'
+    // Toggle the camera (first/third person) when pressing 'c'
     if (key == GLFW_KEY_C && action == GLFW_PRESS) {
         if (active_camera_g == &scene_camera_first_g) {
             active_camera_g = &scene_camera_third_g;
@@ -124,52 +124,52 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         }
     }
 
-	// Move the player forward when pressing 'w'
-	if (key == GLFW_KEY_W && action == GLFW_PRESS) {
-		player->SetForwardPressed(true);
-	} else if (key == GLFW_KEY_W && action == GLFW_RELEASE) {
-		player->SetForwardPressed(false);
-	}
+    // Move the player forward when pressing 'w'
+    if (key == GLFW_KEY_W && action == GLFW_PRESS) {
+        player->SetForwardPressed(true);
+    } else if (key == GLFW_KEY_W && action == GLFW_RELEASE) {
+        player->SetForwardPressed(false);
+    }
 
-	// Move the player backwards when pressing 's'
-	if (key == GLFW_KEY_S && action == GLFW_PRESS) {
-		player->SetBackPressed(true);
-	} else if (key == GLFW_KEY_S && action == GLFW_RELEASE) {
-		player->SetBackPressed(false);
-	}
+    // Move the player backwards when pressing 's'
+    if (key == GLFW_KEY_S && action == GLFW_PRESS) {
+        player->SetBackPressed(true);
+    } else if (key == GLFW_KEY_S && action == GLFW_RELEASE) {
+        player->SetBackPressed(false);
+    }
 
-	// Move the player left when pressing 'a'
-	if (key == GLFW_KEY_A && action == GLFW_PRESS) {
-		player->SetLeftPressed(true);
-	} else if (key == GLFW_KEY_A && action == GLFW_RELEASE) {
-		player->SetLeftPressed(false);
-	}
+    // Move the player left when pressing 'a'
+    if (key == GLFW_KEY_A && action == GLFW_PRESS) {
+        player->SetLeftPressed(true);
+    } else if (key == GLFW_KEY_A && action == GLFW_RELEASE) {
+        player->SetLeftPressed(false);
+    }
 
-	// Move the player right when pressing 'd'
-	if (key == GLFW_KEY_D && action == GLFW_PRESS) {
-		player->SetRightPressed(true);
-	} else if (key == GLFW_KEY_D && action == GLFW_RELEASE) {
-		player->SetRightPressed(false);
-	}
+    // Move the player right when pressing 'd'
+    if (key == GLFW_KEY_D && action == GLFW_PRESS) {
+        player->SetRightPressed(true);
+    } else if (key == GLFW_KEY_D && action == GLFW_RELEASE) {
+        player->SetRightPressed(false);
+    }
 
-	// Move the player up when pressing 'left shift'
-	if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS) {
-		player->SetUpPressed(true);
-	} else if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE) {
-		player->SetUpPressed(false);
-	}
+    // Move the player up when pressing 'left shift'
+    if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS) {
+        player->SetUpPressed(true);
+    } else if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE) {
+        player->SetUpPressed(false);
+    }
 
-	// Move the player down when pressing 'space'
-	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
-		player->SetDownPressed(true);
-	} else if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE) {
-		player->SetDownPressed(false);
-	}
+    // Move the player down when pressing 'space'
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+        player->SetDownPressed(true);
+    } else if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE) {
+        player->SetDownPressed(false);
+    }
 
-	// Exit the program when pressing 'esc'
-	if (key == GLFW_KEY_ESCAPE) {
-		exit(0);
-	}
+    // Exit the program when pressing 'esc'
+    if (key == GLFW_KEY_ESCAPE) {
+        exit(0);
+    }
 }
 
 // Callback for when the window is resized
@@ -179,8 +179,8 @@ void ResizeCallback(GLFWwindow* window, int width, int height){
 
     // Update projection matrix
     main_camera_g.setViewport(width, height);
-	scene_camera_first_g.setViewport(width, height);
-	scene_camera_third_g.setViewport(width, height);
+    scene_camera_first_g.setViewport(width, height);
+    scene_camera_third_g.setViewport(width, height);
 }
 
 // Main function that builds and runs the game
@@ -199,8 +199,8 @@ int MainFunction(void){
             throw(std::runtime_error(std::string("Could not create window")));
         }
 
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		glfwSetCursorPos(window, window_width_g / 2, window_height_g / 2);
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetCursorPos(window, window_width_g / 2, window_height_g / 2);
 
         // Make the window's OpenGL context the current one
         glfwMakeContextCurrent(window);
@@ -218,8 +218,8 @@ int MainFunction(void){
 
         // Set event callbacks for the window
         glfwSetKeyCallback(window, KeyCallback);
-		glfwSetCursorPosCallback(window, CursorPosCallback);
-		glfwSetMouseButtonCallback(window, MouseButtonCallback);
+        glfwSetCursorPosCallback(window, CursorPosCallback);
+        glfwSetMouseButtonCallback(window, MouseButtonCallback);
         glfwSetFramebufferSizeCallback(window, ResizeCallback);
 
         // Set up z-buffer for rendering
@@ -231,7 +231,7 @@ int MainFunction(void){
         glEnable(GL_CULL_FACE);
 
         // Create geometry of the cube and cylinder
-		model::Mesh *plane = resource_manager_g.getOrLoadMesh(resources::models::plane);
+        model::Mesh *plane = resource_manager_g.getOrLoadMesh(resources::models::plane);
         model::Mesh *rock1 = resource_manager_g.getOrLoadMesh(resources::models::rock1);
         model::Mesh *peanutGunMesh = resource_manager_g.getOrLoadMesh(resources::models::peanut_gun);
 
@@ -247,45 +247,45 @@ int MainFunction(void){
         technique->addVertexAttribute(renderer::VertexAttribute(program, "color", 3, GL_FLOAT, GL_FALSE));
         technique->addVertexAttribute(renderer::VertexAttribute(program, "uv", 2, GL_FLOAT, GL_FALSE));
 
-		papaNode = new model::SceneNode();
+        papaNode = new model::SceneNode();
 
-		// Create the walls
-		walls = new Walls(resource_manager_g, technique);
-		papaNode->appendChild(walls);
+        // Create the walls
+        walls = new Walls(resource_manager_g, technique);
+        papaNode->appendChild(walls);
 
         player = new game::Player(resource_manager_g, technique);
         player->setPosition(0, 0.5f, 0);
-		papaNode->appendChild(player);
+        papaNode->appendChild(player);
 
         //Create weapon
-		weapon = new Weapon(peanutGunMesh, rock1, peanutGunTexture, rock1Texture, technique, player);
-		player->appendChild(weapon);
+        weapon = new Weapon(peanutGunMesh, rock1, peanutGunTexture, rock1Texture, technique, player);
+        player->appendChild(weapon);
 
-		playerProjectiles = new Projectiles();
-		papaNode->appendChild(playerProjectiles);
+        playerProjectiles = new Projectiles();
+        papaNode->appendChild(playerProjectiles);
 
-		Enemies* enemies = new Enemies();
-		papaNode->appendChild(enemies);
+        Enemies* enemies = new Enemies();
+        papaNode->appendChild(enemies);
 
-		enemies->turtles.push_back(new SiegeTurtle(resource_manager_g, technique));
-		enemies->turtles.push_back(new SiegeTurtle(resource_manager_g, technique));
-		enemies->turtles.push_back(new SiegeTurtle(resource_manager_g, technique));
+        enemies->turtles.push_back(new SiegeTurtle(resource_manager_g, technique));
+        enemies->turtles.push_back(new SiegeTurtle(resource_manager_g, technique));
+        enemies->turtles.push_back(new SiegeTurtle(resource_manager_g, technique));
 
-		//Create the third person camera
+        //Create the third person camera
         model::SceneNode *cameraNodeThird = scene_camera_third_g.getNode();
         cameraNodeThird->setPosition(0, 1, 4);
 
-		//Create the first person camera
-		model::SceneNode *cameraNodeFirst = scene_camera_first_g.getNode();
-		cameraNodeFirst->setPosition(0, 0, -1);
+        //Create the first person camera
+        model::SceneNode *cameraNodeFirst = scene_camera_first_g.getNode();
+        cameraNodeFirst->setPosition(0, 0, -1);
 
         player->appendChild(cameraNodeThird);
-		player->appendChild(cameraNodeFirst);
+        player->appendChild(cameraNodeFirst);
 
-		model::SceneNode *ground = new model::BasicMeshNode(plane, redChecker, technique);
-		ground->setScale(50);
-		ground->setPosition(0, 0, 0);
-		papaNode->appendChild(ground);
+        model::SceneNode *ground = new model::BasicMeshNode(plane, redChecker, technique);
+        ground->setScale(50);
+        ground->setPosition(0, 0, 0);
+        papaNode->appendChild(ground);
 
         double prev_time = glfwGetTime();
         // Run the main loop
@@ -304,13 +304,13 @@ int MainFunction(void){
             technique->setProjectionMatrix(active_camera_g->getProjection());
             technique->setViewMatrix(active_camera_g->getView());
 
-			enemies->ProcessCollisions(playerProjectiles);
+            enemies->ProcessCollisions(playerProjectiles);
 
-			//Update the scene nodes
-			papaNode->update(delta_time);
+            //Update the scene nodes
+            papaNode->update(delta_time);
 
-			//Draw the scene nodes
-			papaNode->draw(glm::mat4());
+            //Draw the scene nodes
+            papaNode->draw(glm::mat4());
 
             // Push buffer drawn in the background onto the display
             glfwSwapBuffers(window);
@@ -322,9 +322,8 @@ int MainFunction(void){
         delete technique;
         delete player;
         delete enemies;
-		delete weapon;
-		delete walls;
-		delete enemies;
+        delete weapon;
+        delete walls;
 
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;

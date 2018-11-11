@@ -18,14 +18,14 @@ namespace game {
 class Enemies : public model::SceneNode {
 
 public:
-	Enemies();
+    Enemies();
 
-	std::vector<SiegeTurtle*> turtles;
+    std::vector<SiegeTurtle*> turtles;
 
-	void ProcessCollisions(Projectiles *projectiles);
+    void ProcessCollisions(Projectiles *projectiles);
 
-	void onDrawSelf(const glm::mat4 &parent_transform) const override;
-	void onUpdateSelf(float delta_time) override;
+    void onDrawSelf(const glm::mat4 &parent_transform) const override;
+    void onUpdateSelf(float delta_time) override;
 
 protected:
 

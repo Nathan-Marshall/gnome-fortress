@@ -14,7 +14,7 @@ namespace game {
 class Projectile : public model::BasicMeshNode {
 public: 
 
-	const static float DAMAGE;
+    const static float DAMAGE;
 
     Projectile(
             const model::Mesh *mesh,
@@ -25,15 +25,15 @@ public:
 
     ~Projectile();
 
-	glm::vec3 getVelocity();
+    glm::vec3 getVelocity();
 
     void onUpdateSelf(float delta_time) override;
 
-	float GetDamage();
+    float GetDamage();
 
 private:
-	double lifespan;
-	glm::vec3 velocity;
+    double lifespan;
+    glm::vec3 velocity;
 
 };
 
