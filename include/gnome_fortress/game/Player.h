@@ -7,6 +7,7 @@
 #include <glm/gtc/constants.hpp>
 
 #include "gnome_fortress/model/BasicMeshNode.h"
+#include "gnome_fortress/resource/ResourceManager.h"
 
 namespace gnome_fortress{
 namespace game{
@@ -14,8 +15,7 @@ namespace game{
 class Player : public model::BasicMeshNode {
 
 public:
-	Player(const model::Mesh *mesh,
-            const model::Texture *texture,
+	Player( resource::ResourceManager &resourceManager,
 		    renderer::BasicMeshNodeTechnique *technique);
 
 	const static float ACCELERATION;

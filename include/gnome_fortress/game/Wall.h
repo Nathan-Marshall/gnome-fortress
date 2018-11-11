@@ -2,11 +2,9 @@
 
 #define GLEW_STATIC
 #include <GL/glew.h>
-#define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
-#include <glm/gtc/constants.hpp>
 
 #include "gnome_fortress/model/BasicMeshNode.h"
+#include "gnome_fortress/resource/ResourceManager.h"
 
 namespace gnome_fortress {
 namespace game {
@@ -15,8 +13,7 @@ namespace game {
 class Wall : public model::BasicMeshNode {
 
 public:
-	Wall(const model::Mesh *mesh,
-            const model::Texture *diffuse_texture,
+	Wall(   resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique,
             float wallHealth = 100);
 

@@ -140,6 +140,10 @@ void SceneNode::setScale(float sx, float sy, float sz) {
     scale_vec = glm::vec3(sx, sy, sz);
 }
 
+void SceneNode::setScale(float sxyz) {
+    scale_vec = glm::vec3(sxyz, sxyz, sxyz);
+}
+
 void SceneNode::setScaleX(float sx) {
     scale_vec.x = sx;
 }
@@ -158,6 +162,10 @@ void SceneNode::scale(const glm::vec3 &scale) {
 
 void SceneNode::scale(float sx, float sy, float sz) {
     scale_vec *= glm::vec3(sx, sy, sz);
+}
+
+void SceneNode::scale(float sxyz) {
+    scale_vec *= glm::vec3(sxyz, sxyz, sxyz);
 }
 
 void SceneNode::scaleX(float sx) {

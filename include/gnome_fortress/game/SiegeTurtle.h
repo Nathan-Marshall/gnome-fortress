@@ -8,6 +8,7 @@
 #include <cstdlib>
 
 #include "gnome_fortress/game/Enemy.h"
+#include "gnome_fortress/resource/ResourceManager.h"
 
 namespace gnome_fortress {
 namespace game {
@@ -16,9 +17,9 @@ namespace game {
 class SiegeTurtle : public game::Enemy {
 
 public:
-	SiegeTurtle(const model::Mesh *mesh,
-        const model::Texture *diffuse_texture,
-        renderer::BasicMeshNodeTechnique *technique);
+	SiegeTurtle(
+            resource::ResourceManager &resourceManager,
+            renderer::BasicMeshNodeTechnique *technique);
 
 protected:
 	void onUpdateSelf(float dt) override;

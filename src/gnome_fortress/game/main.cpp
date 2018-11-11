@@ -2,7 +2,7 @@
  *
  * A program that demonstrates the use of hierarchical transformations
  *
- * Copyright (c) 2018 Nathan Marshall <Nathagnome_fortress@cmail.carleton.ca>,
+ * Copyright (c) 2018 Nathan Marshall <NathanMarshall@cmail.carleton.ca>,
  * Oliver van Kaick <Oliver.vanKaick@carleton.ca>, David Mould <mould@scs.carleton.ca>
  *
  */
@@ -22,17 +22,19 @@
 #include <glm/gtx/quaternion.hpp>
 
 #include "gnome_fortress/game/Player.h"
-#include "gnome_fortress/game/PrimitiveMeshes.h"
 #include "gnome_fortress/game/Wall.h"
 #include "gnome_fortress/game/Walls.h"
-#include "gnome_fortress/game/Turret.h"
 #include "gnome_fortress/game/Weapon.h"
 #include "gnome_fortress/game/Enemies.h"
+#include "gnome_fortress/game/Resources.h"
 #include "gnome_fortress/game/SiegeTurtle.h"
 #include "gnome_fortress/camera/SceneNodeCamera.h"
 #include "gnome_fortress/model/Mesh.h"
 #include "gnome_fortress/model/OBJParser.h"
+#include "gnome_fortress/resource/ResourceManager.h"
 #include "gnome_fortress/shader/Shader.h"
+
+#include "resources_config.h"
 
 namespace gnome_fortress {
 namespace game {
@@ -60,6 +62,8 @@ game::Weapon *weapon;
 model::SceneNode *papaNode; //the Scene Node
 
 Walls* walls;
+
+resource::ResourceManager resource_manager_g(RESOURCES_DIRECTORY);
 
 //Cursor callback function, called whenever the cursor position is updated
 void CursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
@@ -230,50 +234,42 @@ int MainFunction(void){
         glEnable(GL_CULL_FACE);
 
         // Create geometry of the cube and cylinder
-		model::Mesh plane = CreatePlane();
-        model::Mesh cube = CreateCube();
-        model::Mesh cylinder = CreateCylinder();
-        model::Mesh peanutGunMesh = model::LoadMesh("/models/peanut_gun/peanut_gun.obj");
+		model::Mesh *plane = resource_manager_g.getOrLoadMesh(resources::models::plane);
+        model::Mesh *rock1 = resource_manager_g.getOrLoadMesh(resources::models::rock1);
+        model::Mesh *peanutGunMesh = resource_manager_g.getOrLoadMesh(resources::models::peanut_gun);
 
-        model::Texture mushroom_gun_texture = model::Texture("/models/mushroom_gun/Gun(Handle).png");
-        model::Texture peanutGunTexture = model::Texture("/models/peanut_gun/Gun_001.png");
+        model::Texture *redChecker = resource_manager_g.getOrLoadTexture("/models/plane/checker.png");
+        model::Texture *rock1Texture = resource_manager_g.getOrLoadTexture("/models/rocks/rock1.png");
+        model::Texture *peanutGunTexture = resource_manager_g.getOrLoadTexture("/models/peanut_gun/Gun_001.png");
 
         // Set up shaders
-        GLuint program = shader::CreateShaderProgram("/shaders/textured_material");
+        GLuint program = resource_manager_g.getOrLoadShaderProgram(resources::shaders::textured_material);
         auto technique = new renderer::BasicMeshNodeTechnique(program, "projection_mat", "view_mat", "world_mat", "diffuse_map");
         technique->addVertexAttribute(renderer::VertexAttribute(program, "vertex", 3, GL_FLOAT, GL_FALSE));
         technique->addVertexAttribute(renderer::VertexAttribute(program, "normal", 3, GL_FLOAT, GL_FALSE));
         technique->addVertexAttribute(renderer::VertexAttribute(program, "color", 3, GL_FLOAT, GL_FALSE));
         technique->addVertexAttribute(renderer::VertexAttribute(program, "uv", 2, GL_FLOAT, GL_FALSE));
 
-        // Create turret
-        //Turret *turret = new Turret(&cube, &cylinder, &mushroom_gun_texture, technique);
-
 		papaNode = new model::SceneNode();
 
 		// Create the walls
-		walls = new Walls(&cube, &mushroom_gun_texture, technique);
+		walls = new Walls(resource_manager_g, technique);
 
-        player = new game::Player(&cube, &mushroom_gun_texture, technique);
+        player = new game::Player(resource_manager_g, technique);
         player->setPosition(0, 0.5f, 0);
 		papaNode->appendChild(player);
 
         //Create weapon
-        weapon = new Weapon(&peanutGunMesh, &cylinder, &peanutGunTexture, &mushroom_gun_texture, technique, player);
+        weapon = new Weapon(peanutGunMesh, rock1, peanutGunTexture, rock1Texture, technique, player);
 		
 		Enemies* enemies = new Enemies();
-		SiegeTurtle* turtle1 = new SiegeTurtle(&cube, &mushroom_gun_texture, technique);
-		SiegeTurtle* turtle2 = new SiegeTurtle(&cube, &mushroom_gun_texture, technique);
-		SiegeTurtle* turtle3 = new SiegeTurtle(&cube, &mushroom_gun_texture, technique);
-
-		enemies->turtles.push_back(turtle1);
-		enemies->turtles.push_back(turtle2);
-		enemies->turtles.push_back(turtle3);
+		enemies->turtles.push_back(new SiegeTurtle(resource_manager_g, technique));
+		enemies->turtles.push_back(new SiegeTurtle(resource_manager_g, technique));
+		enemies->turtles.push_back(new SiegeTurtle(resource_manager_g, technique));
 
 		//Create the third person camera
         model::SceneNode *cameraNodeThird = scene_camera_third_g.getNode();
         cameraNodeThird->setPosition(0, 1, 4);
-		//cameraNodeThird->rotate(-glm::pi<float>() / 60, glm::vec3(1, 0, 0));
 
 		//Create the first person camera
 		model::SceneNode *cameraNodeFirst = scene_camera_first_g.getNode();
@@ -283,8 +279,8 @@ int MainFunction(void){
 		player->appendChild(cameraNodeFirst);
 		player->appendChild(weapon);
 
-		model::SceneNode *ground = new model::BasicMeshNode(&plane, &mushroom_gun_texture, technique);
-		ground->setScale(50, 50, 50);
+		model::SceneNode *ground = new model::BasicMeshNode(plane, redChecker, technique);
+		ground->setScale(50);
 		ground->setPosition(0, 0, 0);
 		papaNode->appendChild(ground);
 
@@ -305,20 +301,9 @@ int MainFunction(void){
             technique->setProjectionMatrix(active_camera_g->getProjection());
             technique->setViewMatrix(active_camera_g->getView());
 
-            //turret->update(delta_time);
-            //turret->draw(glm::mat4());
-
-
 			papaNode->update(delta_time);
-            //player->update(delta_time);
 
 			papaNode->draw(glm::mat4());
-			/* No longer necessary because of papaNode
-			player->draw(glm::mat4());
-
-			ground->draw(glm::mat4());
-
-			weapon->draw(glm::mat4());*/
 
 			// Draw the walls
 			walls->draw();
@@ -343,8 +328,8 @@ int MainFunction(void){
         }
 
         delete technique;
-        //delete turret;
         delete player;
+        delete enemies;
 		delete weapon;
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;

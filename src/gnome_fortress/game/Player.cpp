@@ -1,9 +1,17 @@
 #include "gnome_fortress/game/Player.h"
 
+#include "gnome_fortress/game/Resources.h"
+
 namespace gnome_fortress {
 namespace game {
-	Player::Player(const model::Mesh *mesh, const model::Texture *texture, renderer::BasicMeshNodeTechnique *technique)
-		: model::BasicMeshNode(mesh, texture, technique),
+	Player::Player(
+            resource::ResourceManager &resourceManager,
+            renderer::BasicMeshNodeTechnique *technique)
+		: model::BasicMeshNode(
+            resourceManager.getOrLoadMesh(resources::models::gnome),
+            resourceManager.getOrLoadTexture("models/gnome/gnome_diffuse.tga"),
+            technique
+          ),
 		  forward(false),
 		  backward(false),
 		  left(false),
@@ -92,7 +100,6 @@ namespace game {
 		glm::vec3 localScale = getScale();
 
 		float halfX = localScale.x / 2;
-		float halfY = localScale.y / 2;
 		float halfZ = localScale.z / 2;
 
 		float diffX = 0;
@@ -105,11 +112,11 @@ namespace game {
 		if (futurePos.x - halfX < XBOUND_NEG) {
 			diffX = futurePos.x - halfX - XBOUND_NEG;
 		}
-		if (futurePos.y  + halfY > YBOUND_POS) {
-			diffY = futurePos.y + halfY- YBOUND_POS;
+		if (futurePos.y + localScale.y > YBOUND_POS) {
+			diffY = futurePos.y + localScale.y - YBOUND_POS;
 		}
-		if (futurePos.y - halfY < YBOUND_NEG) {
-			diffY = futurePos.y - halfY - YBOUND_NEG;
+		if (futurePos.y < YBOUND_NEG) {
+			diffY = futurePos.y - YBOUND_NEG;
 		}
 		if (futurePos.z + halfZ > ZBOUND_POS) {
 			diffZ = futurePos.z + halfZ - ZBOUND_POS;
