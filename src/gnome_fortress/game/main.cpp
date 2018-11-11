@@ -100,7 +100,9 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
         std::cout << "Left Mouse Pressed " << std::endl;
         if (weapon->getCooldown() <= 0) {
             weapon->setCooldown(0.3f);
-            playerProjectiles->projectiles.push_back(weapon->fireBullet(weapon->getPosition(), scene_camera_first_g.getNode()->getRotation())); //Sidenote: it doesn't matter which camera we use here since both rotate equally
+            Projectile* p = weapon->fireBullet(weapon->getPosition(), scene_camera_first_g.getNode()->getRotation());
+            playerProjectiles->projectiles.push_back(p); //Sidenote: it doesn't matter which camera we use here since both rotate equally
+            playerProjectiles->appendChild(p);
         }
         else {
             std::cout << "COOLDOWN TOO HIGH" << std::endl;
@@ -267,9 +269,18 @@ int MainFunction(void){
         Enemies* enemies = new Enemies();
         papaNode->appendChild(enemies);
 
-        enemies->turtles.push_back(new SiegeTurtle(resource_manager_g, technique));
-        enemies->turtles.push_back(new SiegeTurtle(resource_manager_g, technique));
-        enemies->turtles.push_back(new SiegeTurtle(resource_manager_g, technique));
+        SiegeTurtle* turt1 = new SiegeTurtle(resource_manager_g, technique);
+        SiegeTurtle* turt2 = new SiegeTurtle(resource_manager_g, technique);
+        SiegeTurtle* turt3 = new SiegeTurtle(resource_manager_g, technique);
+
+        enemies->turtles.push_back(turt1);
+        enemies->appendChild(turt1);
+
+        enemies->turtles.push_back(turt2);
+        enemies->appendChild(turt2);
+
+        enemies->turtles.push_back(turt3);
+        enemies->appendChild(turt3);
 
         //Create the third person camera
         model::SceneNode *cameraNodeThird = scene_camera_third_g.getNode();

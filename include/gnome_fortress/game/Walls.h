@@ -21,7 +21,6 @@ public:
     //Vector to define the walls
     std::vector<std::vector<Wall*>> walls;
 
-    void onDrawSelf(const glm::mat4 &parent_transform) const override;
     void onUpdateSelf(float delta_time) override;
 protected:
             

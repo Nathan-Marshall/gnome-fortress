@@ -43,6 +43,7 @@ void Walls::FillWalls(
             wall->setPosition(glm::vec3(ringRadius * (cos(angle)), 0.5, ringRadius * sin(angle)));
             wall->setScale(glm::vec3(wallWidth, 3, 0.5));
             wallRing->push_back(wall);
+            this->appendChild(wall);
         }
                 
         //Add this ring to the walls
@@ -50,21 +51,9 @@ void Walls::FillWalls(
     }
 }
 
-void Walls::onDrawSelf(const glm::mat4 &parentTransform) const {
-    //For now we do this to draw all of the walls
-    for each (std::vector<Wall*> wallGroup in walls)
-    {
-        for each (Wall* indWall in wallGroup)
-        {
-            indWall->draw(glm::mat4());
-        }
-    }
-}
-
 void Walls::onUpdateSelf(float dt) {
     //Walls don't do anything to update at all yet
 }
-
 
 }
 }
