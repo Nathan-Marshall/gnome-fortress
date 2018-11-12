@@ -23,19 +23,19 @@ Weapon::~Weapon() {
 }
 
 bool Weapon::isFiring() {
-	return firing;
+    return firing;
 }
 
 void Weapon::setFiring(bool isPressed) {
-	firing = isPressed;
+    firing = isPressed;
 }
 
 float Weapon::getCooldown() {
-	return cooldown;
+    return cooldown;
 }
 
 void Weapon::setCooldown(float cd) {
-	cooldown = cd;
+    cooldown = cd;
 }
 
 Projectile* Weapon::fireBullet(glm::vec3 position, glm::quat cameraRotation) {
@@ -51,16 +51,16 @@ Projectile* Weapon::fireBullet(glm::vec3 position, glm::quat cameraRotation) {
 void Weapon::onUpdateSelf(float delta_time) {
     cooldown -= delta_time;
 
-	// DEBUG stuff
-	/*std::cout << "WEAPON POSITION-- x: " << getPosition().x
-		<< ", y: " << getPosition().y
-		<< ", z: " << getPosition().z
-		<< std::endl;*/
+    // DEBUG stuff
+    /*std::cout << "WEAPON POSITION-- x: " << getPosition().x
+        << ", y: " << getPosition().y
+        << ", z: " << getPosition().z
+        << std::endl;*/
 
-/*	std::cout << "VELOCITY-- x: " << velocity.x
-		<< ", y: " << velocity.y
-		<< ", z: " << velocity.z
-		<< std::endl;*/
+/*    std::cout << "VELOCITY-- x: " << velocity.x
+        << ", y: " << velocity.y
+        << ", z: " << velocity.z
+        << std::endl;*/
 }
 
 

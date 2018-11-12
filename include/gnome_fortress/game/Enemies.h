@@ -8,19 +8,24 @@
 #include <vector>
 
 #include "Enemy.h"
+#include "Projectiles.h"
+#include "Walls.h"
 #include "SiegeTurtle.h"
 
 namespace gnome_fortress {
 namespace game {
 
 
-class Enemies {
+class Enemies : public model::SceneNode {
 
 public:
-	Enemies();
+    Enemies();
 
-	std::vector<SiegeTurtle*> turtles;
+    std::vector<SiegeTurtle*> turtles;
 
+    void ProcessCollisions(Projectiles *projectiles, Walls *walls);
+    void ProcessProjectileCollisions(Projectiles *projectiles);
+    void ProcessWallCollisions(Walls *walls);
 protected:
 
 

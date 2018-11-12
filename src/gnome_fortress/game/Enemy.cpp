@@ -14,6 +14,18 @@ void Enemy::onUpdateSelf(float dt) {
 
 }
 
+float Enemy::GetBoundingRadius() {
+    return boundingRadius;
+}
+
+void Enemy::DoDamage(float damage) {
+    health -= damage;
+}
+
+float Enemy::GetHealth() {
+    return health;
+}
+
 
 }
 }

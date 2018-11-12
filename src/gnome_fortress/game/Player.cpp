@@ -1,130 +1,146 @@
 #include "gnome_fortress/game/Player.h"
-
+#include "gnome_fortress/game/Weapon.h"
 #include "gnome_fortress/game/Resources.h"
 
 namespace gnome_fortress {
 namespace game {
-	Player::Player(
+    Player::Player(
             resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique)
 		: model::BasicMeshGroupNode(
             resourceManager.getOrLoadMeshGroup(resources::models::gnome),
             technique
           ),
-		  forward(false),
-		  backward(false),
-		  left(false),
-		  right(false),
-		  up(false),
-		  down(false),
-		  velocity() {
-		//Nothing yet
-	}
+          forward(false),
+          backward(false),
+          left(false),
+          right(false),
+          up(false),
+          down(false),
+          velocity(),
+          currentWeapon(nullptr){
+        //Nothing yet
+    }
 
-	const float Player::ACCELERATION = 7.0f;
-	const float Player::DECAY = 0.20f;
+    const float Player::ACCELERATION = 7.0f;
+    const float Player::DECAY = 0.20f;
 
-	bool Player::IsForwardPressed() {
-		return forward;
-	}
-	bool Player::IsBackPressed() {
-		return backward;
-	}
-	bool Player::IsLeftPressed() {
-		return left;
-	}
-	bool Player::IsRightPressed() {
-		return right;
-	}
+    bool Player::IsForwardPressed() {
+        return forward;
+    }
+    bool Player::IsBackPressed() {
+        return backward;
+    }
+    bool Player::IsLeftPressed() {
+        return left;
+    }
+    bool Player::IsRightPressed() {
+        return right;
+    }
 
-	void Player::SetForwardPressed(bool isPressed) {
-		forward = isPressed;
-	}
-	void Player::SetBackPressed(bool isPressed) {
-		backward = isPressed;
-	}
-	void Player::SetLeftPressed(bool isPressed) {
-		left = isPressed;
-	}
-	void Player::SetRightPressed(bool isPressed) {
-		right = isPressed;
-	}
-	void Player::SetUpPressed(bool isPressed) {
-		up = isPressed;
-	}
-	void Player::SetDownPressed(bool isPressed) {
-		down = isPressed;
-	}
+    void Player::SetForwardPressed(bool isPressed) {
+        forward = isPressed;
+    }
+    void Player::SetBackPressed(bool isPressed) {
+        backward = isPressed;
+    }
+    void Player::SetLeftPressed(bool isPressed) {
+        left = isPressed;
+    }
+    void Player::SetRightPressed(bool isPressed) {
+        right = isPressed;
+    }
+    void Player::SetUpPressed(bool isPressed) {
+        up = isPressed;
+    }
+    void Player::SetDownPressed(bool isPressed) {
+        down = isPressed;
+    }
 
-	void Player::onUpdateSelf(float dt) {
+    void Player::setCurrentWeapon(Weapon *newWeapon) {
+        if (!currentWeapon) {
+            this->appendChild(newWeapon);
+        }
+        else {
+            this->replaceChild(newWeapon, this->indexOf(currentWeapon));
+        }
+        
+        currentWeapon = newWeapon;
+    }
 
-		glm::vec3 acceleration;
+    Weapon* Player::getCurrentWeapon() {
+        return currentWeapon;
+    }
 
-		if (forward) {
-			acceleration = getRotation() * glm::vec3(0, 0, 1);
-			velocity -= (acceleration * ACCELERATION) * dt;
-		}
-		else if (backward) {
-			acceleration = getRotation() * glm::vec3(0, 0, 1);
-			velocity += (acceleration * ACCELERATION) * dt;
-		}
-		else if (left) {
-			acceleration = getRotation() * glm::vec3(1, 0, 0);
-			velocity -= (acceleration * ACCELERATION) * dt;
-		}
-		else if (right) {
-			acceleration = getRotation() * glm::vec3(1, 0, 0);
-			velocity += (acceleration * ACCELERATION) * dt;
-		}
+    void Player::onUpdateSelf(float dt) {
 
-		else if (up) {
-			acceleration = getRotation() * glm::vec3(0, 1, 0);
-			velocity += (acceleration * ACCELERATION) * dt;
-		}
-		else if (down) {
-			acceleration = getRotation() * glm::vec3(0, 1, 0);
-			velocity -= (acceleration * ACCELERATION) * dt;
-		}
+        glm::vec3 acceleration;
 
-		velocity *= glm::pow(DECAY, dt);
+        if (forward) {
+            acceleration = getRotation() * glm::vec3(0, 0, 1);
+            velocity -= (acceleration * ACCELERATION) * dt;
+        }
+        else if (backward) {
+            acceleration = getRotation() * glm::vec3(0, 0, 1);
+            velocity += (acceleration * ACCELERATION) * dt;
+        }
+        else if (left) {
+            acceleration = getRotation() * glm::vec3(1, 0, 0);
+            velocity -= (acceleration * ACCELERATION) * dt;
+        }
+        else if (right) {
+            acceleration = getRotation() * glm::vec3(1, 0, 0);
+            velocity += (acceleration * ACCELERATION) * dt;
+        }
 
-		CheckBounds(velocity * dt);
+        else if (up) {
+            acceleration = getRotation() * glm::vec3(0, 1, 0);
+            velocity += (acceleration * ACCELERATION) * dt;
+        }
+        else if (down) {
+            acceleration = getRotation() * glm::vec3(0, 1, 0);
+            velocity -= (acceleration * ACCELERATION) * dt;
+        }
 
-		translate(velocity * dt);
-	}
+        velocity *= glm::pow(DECAY, dt);
 
-	void Player::CheckBounds(glm::vec3 translationAmount) {
-		glm::vec3 currentPos = getPosition();
-		glm::vec3 futurePos = currentPos += translationAmount;
-		glm::vec3 localScale = getScale();
+        CheckBounds(velocity * dt);
 
-		float halfX = localScale.x / 2;
-		float halfZ = localScale.z / 2;
+        translate(velocity * dt);
+    }
 
-		float diffX = 0;
-		float diffY = 0;
-		float diffZ = 0;
+    void Player::CheckBounds(glm::vec3 translationAmount) {
+        glm::vec3 currentPos = getPosition();
+        glm::vec3 futurePos = currentPos += translationAmount;
+        glm::vec3 localScale = getScale();
 
-		if (futurePos.x + halfX > XBOUND_POS) {
-			diffX = futurePos.x + halfX - XBOUND_POS;
-		}
-		if (futurePos.x - halfX < XBOUND_NEG) {
-			diffX = futurePos.x - halfX - XBOUND_NEG;
-		}
-		if (futurePos.y + localScale.y > YBOUND_POS) {
-			diffY = futurePos.y + localScale.y - YBOUND_POS;
-		}
-		if (futurePos.y < YBOUND_NEG) {
-			diffY = futurePos.y - YBOUND_NEG;
-		}
-		if (futurePos.z + halfZ > ZBOUND_POS) {
-			diffZ = futurePos.z + halfZ - ZBOUND_POS;
-		}
-		if (futurePos.z - halfZ < ZBOUND_NEG) {
-			diffZ = futurePos.z - halfZ - ZBOUND_NEG;
-		}
+        float halfX = localScale.x / 2;
+        float halfZ = localScale.z / 2;
 
-		velocity -= glm::vec3(diffX, diffY, diffZ);
-	}
+        float diffX = 0;
+        float diffY = 0;
+        float diffZ = 0;
+
+        if (futurePos.x + halfX > XBOUND_POS) {
+            diffX = futurePos.x + halfX - XBOUND_POS;
+        }
+        if (futurePos.x - halfX < XBOUND_NEG) {
+            diffX = futurePos.x - halfX - XBOUND_NEG;
+        }
+        if (futurePos.y + localScale.y > YBOUND_POS) {
+            diffY = futurePos.y + localScale.y - YBOUND_POS;
+        }
+        if (futurePos.y < YBOUND_NEG) {
+            diffY = futurePos.y - YBOUND_NEG;
+        }
+        if (futurePos.z + halfZ > ZBOUND_POS) {
+            diffZ = futurePos.z + halfZ - ZBOUND_POS;
+        }
+        if (futurePos.z - halfZ < ZBOUND_NEG) {
+            diffZ = futurePos.z - halfZ - ZBOUND_NEG;
+        }
+
+        velocity -= glm::vec3(diffX, diffY, diffZ);
+    }
 }
 }

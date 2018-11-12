@@ -10,8 +10,10 @@ namespace resources {
 namespace models {
     const std::string dirname = "models/";
 
+    const std::string acorn = models::dirname + "acorn/acorn.obj";
     const std::string cube = models::dirname + "cube/cube.obj";
     const std::string gnome = models::dirname + "gnome/gnome.obj";
+    const std::string jetpack = models::dirname + "jetpack/jetpack.obj";
     const std::string mushroom_gun = models::dirname + "mushroom_gun/mushroom_gun.obj";
     const std::string peanut_gun = models::dirname + "peanut_gun/peanut_gun.obj";
     const std::string plane = models::dirname + "plane/plane.obj";

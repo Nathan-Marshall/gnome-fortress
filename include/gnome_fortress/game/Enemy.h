@@ -18,12 +18,18 @@ public:
 	Enemy(const model::MeshGroup *meshGroup,
 		renderer::BasicMeshNodeTechnique *technique);
 
+    float GetBoundingRadius();
+    float GetHealth();
+    void DoDamage(float damage);
+
 protected:
-	void onUpdateSelf(float dt) override;
+    void onUpdateSelf(float dt) override;
+
+    float health;
+    float boundingRadius;
 
 private:
-	float health;
-	
+    
 };
 
 

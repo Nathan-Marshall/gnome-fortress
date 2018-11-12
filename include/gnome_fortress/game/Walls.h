@@ -11,25 +11,32 @@
 namespace gnome_fortress {
 namespace game {
 
-class Walls {
+class Walls : public model::SceneNode {
 
 public:
-	Walls(  resource::ResourceManager &resourceManager,
+
+    Walls(  resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique,
             int numRings = 3);
 
-	//Vector to define the walls
-	std::vector<std::vector<Wall*>> walls;
+    //Vector to define the walls
+    std::vector<std::vector<Wall*>> walls;
 
-	void draw();
+    void onUpdateSelf(float delta_time) override;
+
+    std::vector<std::vector<Wall*>>* GetWalls();
+
+    static int NumWalls();
 protected:
-			
+            
 private:
-	const static float OUTER_RADIUS;
-	const static float INNER_RADIUS;
-	const static int WALLS_PER_RING;
+    const static float OUTER_RADIUS;
+    const static float INNER_RADIUS;
+    const static int WALLS_PER_RING;
+    const static float WALL_WIDTH;
+    const static float WALL_HEIGHT;
 
-	void FillWalls(
+    void FillWalls(
             resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique,
             int numRings);
