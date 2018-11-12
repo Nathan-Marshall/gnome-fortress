@@ -8,10 +8,8 @@ MushroomGun::MushroomGun(
     renderer::BasicMeshNodeTechnique *technique,
     Player *player)
     : game::Weapon(
-        resourceManager.getOrLoadMesh(resources::models::mushroom_gun),
-        resourceManager.getOrLoadMesh(resources::models::rock5),
-        resourceManager.getOrLoadTexture("models/mushroom_gun/Gun(Front).png"),
-        resourceManager.getOrLoadTexture("models/rocks/rock5.png"),
+        resourceManager.getOrLoadMeshGroup(resources::models::mushroom_gun),
+        resourceManager.getOrLoadMeshGroup(resources::models::rock5),
         technique,
         player
     ) {
