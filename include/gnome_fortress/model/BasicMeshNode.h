@@ -3,7 +3,6 @@
 #include "gnome_fortress/renderer/BasicMeshNodeTechnique.h"
 #include "gnome_fortress/model/SceneNode.h"
 #include "gnome_fortress/model/Mesh.h"
-#include "gnome_fortress/model/Texture.h"
 
 namespace gnome_fortress {
 namespace model {

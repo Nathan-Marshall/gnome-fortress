@@ -8,12 +8,12 @@ namespace gnome_fortress {
 namespace game {
 
 Projectile::Projectile(
-        const model::Mesh *mesh,
+        const model::MeshGroup *meshGroup,
         renderer::BasicMeshNodeTechnique *technique, 
 		glm::vec3 pointOfOrigin,
         glm::vec3 velocity)
-    : model::BasicMeshNode(
-        mesh,
+    : model::BasicMeshGroupNode(
+        meshGroup,
         technique
       ),
       velocity(velocity), 

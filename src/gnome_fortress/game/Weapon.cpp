@@ -9,13 +9,13 @@ namespace gnome_fortress {
 namespace game {
 
 Weapon::Weapon(
-        const model::Mesh *gunMesh,
-        const model::Mesh *bMesh,
+        const model::MeshGroup *gunMeshGroup,
+        const model::MeshGroup *bMeshGroup,
         renderer::BasicMeshNodeTechnique *technique,
         Player *player)
-    : model::BasicMeshNode(gunMesh, technique),
+    : model::BasicMeshGroupNode(gunMeshGroup, technique),
       firing(false),
-      bulletMesh(bMesh) {
+      bulletMeshGroup(bMeshGroup) {
     setPosition(0.8, 0, 0);
 }
 
@@ -43,7 +43,7 @@ Projectile* Weapon::fireBullet(glm::vec3 position, glm::quat cameraRotation) {
 	vel.x *= 5.0; //FIRING_VELOCITY;
 	vel.y *= 5.0; //FIRING_VELOCITY;
 	vel.z *= 5.0; //FIRING_VELOCITY;
-	Projectile *p = new Projectile(bulletMesh, getTechnique(),
+	Projectile *p = new Projectile(bulletMeshGroup, getTechnique(),
 		glm::vec3(getGlobalTransform() * glm::vec4(0,0,0,1)), vel);
 	return p;
 }

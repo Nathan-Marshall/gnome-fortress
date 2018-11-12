@@ -254,7 +254,7 @@ int MainFunction(void){
 		papaNode->appendChild(player);
 
         //Create weapon
-        weapon = new Weapon(peanutGunMesh->meshes[0], rock1->meshes[0], technique, player);
+        weapon = new Weapon(peanutGunMesh, rock1, technique, player);
 		
 		Enemies* enemies = new Enemies();
 		enemies->turtles.push_back(new SiegeTurtle(resource_manager_g, technique));

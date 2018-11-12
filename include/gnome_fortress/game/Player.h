@@ -6,13 +6,13 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 
-#include "gnome_fortress/model/BasicMeshNode.h"
+#include "gnome_fortress/model/BasicMeshGroupNode.h"
 #include "gnome_fortress/resource/ResourceManager.h"
 
 namespace gnome_fortress{
 namespace game{
 
-class Player : public model::BasicMeshNode {
+class Player : public model::BasicMeshGroupNode {
 
 public:
 	Player( resource::ResourceManager &resourceManager,
