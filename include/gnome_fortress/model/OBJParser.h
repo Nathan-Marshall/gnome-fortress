@@ -17,7 +17,9 @@ namespace resource {
 
 namespace model {
 
-MeshGroup LoadMesh(const std::string &filename, resource::ResourceManager &resourceManager);
+MeshGroup *LoadMesh(const std::string &filename, resource::ResourceManager &resourceManager);
+
+std::string GetRelativePathFromAbsolutePath(const std::string &filename, resource::ResourceManager &resourceManager);
 
 }
 }

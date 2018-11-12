@@ -8,7 +8,7 @@ namespace game {
             resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique)
 		: model::BasicMeshNode(
-            &resourceManager.getOrLoadMeshGroup(resources::models::gnome)->meshes[0],
+            resourceManager.getOrLoadMeshGroup(resources::models::gnome)->meshes[0],
             technique
           ),
 		  forward(false),

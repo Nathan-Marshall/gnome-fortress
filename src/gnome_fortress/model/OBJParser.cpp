@@ -4,20 +4,19 @@
 #include <fstream>
 #include <sstream>
 
-#include <OBJ-Loader/OBJ_Loader.h>
-
 #include "gnome_fortress/resource/ResourceManager.h"
+#include "objl/OBJ_Loader.h"
 
 namespace gnome_fortress {
 namespace model {
 
-MeshGroup LoadMesh(const std::string &filename, resource::ResourceManager &resourceManager){
+MeshGroup *LoadMesh(const std::string &filename, resource::ResourceManager &resourceManager){
     objl::Loader loader;
     if (!loader.LoadFile(filename)) {
         throw(std::ios_base::failure(std::string("Error loading OBJ model from file: ") + std::string(filename)));
     }
 
-    MeshGroup meshGroup;
+    MeshGroup *meshGroup = new MeshGroup();
 
     // Number of attributes for vertices and faces
     const int vertex_att = 11;
@@ -57,8 +56,8 @@ MeshGroup LoadMesh(const std::string &filename, resource::ResourceManager &resou
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.Indices.size() * sizeof(unsigned int), mesh.Indices.data(), GL_STATIC_DRAW);
 
         auto &mat = mesh.MeshMaterial;
-        meshGroup.materials.push_back(
-            Material(
+        meshGroup->materials.push_back(
+            new Material(
                 mat.name,
                 glm::vec3(mat.Ka.X, mat.Ka.Y, mat.Ka.Z),
                 glm::vec3(mat.Kd.X, mat.Kd.Y, mat.Kd.Z),
@@ -67,20 +66,30 @@ MeshGroup LoadMesh(const std::string &filename, resource::ResourceManager &resou
                 mat.Ni,
                 mat.d,
                 mat.illum,
-                std::string() == mat.map_Ka ? nullptr : resourceManager.getOrLoadTexture(mat.map_Ka),
-                std::string() == mat.map_Kd ? nullptr : resourceManager.getOrLoadTexture(mat.map_Kd),
-                std::string() == mat.map_Ks ? nullptr : resourceManager.getOrLoadTexture(mat.map_Ks),
-                std::string() == mat.map_Ns ? nullptr : resourceManager.getOrLoadTexture(mat.map_Ns),
-                std::string() == mat.map_d ? nullptr : resourceManager.getOrLoadTexture(mat.map_d),
-                std::string() == mat.map_bump ? nullptr : resourceManager.getOrLoadTexture(mat.map_bump)
+                std::string() == mat.map_Ka ? nullptr : resourceManager.getOrLoadTexture(GetRelativePathFromAbsolutePath(mat.map_Ka, resourceManager)),
+                std::string() == mat.map_Kd ? nullptr : resourceManager.getOrLoadTexture(GetRelativePathFromAbsolutePath(mat.map_Kd, resourceManager)),
+                std::string() == mat.map_Ks ? nullptr : resourceManager.getOrLoadTexture(GetRelativePathFromAbsolutePath(mat.map_Ks, resourceManager)),
+                std::string() == mat.map_Ns ? nullptr : resourceManager.getOrLoadTexture(GetRelativePathFromAbsolutePath(mat.map_Ns, resourceManager)),
+                std::string() == mat.map_d ? nullptr : resourceManager.getOrLoadTexture(GetRelativePathFromAbsolutePath(mat.map_d, resourceManager)),
+                std::string() == mat.map_bump ? nullptr : resourceManager.getOrLoadTexture(GetRelativePathFromAbsolutePath(mat.map_bump, resourceManager))
             )
         );
 
         // create an instance of our own Mesh struct to store handles for the buffers
-        meshGroup.meshes.push_back(Mesh(mesh.MeshName, vbo, ebo, mesh.Vertices.size(), mesh.Indices.size(), GL_TRIANGLES, &meshGroup.materials.back()));
+        meshGroup->meshes.push_back(new Mesh(mesh.MeshName, vbo, ebo, mesh.Vertices.size(), mesh.Indices.size(), GL_TRIANGLES, meshGroup->materials.back()));
     }
 
     return meshGroup;
+}
+
+std::string GetRelativePathFromAbsolutePath(const std::string &filename, resource::ResourceManager &resourceManager) {
+    std::string dir = resourceManager.getResourcesDirectory();
+    if (filename.substr(0, dir.size()) == dir) {
+        return filename.substr(dir.size());
+    } else {
+        throw(std::ios_base::failure(std::string("Given filename (\"") + filename
+            + std::string("\") is not relative to the resources directory (\"") + dir + std::string("\").")));
+    }
 }
 
 }

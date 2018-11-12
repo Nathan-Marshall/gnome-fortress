@@ -35,6 +35,8 @@ set(HDRS
     include/gnome_fortress/resource/ResourceManager.h
 
     include/gnome_fortress/shader/Shader.h
+
+    include/objl/OBJ_Loader.h
 )
 
 # Specify project source files

@@ -8,7 +8,7 @@ MeshGroup::MeshGroup()
       materials() {
 }
 
-MeshGroup::MeshGroup(const std::vector<Mesh> &meshes, const std::vector<Material> &materials)
+MeshGroup::MeshGroup(const std::vector<Mesh *> &meshes, const std::vector<Material *> &materials)
     : meshes(meshes),
       materials(materials) {
 }

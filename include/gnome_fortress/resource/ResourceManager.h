@@ -13,6 +13,8 @@ public:
     ResourceManager(const std::string &resourcesDirectory);
     ~ResourceManager();
 
+    std::string getResourcesDirectory() const;
+
     void loadMeshGroup(const std::string &relativePath);
     model::MeshGroup *getOrLoadMeshGroup(const std::string &relativePath);
     void unloadMeshGroup(const std::string &relativePath);

@@ -21,10 +21,13 @@ ResourceManager::~ResourceManager() {
     unloadAll();
 }
 
+std::string ResourceManager::getResourcesDirectory() const {
+    return resourcesDirectory;
+}
+
 void ResourceManager::loadMeshGroup(const std::string &relativePath) {
     std::string fullPath = resourcesDirectory + relativePath;
-    model::LoadMesh(fullPath, *this);
-    model::MeshGroup *meshGroup = new model::MeshGroup();
+    model::MeshGroup *meshGroup = model::LoadMesh(fullPath, *this);
     meshGroups[relativePath] = meshGroup;
 }
 model::MeshGroup *ResourceManager::getOrLoadMeshGroup(const std::string &relativePath) {
@@ -35,9 +38,13 @@ model::MeshGroup *ResourceManager::getOrLoadMeshGroup(const std::string &relativ
 }
 void ResourceManager::unloadMeshGroup(const std::string &relativePath) {
     model::MeshGroup *meshGroup = meshGroups[relativePath];
-    for (auto &mesh : meshGroup->meshes) {
-        glDeleteBuffers(1, &mesh.vbo);
-        glDeleteBuffers(1, &mesh.ebo);
+    for (auto mesh : meshGroup->meshes) {
+        glDeleteBuffers(1, &mesh->vbo);
+        glDeleteBuffers(1, &mesh->ebo);
+        delete mesh;
+    }
+    for (auto material : meshGroup->materials) {
+        delete material;
     }
     delete meshGroup;
     meshGroups.erase(relativePath);

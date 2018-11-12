@@ -14,10 +14,10 @@ namespace model {
 struct MeshGroup {
     MeshGroup();
 
-    MeshGroup(const std::vector<Mesh> &meshes, const std::vector<Material> &materials);
+    MeshGroup(const std::vector<Mesh *> &meshes, const std::vector<Material *> &materials);
 
-    std::vector<Mesh> meshes;
-    std::vector<Material> materials;
+    std::vector<Mesh *> meshes;
+    std::vector<Material *> materials;
 };
 
 }
