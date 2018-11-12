@@ -1,22 +1,18 @@
-#include "gnome_fortress/model/OBJParser.h"
-
-#include <iostream>
-#include <fstream>
-#include <sstream>
+#include "gnome_fortress/resource/MeshGroupLoader.h"
 
 #include "gnome_fortress/resource/ResourceManager.h"
 #include "objl/OBJ_Loader.h"
 
 namespace gnome_fortress {
-namespace model {
+namespace resource {
 
-MeshGroup *LoadMesh(const std::string &filename, resource::ResourceManager &resourceManager){
+model::MeshGroup *MeshGroupLoader::LoadMeshGroup(const std::string &filename, resource::ResourceManager &resourceManager){
     objl::Loader loader;
     if (!loader.LoadFile(filename)) {
         throw(std::ios_base::failure(std::string("Error loading OBJ model from file: ") + std::string(filename)));
     }
 
-    MeshGroup *meshGroup = new MeshGroup();
+    model::MeshGroup *meshGroup = new model::MeshGroup();
 
     // Number of attributes for vertices and faces
     const int vertex_att = 11;
@@ -57,7 +53,7 @@ MeshGroup *LoadMesh(const std::string &filename, resource::ResourceManager &reso
 
         auto &mat = mesh.MeshMaterial;
         meshGroup->materials.push_back(
-            new Material(
+            new model::Material(
                 mat.name,
                 glm::vec3(mat.Ka.X, mat.Ka.Y, mat.Ka.Z),
                 glm::vec3(mat.Kd.X, mat.Kd.Y, mat.Kd.Z),
@@ -76,13 +72,25 @@ MeshGroup *LoadMesh(const std::string &filename, resource::ResourceManager &reso
         );
 
         // create an instance of our own Mesh struct to store handles for the buffers
-        meshGroup->meshes.push_back(new Mesh(mesh.MeshName, vbo, ebo, mesh.Vertices.size(), mesh.Indices.size(), GL_TRIANGLES, meshGroup->materials.back()));
+        meshGroup->meshes.push_back(new model::Mesh(mesh.MeshName, vbo, ebo, mesh.Vertices.size(), mesh.Indices.size(), GL_TRIANGLES, meshGroup->materials.back()));
     }
 
     return meshGroup;
 }
 
-std::string GetRelativePathFromAbsolutePath(const std::string &filename, resource::ResourceManager &resourceManager) {
+void MeshGroupLoader::UnloadMeshGroup(model::MeshGroup *meshGroup) {
+    for (auto mesh : meshGroup->meshes) {
+        glDeleteBuffers(1, &mesh->vbo);
+        glDeleteBuffers(1, &mesh->ebo);
+        delete mesh;
+    }
+    for (auto material : meshGroup->materials) {
+        delete material;
+    }
+    delete meshGroup;
+}
+
+std::string MeshGroupLoader::GetRelativePathFromAbsolutePath(const std::string &filename, resource::ResourceManager &resourceManager) {
     std::string dir = resourceManager.getResourcesDirectory();
     if (filename.substr(0, dir.size()) == dir) {
         return filename.substr(dir.size());

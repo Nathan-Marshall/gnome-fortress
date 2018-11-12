@@ -1,22 +1,19 @@
 /*
- * Copyright (c) 2018 Nathan Marshall <NathanMarshall@cmail.carleton.ca>,
+ * Copyright (c) 2018 Mitchell Blanchard, Nathan Marshall, Megan Perera,
  * Oliver van Kaick <Oliver.vanKaick@carleton.ca>, David Mould <mould@scs.carleton.ca>
  */
 
-#include "gnome_fortress/shader/Shader.h"
+#include "gnome_fortress/resource/ShaderProgramLoader.h"
 
-#include <fstream>
-#include <iostream>
-#include <sstream>
+#include "gnome_fortress/resource/FileReader.h"
 
 namespace gnome_fortress {
-namespace shader {
+namespace resource {
 
-// Compiles and links a vertex shader and fragment shader from the given source code.
-GLuint CreateShaderProgram(const std::string &shader_prefix) {
-    std::string vp_source_str = LoadTextFile(shader_prefix + "_vp.glsl");
+GLuint ShaderProgramLoader::LoadShaderProgram(const std::string &shader_prefix) {
+    std::string vp_source_str = ReadTextFile(shader_prefix + "_vp.glsl");
     const GLchar *vp_source = vp_source_str.c_str();
-    std::string fp_source_str = LoadTextFile(shader_prefix + "_fp.glsl");
+    std::string fp_source_str = ReadTextFile(shader_prefix + "_fp.glsl");
     const GLchar *fp_source = fp_source_str.c_str();
 
     // Create a shader from vertex program source code
@@ -68,26 +65,8 @@ GLuint CreateShaderProgram(const std::string &shader_prefix) {
     return program;
 }
 
-std::string LoadTextFile(const std::string &filename) {
-
-    // Open file
-    std::ifstream f;
-    f.open(filename);
-    if (f.fail()) {
-        throw(std::ios_base::failure(std::string("Error opening file ") + std::string(filename)));
-    }
-
-    // Read file
-    std::string content;
-    std::string line;
-    while (std::getline(f, line)) {
-        content += line + "\n";
-    }
-
-    // Close file
-    f.close();
-
-    return content;
+void ShaderProgramLoader::UnloadShaderProgram(GLuint program) {
+    glDeleteProgram(program);
 }
 
 }

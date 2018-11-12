@@ -30,9 +30,7 @@
 #include "gnome_fortress/game/SiegeTurtle.h"
 #include "gnome_fortress/camera/SceneNodeCamera.h"
 #include "gnome_fortress/model/Mesh.h"
-#include "gnome_fortress/model/OBJParser.h"
 #include "gnome_fortress/resource/ResourceManager.h"
-#include "gnome_fortress/shader/Shader.h"
 
 #include "resources_config.h"
 
