@@ -5,8 +5,8 @@ namespace game {
 
 
 Enemy::Enemy(const model::MeshGroup *meshGroup, renderer::BasicMeshNodeTechnique *technique)
-	: model::BasicMeshGroupNode(meshGroup, technique) {
-	//Nothing yet
+    : model::BasicMeshGroupNode(meshGroup, technique) {
+    //Nothing yet
 }
 
 

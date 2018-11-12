@@ -7,7 +7,7 @@ namespace game {
     Player::Player(
             resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique)
-		: model::BasicMeshGroupNode(
+        : model::BasicMeshGroupNode(
             resourceManager.getOrLoadMeshGroup(resources::models::gnome),
             technique
           ),

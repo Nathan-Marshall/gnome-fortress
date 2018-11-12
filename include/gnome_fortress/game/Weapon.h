@@ -14,7 +14,7 @@ namespace gnome_fortress {
 namespace game {
 
 class Weapon : public model::BasicMeshGroupNode {
-	
+    
 public: 
     Weapon(const model::MeshGroup *gunMeshGroup,
         const model::MeshGroup *bMeshGroup,
@@ -41,10 +41,10 @@ protected:
     static int FIRING_RATE; //number of bullets per second 
     static double FIRING_VELOCITY; //speed of individual bullets 
 
-	const model::MeshGroup *bulletMeshGroup;
-	
-	bool firing;
-	float cooldown;
+    const model::MeshGroup *bulletMeshGroup;
+    
+    bool firing;
+    float cooldown;
 
 };
 }

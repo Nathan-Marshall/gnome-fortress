@@ -9,7 +9,7 @@ namespace game {
 SiegeTurtle::SiegeTurtle(
         resource::ResourceManager &resourceManager,
         renderer::BasicMeshNodeTechnique *technique)
-	: game::Enemy(
+    : game::Enemy(
         resourceManager.getOrLoadMeshGroup(resources::models::siege_turtle),
         technique
       ) {

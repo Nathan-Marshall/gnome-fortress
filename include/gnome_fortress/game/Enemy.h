@@ -15,8 +15,8 @@ namespace game {
 class Enemy : public model::BasicMeshGroupNode {
 
 public:
-	Enemy(const model::MeshGroup *meshGroup,
-		renderer::BasicMeshNodeTechnique *technique);
+    Enemy(const model::MeshGroup *meshGroup,
+        renderer::BasicMeshNodeTechnique *technique);
 
     float GetBoundingRadius();
     float GetHealth();

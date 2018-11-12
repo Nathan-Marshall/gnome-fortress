@@ -247,7 +247,7 @@ int MainFunction(void){
         glEnable(GL_CULL_FACE);
 
         // Create geometry of the cube and cylinder
-		model::MeshGroup *plane = resource_manager_g.getOrLoadMeshGroup(resources::models::plane);
+        model::MeshGroup *plane = resource_manager_g.getOrLoadMeshGroup(resources::models::plane);
 
         // Set up shaders
         GLuint program = resource_manager_g.getOrLoadShaderProgram(resources::shaders::textured_material);
@@ -304,10 +304,10 @@ int MainFunction(void){
         player->appendChild(cameraNodeThird);
         player->appendChild(cameraNodeFirst);
 
-		model::SceneNode *ground = new model::BasicMeshNode(plane->meshes[0], technique);
-		ground->setScale(50);
-		ground->setPosition(0, 0, 0);
-		papaNode->appendChild(ground);
+        model::SceneNode *ground = new model::BasicMeshNode(plane->meshes[0], technique);
+        ground->setScale(50);
+        ground->setPosition(0, 0, 0);
+        papaNode->appendChild(ground);
 
         double prev_time = glfwGetTime();
         // Run the main loop
