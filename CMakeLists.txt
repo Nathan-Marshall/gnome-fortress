@@ -21,9 +21,11 @@ set(HDRS
     include/gnome_fortress/game/Wall.h
     include/gnome_fortress/game/Walls.h
    
+    include/gnome_fortress/model/BasicMeshGroupNode.h
     include/gnome_fortress/model/BasicMeshNode.h
+    include/gnome_fortress/model/Material.h
     include/gnome_fortress/model/Mesh.h
-    include/gnome_fortress/model/OBJParser.h
+    include/gnome_fortress/model/MeshGroup.h
     include/gnome_fortress/model/SceneNode.h
     include/gnome_fortress/model/Texture.h
     
@@ -33,9 +35,13 @@ set(HDRS
     include/gnome_fortress/renderer/Uniform.h
     include/gnome_fortress/renderer/VertexAttribute.h
 
+    include/gnome_fortress/resource/FileReader.h
+    include/gnome_fortress/resource/MeshGroupLoader.h
     include/gnome_fortress/resource/ResourceManager.h
+    include/gnome_fortress/resource/ShaderProgramLoader.h
+    include/gnome_fortress/resource/TextureLoader.h
 
-    include/gnome_fortress/shader/Shader.h
+    include/objl/OBJ_Loader.h
 )
 
 # Specify project source files
@@ -55,10 +61,12 @@ set(SRCS
     src/gnome_fortress/game/Weapon.cpp
     src/gnome_fortress/game/Wall.cpp
     src/gnome_fortress/game/Walls.cpp
-
+    
+    src/gnome_fortress/model/BasicMeshGroupNode.cpp
     src/gnome_fortress/model/BasicMeshNode.cpp
+    src/gnome_fortress/model/Material.cpp
     src/gnome_fortress/model/Mesh.cpp
-    src/gnome_fortress/model/OBJParser.cpp
+    src/gnome_fortress/model/MeshGroup.cpp
     src/gnome_fortress/model/SceneNode.cpp
     src/gnome_fortress/model/Texture.cpp
     
@@ -68,9 +76,11 @@ set(SRCS
     src/gnome_fortress/renderer/Uniform.cpp
     src/gnome_fortress/renderer/VertexAttribute.cpp
 
+    src/gnome_fortress/resource/FileReader.cpp
+    src/gnome_fortress/resource/MeshGroupLoader.cpp
     src/gnome_fortress/resource/ResourceManager.cpp
-
-    src/gnome_fortress/shader/Shader.cpp
+    src/gnome_fortress/resource/ShaderProgramLoader.cpp
+    src/gnome_fortress/resource/TextureLoader.cpp
 )
 
 # The following config header will be evaluated and added to "bin"

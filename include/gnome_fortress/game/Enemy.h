@@ -6,17 +6,16 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 
-#include "gnome_fortress/model/BasicMeshNode.h"
+#include "gnome_fortress/model/BasicMeshGroupNode.h"
 
 namespace gnome_fortress {
 namespace game {
 
 
-class Enemy : public model::BasicMeshNode {
+class Enemy : public model::BasicMeshGroupNode {
 
 public:
-    Enemy(const model::Mesh *mesh,
-        const model::Texture *diffuse_texture,
+    Enemy(const model::MeshGroup *meshGroup,
         renderer::BasicMeshNodeTechnique *technique);
 
     float GetBoundingRadius();

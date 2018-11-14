@@ -13,9 +13,8 @@ Wall::Wall(
         resource::ResourceManager &resourceManager,
         renderer::BasicMeshNodeTechnique *technique,
         float wallHealth)
-    : model::BasicMeshNode(
-        resourceManager.getOrLoadMesh(resources::models::cube),
-        resourceManager.getOrLoadTexture("models/cube/checker.png"),
+    : model::BasicMeshGroupNode(
+        resourceManager.getOrLoadMeshGroup(resources::models::cube),
         technique
     ),
     health(wallHealth) {

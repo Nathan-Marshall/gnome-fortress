@@ -6,19 +6,18 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 
+#include "gnome_fortress/model/BasicMeshGroupNode.h"
 #include "gnome_fortress/game/Player.h"
 #include "gnome_fortress/game/Projectile.h"
 
 namespace gnome_fortress {
 namespace game {
 
-class Weapon : public model::BasicMeshNode {
+class Weapon : public model::BasicMeshGroupNode {
     
 public: 
-    Weapon(const model::Mesh *gunMesh,
-        const model::Mesh *bMesh,
-        const model::Texture *gun_diffuse_texture,
-        const model::Texture *bullet_diffuse_texture,
+    Weapon(const model::MeshGroup *gunMeshGroup,
+        const model::MeshGroup *bMeshGroup,
         renderer::BasicMeshNodeTechnique *technique, 
         Player *player);
 
@@ -42,8 +41,7 @@ protected:
     static int FIRING_RATE; //number of bullets per second 
     static double FIRING_VELOCITY; //speed of individual bullets 
 
-    const model::Mesh *bulletMesh;
-    const model::Texture *bullet_diffuse_texture;
+    const model::MeshGroup *bulletMeshGroup;
     
     bool firing;
     float cooldown;

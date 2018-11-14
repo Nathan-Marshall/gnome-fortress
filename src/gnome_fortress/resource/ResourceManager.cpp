@@ -1,16 +1,15 @@
 #include <gnome_fortress/resource/ResourceManager.h>
 
-#include <SOIL/SOIL.h>
-
-#include "gnome_fortress/model/OBJParser.h"
-#include "gnome_fortress/shader/Shader.h"
+#include "gnome_fortress/resource/MeshGroupLoader.h"
+#include "gnome_fortress/resource/ShaderProgramLoader.h"
+#include "gnome_fortress/resource/TextureLoader.h"
 
 namespace gnome_fortress {
 namespace resource {
 
 ResourceManager::ResourceManager(const std::string &inResourcesDirectory)
     : resourcesDirectory(inResourcesDirectory),
-      meshes(),
+      meshGroups(),
       shaderPrograms(),
       textures() {
     if (resourcesDirectory.back() != '/') {
@@ -21,29 +20,28 @@ ResourceManager::~ResourceManager() {
     unloadAll();
 }
 
-void ResourceManager::loadMesh(const std::string &relativePath) {
+std::string ResourceManager::getResourcesDirectory() const {
+    return resourcesDirectory;
+}
+
+void ResourceManager::loadMeshGroup(const std::string &relativePath) {
     std::string fullPath = resourcesDirectory + relativePath;
-    model::Mesh *mesh = new model::Mesh(model::LoadMesh(fullPath));
-    meshes[relativePath] = mesh;
+    meshGroups[relativePath] = MeshGroupLoader::LoadMeshGroup(fullPath, *this);
 }
-model::Mesh *ResourceManager::getOrLoadMesh(const std::string &relativePath) {
-    if (meshes.find(relativePath) == meshes.end()) {
-        loadMesh(relativePath);
+model::MeshGroup *ResourceManager::getOrLoadMeshGroup(const std::string &relativePath) {
+    if (meshGroups.find(relativePath) == meshGroups.end()) {
+        loadMeshGroup(relativePath);
     }
-    return meshes[relativePath];
+    return meshGroups[relativePath];
 }
-void ResourceManager::unloadMesh(const std::string &relativePath) {
-    model::Mesh *mesh = meshes[relativePath];
-    glDeleteBuffers(1, &mesh->vbo);
-    glDeleteBuffers(1, &mesh->ebo);
-    delete mesh;
-    meshes.erase(relativePath);
+void ResourceManager::unloadMeshGroup(const std::string &relativePath) {
+    MeshGroupLoader::UnloadMeshGroup(meshGroups[relativePath]);
+    meshGroups.erase(relativePath);
 }
 
 void ResourceManager::loadShaderProgram(const std::string &relativePath) {
     std::string fullPath = resourcesDirectory + relativePath;
-    GLuint id = shader::CreateShaderProgram(fullPath);
-    shaderPrograms[relativePath] = id;
+    shaderPrograms[relativePath] = ShaderProgramLoader::LoadShaderProgram(fullPath);
 }
 GLuint ResourceManager::getOrLoadShaderProgram(const std::string &relativePath) {
     if (shaderPrograms.find(relativePath) == shaderPrograms.end()) {
@@ -52,18 +50,13 @@ GLuint ResourceManager::getOrLoadShaderProgram(const std::string &relativePath) 
     return shaderPrograms[relativePath];
 }
 void ResourceManager::unloadShaderProgram(const std::string &relativePath) {
-    GLuint shaderProgram = shaderPrograms[relativePath];
-    glDeleteProgram(shaderProgram);
+    ShaderProgramLoader::UnloadShaderProgram(shaderPrograms[relativePath]);
     shaderPrograms.erase(relativePath);
 }
 
 void ResourceManager::loadTexture(const std::string &relativePath) {
     std::string fullPath = resourcesDirectory + relativePath;
-    GLuint id = SOIL_load_OGL_texture(fullPath.c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
-    if (!id) {
-        throw(std::ios_base::failure(std::string("Error loading texture ") + fullPath + std::string(": ") + std::string(SOIL_last_result())));
-    }
-    textures[relativePath] = new model::Texture(id);
+    textures[relativePath] = TextureLoader::LoadTexture(fullPath);
 }
 model::Texture *ResourceManager::getOrLoadTexture(const std::string &relativePath) {
     if (textures.find(relativePath) == textures.end()) {
@@ -72,15 +65,13 @@ model::Texture *ResourceManager::getOrLoadTexture(const std::string &relativePat
     return textures[relativePath];
 }
 void ResourceManager::unloadTexture(const std::string &relativePath) {
-    model::Texture *texture = textures[relativePath];
-    glDeleteTextures(1, &texture->id);
-    delete texture;
+    TextureLoader::UnloadTexture(textures[relativePath]);
     textures.erase(relativePath);
 }
 
 void ResourceManager::unloadAll() {
-    while (!meshes.empty()) {
-        unloadMesh(meshes.begin()->first);
+    while (!meshGroups.empty()) {
+        unloadMeshGroup(meshGroups.begin()->first);
     }
     while (!shaderPrograms.empty()) {
         unloadShaderProgram(shaderPrograms.begin()->first);

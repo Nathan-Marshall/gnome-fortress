@@ -8,10 +8,8 @@ namespace model {
 
 BasicMeshNode::BasicMeshNode(
         const Mesh *mesh,
-        const Texture *diffuse_texture,
         renderer::BasicMeshNodeTechnique *technique)
     : mesh(mesh),
-      diffuse_texture(diffuse_texture),
       technique(technique) {
 
 }
@@ -23,7 +21,7 @@ void BasicMeshNode::onDrawSelf(const glm::mat4 &parent_transform) const {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
         
         // bind textures
-        technique->bindDiffuseTexture(diffuse_texture);
+        technique->bindDiffuseTexture(mesh->material->map_Kd);
 
         // update model matrix
         technique->setModelMatrix(parent_transform * getTransformMatrix());

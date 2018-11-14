@@ -3,8 +3,7 @@
 #include <string>
 #include <unordered_map>
 
-#include <gnome_fortress/model/Mesh.h>
-#include <gnome_fortress/model/Texture.h>
+#include <gnome_fortress/model/MeshGroup.h>
 
 namespace gnome_fortress {
 namespace resource {
@@ -14,9 +13,11 @@ public:
     ResourceManager(const std::string &resourcesDirectory);
     ~ResourceManager();
 
-    void loadMesh(const std::string &relativePath);
-    model::Mesh *getOrLoadMesh(const std::string &relativePath);
-    void unloadMesh(const std::string &relativePath);
+    std::string getResourcesDirectory() const;
+
+    void loadMeshGroup(const std::string &relativePath);
+    model::MeshGroup *getOrLoadMeshGroup(const std::string &relativePath);
+    void unloadMeshGroup(const std::string &relativePath);
 
     /* When dealing with shaders, ResourceManager expects a filename prefix, which refers to both the vertex and
      * fragment shader source files. "_vp.glsl" is appended for the vertex shader and /"_fp.glsl" is appended for the
@@ -40,7 +41,7 @@ public:
 private:
     std::string resourcesDirectory;
 
-    std::unordered_map<std::string, model::Mesh *> meshes;
+    std::unordered_map<std::string, model::MeshGroup *> meshGroups;
     std::unordered_map<std::string, GLuint> shaderPrograms;
     std::unordered_map<std::string, model::Texture *> textures;
 };

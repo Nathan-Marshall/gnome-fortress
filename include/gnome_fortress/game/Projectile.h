@@ -6,19 +6,18 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 
-#include "gnome_fortress/model/BasicMeshNode.h"
+#include "gnome_fortress/model/BasicMeshGroupNode.h"
 
 namespace gnome_fortress {
 namespace game {
 
-class Projectile : public model::BasicMeshNode {
+class Projectile : public model::BasicMeshGroupNode {
 public: 
 
     const static float DAMAGE;
 
     Projectile(
-            const model::Mesh *mesh,
-            const model::Texture *diffuse_texture,
+            const model::MeshGroup *meshGroup,
             renderer::BasicMeshNodeTechnique *technique,
             glm::vec3 pointOfOrigin,
             glm::vec3 velocity);

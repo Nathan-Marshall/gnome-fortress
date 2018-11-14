@@ -31,9 +31,7 @@
 #include "gnome_fortress/game/Wall.h"
 #include "gnome_fortress/camera/SceneNodeCamera.h"
 #include "gnome_fortress/model/Mesh.h"
-#include "gnome_fortress/model/OBJParser.h"
 #include "gnome_fortress/resource/ResourceManager.h"
-#include "gnome_fortress/shader/Shader.h"
 
 #include "resources_config.h"
 
@@ -249,8 +247,7 @@ int MainFunction(void){
         glEnable(GL_CULL_FACE);
 
         // Create geometry of the cube and cylinder
-        model::Mesh *plane = resource_manager_g.getOrLoadMesh(resources::models::plane);
-        model::Texture *redChecker = resource_manager_g.getOrLoadTexture("/models/plane/checker.png");
+        model::MeshGroup *plane = resource_manager_g.getOrLoadMeshGroup(resources::models::plane);
 
         // Set up shaders
         GLuint program = resource_manager_g.getOrLoadShaderProgram(resources::shaders::textured_material);
@@ -307,7 +304,7 @@ int MainFunction(void){
         player->appendChild(cameraNodeThird);
         player->appendChild(cameraNodeFirst);
 
-        model::SceneNode *ground = new model::BasicMeshNode(plane, redChecker, technique);
+        model::SceneNode *ground = new model::BasicMeshNode(plane->meshes[0], technique);
         ground->setScale(50);
         ground->setPosition(0, 0, 0);
         papaNode->appendChild(ground);
