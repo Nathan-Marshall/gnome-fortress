@@ -1,0 +1,28 @@
+# Blender MTL File: 'None'
+# Material Count: 2
+
+newmtl Tree_Cones
+Ns 37.254902
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd pinecones_diffuse.jpg
+map_Bump pinecones_bump.jpg
+map_Ka pinecones_diffuse.jpg
+
+newmtl Tree_Cones.001
+Ns 37.254902
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd pinecones_diffuse.jpg
+map_Bump pinecones_bump.jpg
+map_Ka pinecones_diffuse.jpg
