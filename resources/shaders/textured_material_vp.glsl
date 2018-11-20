@@ -6,34 +6,31 @@ in vec3 normal;
 in vec3 color;
 in vec2 uv;
 
-// Uniform (global) buffer
+// global matrices
 uniform mat4 world_mat;
 uniform mat4 view_mat;
 uniform mat4 projection_mat;
 uniform mat4 normal_mat;
+uniform vec3 eye_pos;
 
 // Attributes forwarded to the fragment shader
 out vec3 position_interp;
 out vec3 normal_interp;
 out vec4 color_interp;
 out vec2 uv_interp;
-out vec3 light_pos;
-
-// Material attributes (constants)
-uniform vec3 light_position = vec3(-0.5, -0.5, 1.5);
-
 
 void main()
 {
-    gl_Position = projection_mat * view_mat * world_mat * vec4(vertex, 1.0);
+    // Transform vertex position to screen space
+    gl_Position = projection_mat * view_mat * world_mat * vec4(vertex, 1);
 
-    position_interp = vec3(view_mat * world_mat * vec4(vertex, 1.0));
-    
-    normal_interp = vec3(normal_mat * vec4(normal, 0.0));
+    // Transform vertex position to world space
+    position_interp = vec3(world_mat * vec4(vertex, 1));
 
-    color_interp = vec4(color, 1.0);
+    // Transform normal directions to world space
+    normal_interp = vec3(normal_mat * vec4(normal, 0));
+
+    color_interp = vec4(color, 1);
 
     uv_interp = uv;
-
-    light_pos = vec3(view_mat * vec4(light_position, 1.0));
 }

@@ -16,7 +16,7 @@ namespace models {
     const std::string jetpack = models::dirname + "jetpack/jetpack.obj";
     const std::string mushroom_gun = models::dirname + "mushroom_gun/mushroom_gun.obj";
     const std::string peanut_gun = models::dirname + "peanut_gun/peanut_gun.obj";
-    const std::string plane = models::dirname + "plane/plane.obj";
+    const std::string ground = models::dirname + "ground/ground.obj";
     const std::string rock1 = models::dirname + "rocks/rock1.obj";
     const std::string rock2 = models::dirname + "rocks/rock2.obj";
     const std::string rock3 = models::dirname + "rocks/rock3.obj";

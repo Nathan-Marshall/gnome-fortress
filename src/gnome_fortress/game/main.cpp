@@ -247,11 +247,11 @@ int MainFunction(void){
         glEnable(GL_CULL_FACE);
 
         // Create geometry of the cube and cylinder
-        model::MeshGroup *plane = resource_manager_g.getOrLoadMeshGroup(resources::models::plane);
+        model::MeshGroup *plane = resource_manager_g.getOrLoadMeshGroup(resources::models::ground);
 
         // Set up shaders
         GLuint program = resource_manager_g.getOrLoadShaderProgram(resources::shaders::textured_material);
-        auto technique = new renderer::BasicMeshNodeTechnique(program, "projection_mat", "view_mat", "world_mat", "diffuse_map");
+        auto technique = new renderer::BasicMeshNodeTechnique(program, "projection_mat", "view_mat", "world_mat", "normal_mat", "eye_pos", "diffuse_map");
         technique->addVertexAttribute(renderer::VertexAttribute(program, "vertex", 3, GL_FLOAT, GL_FALSE));
         technique->addVertexAttribute(renderer::VertexAttribute(program, "normal", 3, GL_FLOAT, GL_FALSE));
         technique->addVertexAttribute(renderer::VertexAttribute(program, "color", 3, GL_FLOAT, GL_FALSE));

@@ -15,7 +15,9 @@ public:
             const std::string &proj_name,
             const std::string &view_name,
             const std::string &model_name,
-            const std::string &diffuse_name);
+            const std::string &normal_name,
+            const std::string &diffuse_name,
+            const std::string &eye_pos_name);
 
     void bindDiffuseTexture(const model::Texture *texture);
 
