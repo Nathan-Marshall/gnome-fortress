@@ -1,0 +1,15 @@
+# Blender MTL File: 'None'
+# Material Count: 1
+
+newmtl Berry
+Ns 35.294118
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.249400 0.108200 0.108200
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd pinecones_diffuse.jpg
+map_Bump pinecones_bump.jpg
+refl Map__20_Gradient Ramp.jpg
