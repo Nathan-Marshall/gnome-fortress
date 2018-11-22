@@ -7,6 +7,7 @@
 #include <glm/gtc/constants.hpp>
 
 #include "gnome_fortress/model/BasicMeshGroupNode.h"
+#include "gnome_fortress/resource/ResourceManager.h"
 
 namespace gnome_fortress {
 namespace game {
@@ -30,7 +31,7 @@ public:
 
     float GetDamage();
 
-private:
+protected:
     double lifespan;
     glm::vec3 velocity;
 

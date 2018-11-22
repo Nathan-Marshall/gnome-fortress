@@ -2,8 +2,6 @@
 
 #include <iostream>
 
-#include "gnome_fortress/game/Resources.h"
-
 namespace gnome_fortress {
 namespace game {
 
@@ -20,6 +18,7 @@ Projectile::Projectile(
       lifespan(0) {
 
     setPosition(pointOfOrigin);
+    //setPosition(pointOfOrigin + glm::vec3(0.03, 0.5, -0.25));
 
     //Make the bullets nice and smol
     setScale(0.2f);

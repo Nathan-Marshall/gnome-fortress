@@ -11,6 +11,8 @@
 namespace gnome_fortress {
 namespace game {
 
+class Spore;
+
 class MushroomGun : public game::Weapon {
 
 public:
@@ -21,6 +23,9 @@ public:
 
 protected:
     void onUpdateSelf(float dt) override;
+
+    //Creating bullets 
+    Projectile* fireBullet(glm::vec3 position) override;
 };
 
 }
