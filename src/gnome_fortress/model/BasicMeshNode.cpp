@@ -21,7 +21,11 @@ void BasicMeshNode::onDrawSelf(const glm::mat4 &parent_transform) const {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
         
         // bind textures
+        technique->setDiffuseColor(mesh->material->Kd);
+        technique->setSpecularColor(mesh->material->Ks);
+        technique->setSpecularExponent(mesh->material->Ns);
         technique->bindDiffuseTexture(mesh->material->map_Kd);
+        technique->bindGlossTexture(mesh->material->map_Ks);
 
         // update model matrix
         technique->setModelMatrix(parent_transform * getTransformMatrix());
