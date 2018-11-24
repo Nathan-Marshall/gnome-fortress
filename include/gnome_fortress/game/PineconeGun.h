@@ -11,12 +11,12 @@
 namespace gnome_fortress {
 namespace game {
 
-class Rock;
+class Rocket;
 
-class PeanutGun : public game::Weapon {
+class PineconeGun : public game::Weapon {
 
 public:
-    PeanutGun(
+    PineconeGun(
         resource::ResourceManager &resourceManager,
         renderer::BasicMeshNodeTechnique *technique,
         Player *player);
@@ -28,5 +28,6 @@ protected:
     Projectile* fireBullet(glm::vec3 position) override;
 
 };
+
 }
 }

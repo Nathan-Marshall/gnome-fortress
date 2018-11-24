@@ -25,6 +25,7 @@
 #include "gnome_fortress/game/Enemies.h"
 #include "gnome_fortress/game/MushroomGun.h"
 #include "gnome_fortress/game/PeanutGun.h"
+#include "gnome_fortress/game/PineconeGun.h"
 #include "gnome_fortress/game/Player.h"
 #include "gnome_fortress/game/Resources.h"
 #include "gnome_fortress/game/Walls.h"
@@ -61,9 +62,13 @@ model::SceneNode *papaNode;
 game::Player *player;
 game::Weapon *peanutGun;
 game::Weapon *mushroomGun;
+game::Weapon *pineconeGun;
 game::Walls* walls;
 game::Enemies* enemies;
 game::Projectiles* playerProjectiles;
+
+//A vector for swapping through weapons 
+std::vector<Weapon*> weapons;
 
 resource::ResourceManager resource_manager_g(RESOURCES_DIRECTORY);
 
@@ -83,6 +88,8 @@ void CursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
     //Then we can rotate the camera based off of the calculated value
     //The offset from the middle will be larger based on how far they push the cursor to rotate
     player->rotate(x_angle * 0.001, glm::vec3(0, 1, 0));
+    player->getWeaponContainer()->rotate(y_angle * 0.0005, glm::vec3(1, 0, 0));
+    //player->getWeaponContainer()->rotate()
 
     //Adjust both cameras so that there won't be any shift when we toggle between the two
     
@@ -100,7 +107,7 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
         std::cout << "Left Mouse Pressed " << std::endl;
         if (player->getCurrentWeapon()->getCooldown() <= 0) {
             player->getCurrentWeapon()->setCooldown(0.3f);
-            Projectile* p = player->getCurrentWeapon()->fireBullet(player->getCurrentWeapon()->getPosition(), scene_camera_first_g.getNode()->getRotation());
+            Projectile* p = player->getCurrentWeapon()->fireBullet(player->getCurrentWeapon()->getPosition());
             playerProjectiles->projectiles.push_back(p); //Sidenote: it doesn't matter which camera we use here since both rotate equally
             playerProjectiles->appendChild(p);
         }
@@ -112,13 +119,23 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 
 void SetScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
     if (yoffset > 0) {
-        if (player->getCurrentWeapon() != mushroomGun) {
-            player->setCurrentWeapon(mushroomGun);
+        if (player->getWeaponIndex() < 2) {
+            player->incrementWeaponIndex();
+            player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
+        }
+        else if (player->getWeaponIndex() == 2) {
+            player->setWeaponIndex(0);
+            player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
         }
     }
     if (yoffset < 0) {
-        if (player->getCurrentWeapon() != peanutGun) {
-            player->setCurrentWeapon(peanutGun);
+        if (player->getWeaponIndex() > 0) {
+            player->decrementWeaponIndex();
+            player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
+        }
+        else if (player->getWeaponIndex() == 0) {
+            player->setWeaponIndex(2);
+            player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
         }
     }
 }
@@ -270,9 +287,15 @@ int MainFunction(void){
         //Create weapons
         peanutGun = new PeanutGun(resource_manager_g, technique, player);
         mushroomGun = new MushroomGun(resource_manager_g, technique, player);
+        pineconeGun = new PineconeGun(resource_manager_g, technique, player);
 
         //setCurrentWeapon also appends as the gun as a child to player
         player->setCurrentWeapon(peanutGun);
+
+        //Add weapons to vector
+        weapons.push_back(peanutGun);
+        weapons.push_back(mushroomGun);
+        weapons.push_back(pineconeGun);
 
         playerProjectiles = new Projectiles();
         papaNode->appendChild(playerProjectiles);
@@ -346,6 +369,7 @@ int MainFunction(void){
         delete enemies;
         delete peanutGun;
         delete mushroomGun;
+        delete pineconeGun;
         delete walls;
 
     } catch (std::exception &e) {

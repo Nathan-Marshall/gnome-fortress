@@ -10,6 +10,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Kd pinecones_diffuse.jpg
-map_Bump pinecones_bump.jpg
-refl Map__20_Gradient Ramp.jpg
+map_Kd pinecones_diffuse.png
+map_Bump pinecones_bump.png
+map_Ka pinecones_diffuse.png
+refl Map__20_Gradient Ramp.png

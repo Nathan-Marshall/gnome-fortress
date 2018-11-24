@@ -18,8 +18,10 @@ class Weapon;
 class Player : public model::BasicMeshGroupNode {
 
 public:
-    Player( resource::ResourceManager &resourceManager,
+    Player(resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique);
+
+    ~Player();
 
     const static float ACCELERATION;
     const static float DECAY;
@@ -39,6 +41,13 @@ public:
     void setCurrentWeapon(Weapon *weapon);
     Weapon* getCurrentWeapon();
 
+    SceneNode* getWeaponContainer();
+
+    void incrementWeaponIndex();
+    void decrementWeaponIndex();
+    void setWeaponIndex(int index);
+    const int getWeaponIndex();
+
 protected:
     void onUpdateSelf(float dt) override;
 
@@ -50,8 +59,10 @@ private:
     bool up;
     bool down;
 
+    SceneNode *weaponContainer;
     Weapon *currentWeapon;
 
+    int weaponIndex;
 
     glm::vec3 velocity;
 

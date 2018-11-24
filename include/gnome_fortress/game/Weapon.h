@@ -6,7 +6,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 
-#include "gnome_fortress/model/BasicMeshGroupNode.h"
 #include "gnome_fortress/game/Player.h"
 #include "gnome_fortress/game/Projectile.h"
 
@@ -32,7 +31,7 @@ public:
     void setCooldown(float cd);
 
     //Creating bullets 
-    Projectile* fireBullet(glm::vec3 position, glm::quat cameraRotation);
+    virtual Projectile* fireBullet(glm::vec3 position);
     
 
     void onUpdateSelf(float dt) override;

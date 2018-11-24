@@ -11,11 +11,13 @@ namespace models {
     const std::string dirname = "models/";
 
     const std::string acorn = models::dirname + "acorn/acorn.obj";
+    const std::string berry = models::dirname + "pinecone_gun/berry.obj";
     const std::string cube = models::dirname + "cube/cube.obj";
     const std::string gnome = models::dirname + "gnome/gnome.obj";
     const std::string jetpack = models::dirname + "jetpack/jetpack.obj";
     const std::string mushroom_gun = models::dirname + "mushroom_gun/mushroom_gun.obj";
     const std::string peanut_gun = models::dirname + "peanut_gun/peanut_gun.obj";
+    const std::string pinecone_gun = models::dirname + "pinecone_gun/pinecone_gun.obj";
     const std::string ground = models::dirname + "ground/ground.obj";
     const std::string rock1 = models::dirname + "rocks/rock1.obj";
     const std::string rock2 = models::dirname + "rocks/rock2.obj";

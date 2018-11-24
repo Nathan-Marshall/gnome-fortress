@@ -18,8 +18,14 @@ namespace game {
           up(false),
           down(false),
           velocity(),
-          currentWeapon(nullptr){
-        //Nothing yet
+          currentWeapon(nullptr),
+          weaponIndex(0)  {
+        weaponContainer = new SceneNode();
+        this->appendChild(weaponContainer);
+    }
+
+    Player::~Player() {
+        delete weaponContainer;
     }
 
     const float Player::ACCELERATION = 7.0f;
@@ -59,17 +65,37 @@ namespace game {
 
     void Player::setCurrentWeapon(Weapon *newWeapon) {
         if (!currentWeapon) {
-            this->appendChild(newWeapon);
+            weaponContainer->appendChild(newWeapon);
         }
         else {
-            this->replaceChild(newWeapon, this->indexOf(currentWeapon));
+            weaponContainer->replaceChild(newWeapon, weaponContainer->indexOf(currentWeapon));
         }
         
         currentWeapon = newWeapon;
     }
 
+    model::SceneNode* Player::getWeaponContainer() {
+        return weaponContainer;
+    }
+
     Weapon* Player::getCurrentWeapon() {
         return currentWeapon;
+    }
+
+    void Player::incrementWeaponIndex() {
+            weaponIndex++;
+    }
+
+    void Player::decrementWeaponIndex() {
+            weaponIndex--;
+    }
+
+    void Player::setWeaponIndex(int index) {
+        weaponIndex = index;
+    }
+
+    const int Player::getWeaponIndex() {
+        return weaponIndex;
     }
 
     void Player::onUpdateSelf(float dt) {
