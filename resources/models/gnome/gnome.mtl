@@ -11,5 +11,6 @@ Ni 1.000000
 d 1.000000
 illum 2
 map_Kd gnome_diffuse.tga
+map_Ks gnome_spec.tga
 map_Bump gnome_normals.tga
 refl gnome_reflect.tga
