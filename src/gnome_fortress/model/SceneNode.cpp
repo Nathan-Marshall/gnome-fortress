@@ -17,12 +17,12 @@ SceneNode::SceneNode()
       children() {    
 }
 
-const float SceneNode::XBOUND_POS = 25.0f;
-const float SceneNode::XBOUND_NEG = -25.0f;
+const float SceneNode::XBOUND_POS = 35.0f;
+const float SceneNode::XBOUND_NEG = -35.0f;
 const float SceneNode::YBOUND_POS = 50.0f;
 const float SceneNode::YBOUND_NEG = 0.0f;
-const float SceneNode::ZBOUND_POS = 25.0f;
-const float SceneNode::ZBOUND_NEG = -25.0f;
+const float SceneNode::ZBOUND_POS = 35.0f;
+const float SceneNode::ZBOUND_NEG = -35.0f;
 
 void SceneNode::update(float delta_time) {
     onUpdateSelf(delta_time);

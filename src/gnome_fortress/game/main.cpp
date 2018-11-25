@@ -300,9 +300,11 @@ int MainFunction(void){
         playerProjectiles = new Projectiles();
         papaNode->appendChild(playerProjectiles);
 
+        //Create the enemies
         Enemies* enemies = new Enemies();
         papaNode->appendChild(enemies);
 
+        //Spawn some turtles
         SiegeTurtle* turt1 = new SiegeTurtle(resource_manager_g, technique);
         SiegeTurtle* turt2 = new SiegeTurtle(resource_manager_g, technique);
         SiegeTurtle* turt3 = new SiegeTurtle(resource_manager_g, technique);
@@ -316,6 +318,21 @@ int MainFunction(void){
         enemies->turtles.push_back(turt3);
         enemies->appendChild(turt3);
 
+        //Spawn some squirrels
+        Squirrel* squir1 = new Squirrel(resource_manager_g, technique);
+        Squirrel* squir2 = new Squirrel(resource_manager_g, technique);
+        Squirrel* squir3 = new Squirrel(resource_manager_g, technique);
+
+        enemies->squirrels.push_back(squir1);
+        enemies->appendChild(squir1);
+
+        enemies->squirrels.push_back(squir2);
+        enemies->appendChild(squir2);
+
+        enemies->squirrels.push_back(squir3);
+        enemies->appendChild(squir3);
+
+
         //Create the third person camera
         model::SceneNode *cameraNodeThird = scene_camera_third_g.getNode();
         cameraNodeThird->setPosition(0, 1, 4);
@@ -328,7 +345,7 @@ int MainFunction(void){
         player->appendChild(cameraNodeFirst);
 
         model::SceneNode *ground = new model::BasicMeshNode(plane->meshes[0], technique);
-        ground->setScale(50);
+        ground->setScale(100);
         ground->setPosition(0, 0, 0);
         papaNode->appendChild(ground);
 

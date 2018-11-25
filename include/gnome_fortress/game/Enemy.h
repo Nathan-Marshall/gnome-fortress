@@ -27,6 +27,7 @@ protected:
 
     float health;
     float boundingRadius;
+    float moveSpeed;
 
 private:
     

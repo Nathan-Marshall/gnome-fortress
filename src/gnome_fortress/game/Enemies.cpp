@@ -5,7 +5,6 @@ namespace game {
 
 
 Enemies::Enemies() {
-    //Nothing yet
 }
 
 void Enemies::ProcessCollisions(Projectiles *projectiles, Walls *walls) {
@@ -63,8 +62,12 @@ void Enemies::ProcessWallCollisions(Walls *walls) {
     std::vector<std::vector<Wall*>>::iterator wallIt;
     std::vector<Wall*>::iterator innerWallIt;
 
+    int ringCount = 0;
+
     for (turtleIt = turtles.begin(); turtleIt < turtles.end(); turtleIt++) {
+        ringCount = 0;
         for (wallIt = wallVec->begin(); wallIt < wallVec->end(); wallIt++) {
+            ringCount++;
             for (innerWallIt = wallIt->begin(); innerWallIt < wallIt->end();) {
                 glm::vec3 turtlePos = (*turtleIt)->getPosition();
                 glm::vec3 wallPos = (*innerWallIt)->getPosition();
@@ -81,6 +84,11 @@ void Enemies::ProcessWallCollisions(Walls *walls) {
                     if ((*innerWallIt)->GetHealth() <= 0) {
                         //We need to remove the wall
                         (*innerWallIt)->removeFromParent();
+
+                        for each (Squirrel* squir in squirrels) {
+                            squir->addWallHole((*innerWallIt)->getPosition(), ringCount);
+                        }
+
                         innerWallIt = (*wallIt).erase(innerWallIt);
                     }
                 }
