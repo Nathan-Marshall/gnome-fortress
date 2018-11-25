@@ -61,6 +61,7 @@ void Enemies::ProcessWallCollisions(Walls *walls) {
 
     std::vector<SiegeTurtle*>::iterator turtleIt;
     std::vector<Squirrel*>::iterator squirrelIt;
+    std::vector<Spider*>::iterator spiderIt;
 
     std::vector<std::vector<Wall*>>::iterator wallIt;
     std::vector<Wall*>::iterator innerWallIt;
@@ -137,6 +138,30 @@ void Enemies::ProcessWallCollisions(Walls *walls) {
                 else {
                     innerWallIt++;
                 }
+            }
+        }
+    }
+
+    for (spiderIt = spiders.begin(); spiderIt < spiders.end(); spiderIt++) {
+        for (wallIt = wallVec->begin(); wallIt < wallVec->end(); wallIt++) {
+            for (innerWallIt = wallIt->begin(); innerWallIt < wallIt->end();) {
+                glm::vec3 spiderPos = (*spiderIt)->getPosition();
+                glm::vec3 wallPos = (*innerWallIt)->getPosition();
+
+                spiderPos.y = 0;
+                wallPos.y = 0;
+
+                float widthDistance = glm::length(spiderPos - wallPos);
+
+                if (widthDistance < (*spiderIt)->GetBoundingRadius() && ((*spiderIt)->getPosition().y < Walls::WALL_HEIGHT) && (*spiderIt)->hittingWall == false) {
+                    (*spiderIt)->hittingWall = true;
+                }
+                else if (((*spiderIt)->getPosition().y >= Walls::WALL_HEIGHT)) {
+                    (*spiderIt)->overWall = true;
+                }
+
+                innerWallIt++;
+            
             }
         }
     }

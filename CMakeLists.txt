@@ -14,6 +14,7 @@ set(HDRS
     include/gnome_fortress/game/MushroomGun.h
     include/gnome_fortress/game/SiegeTurtle.h
     include/gnome_fortress/game/Squirrel.h
+    include/gnome_fortress/game/Spider.h
     include/gnome_fortress/game/PeanutGun.h
     include/gnome_fortress/game/PineconeGun.h
     include/gnome_fortress/game/Projectile.h
@@ -60,6 +61,7 @@ set(SRCS
     src/gnome_fortress/game/MushroomGun.cpp
     src/gnome_fortress/game/SiegeTurtle.cpp
     src/gnome_fortress/game/Squirrel.cpp
+    src/gnome_fortress/game/Spider.cpp
     src/gnome_fortress/game/PeanutGun.cpp
     src/gnome_fortress/game/PineconeGun.cpp
     src/gnome_fortress/game/Projectile.cpp

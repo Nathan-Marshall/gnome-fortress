@@ -12,6 +12,7 @@
 #include "Walls.h"
 #include "SiegeTurtle.h"
 #include "Squirrel.h"
+#include "Spider.h"
 
 namespace gnome_fortress {
 namespace game {
@@ -26,6 +27,7 @@ public:
 
     std::vector<SiegeTurtle*> turtles;
     std::vector<Squirrel*> squirrels;
+    std::vector<Spider*> spiders;
 
     void ProcessCollisions(Projectiles *projectiles, Walls *walls);
     void ProcessProjectileCollisions(Projectiles *projectiles);

@@ -318,6 +318,20 @@ int MainFunction(void){
         enemies->turtles.push_back(turt3);
         enemies->appendChild(turt3);
 
+        //Spawn some spiders
+        Spider* spi1 = new Spider(resource_manager_g, technique);
+        Spider* spi2 = new Spider(resource_manager_g, technique);
+        Spider* spi3 = new Spider(resource_manager_g, technique);
+
+        enemies->spiders.push_back(spi1);
+        enemies->appendChild(spi1);
+
+        enemies->spiders.push_back(spi2);
+        enemies->appendChild(spi2);
+
+        enemies->spiders.push_back(spi3);
+        enemies->appendChild(spi3);
+
         //Create the third person camera
         model::SceneNode *cameraNodeThird = scene_camera_third_g.getNode();
         cameraNodeThird->setPosition(0, 1, 4);
