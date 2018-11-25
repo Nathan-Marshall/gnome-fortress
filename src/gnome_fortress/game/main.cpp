@@ -10,6 +10,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <time.h>
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -420,5 +421,6 @@ int MainFunction(void){
 }
 
 int main(void) {
+    srand(time(0));
     return gnome_fortress::game::MainFunction();
 }
