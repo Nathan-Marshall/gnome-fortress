@@ -22,6 +22,8 @@ class Enemies : public model::SceneNode {
 public:
     Enemies();
 
+    std::vector<std::pair<glm::vec3, int>> *wallHoles;
+
     std::vector<SiegeTurtle*> turtles;
     std::vector<Squirrel*> squirrels;
 

@@ -318,21 +318,6 @@ int MainFunction(void){
         enemies->turtles.push_back(turt3);
         enemies->appendChild(turt3);
 
-        //Spawn some squirrels
-        Squirrel* squir1 = new Squirrel(resource_manager_g, technique);
-        Squirrel* squir2 = new Squirrel(resource_manager_g, technique);
-        Squirrel* squir3 = new Squirrel(resource_manager_g, technique);
-
-        enemies->squirrels.push_back(squir1);
-        enemies->appendChild(squir1);
-
-        enemies->squirrels.push_back(squir2);
-        enemies->appendChild(squir2);
-
-        enemies->squirrels.push_back(squir3);
-        enemies->appendChild(squir3);
-
-
         //Create the third person camera
         model::SceneNode *cameraNodeThird = scene_camera_third_g.getNode();
         cameraNodeThird->setPosition(0, 1, 4);
@@ -349,6 +334,9 @@ int MainFunction(void){
         ground->setPosition(0, 0, 0);
         papaNode->appendChild(ground);
 
+        double startTime = glfwGetTime();
+        bool squirrelsSpawned = false;
+
         double prev_time = glfwGetTime();
         // Run the main loop
         while (!glfwWindowShouldClose(window)){
@@ -356,6 +344,24 @@ int MainFunction(void){
             double current_time = glfwGetTime();
             double delta_time = current_time - prev_time;
             prev_time = glfwGetTime();
+
+            if (current_time - startTime > 15.0 && !squirrelsSpawned) {
+                //Spawn some squirrels
+                Squirrel* squir1 = new Squirrel(resource_manager_g, technique, enemies->wallHoles);
+                Squirrel* squir2 = new Squirrel(resource_manager_g, technique, enemies->wallHoles);
+                Squirrel* squir3 = new Squirrel(resource_manager_g, technique, enemies->wallHoles);
+
+                enemies->squirrels.push_back(squir1);
+                enemies->appendChild(squir1);
+
+                enemies->squirrels.push_back(squir2);
+                enemies->appendChild(squir2);
+
+                enemies->squirrels.push_back(squir3);
+                enemies->appendChild(squir3);
+
+                squirrelsSpawned = true;
+            }
 
             // Clear background
             glClearColor(viewport_background_color_g[0], 

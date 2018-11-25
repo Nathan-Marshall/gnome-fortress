@@ -5,6 +5,7 @@ namespace game {
 
 
 Enemies::Enemies() {
+    wallHoles = new std::vector<std::pair<glm::vec3, int>>();
 }
 
 void Enemies::ProcessCollisions(Projectiles *projectiles, Walls *walls) {
@@ -59,6 +60,8 @@ void Enemies::ProcessWallCollisions(Walls *walls) {
     std::vector<std::vector<Wall*>> *wallVec = walls->GetWalls();
 
     std::vector<SiegeTurtle*>::iterator turtleIt;
+    std::vector<Squirrel*>::iterator squirrelIt;
+
     std::vector<std::vector<Wall*>>::iterator wallIt;
     std::vector<Wall*>::iterator innerWallIt;
 
@@ -84,6 +87,45 @@ void Enemies::ProcessWallCollisions(Walls *walls) {
                     if ((*innerWallIt)->GetHealth() <= 0) {
                         //We need to remove the wall
                         (*innerWallIt)->removeFromParent();
+
+                        wallHoles->push_back(std::make_pair((*innerWallIt)->getPosition(), ringCount));
+
+                        for each (Squirrel* squir in squirrels) {
+                            squir->addWallHole((*innerWallIt)->getPosition(), ringCount);
+                        }
+
+                        innerWallIt = (*wallIt).erase(innerWallIt);
+                    }
+                }
+                else {
+                    innerWallIt++;
+                }
+            }
+        }
+    }
+
+    for (squirrelIt = squirrels.begin(); squirrelIt < squirrels.end(); squirrelIt++) {
+        ringCount = 0;
+        for (wallIt = wallVec->begin(); wallIt < wallVec->end(); wallIt++) {
+            ringCount++;
+            for (innerWallIt = wallIt->begin(); innerWallIt < wallIt->end();) {
+                glm::vec3 squirrelPos = (*squirrelIt)->getPosition();
+                glm::vec3 wallPos = (*innerWallIt)->getPosition();
+
+                float distance = glm::length(squirrelPos - wallPos);
+
+                //Need to change this back later once nathans stuff is working
+                //if (distance < (*turtleIt)->GetBoundingRadius()){
+                if (distance < 1.5f && (*squirrelIt)->hittingWall == false) {
+                    //We have a collision
+                    (*squirrelIt)->hittingWall = true;
+                    (*innerWallIt)->DoDamage((*squirrelIt)->damageOnHit);
+
+                    if ((*innerWallIt)->GetHealth() <= 0) {
+                        //We need to remove the wall
+                        (*innerWallIt)->removeFromParent();
+
+                        wallHoles->push_back(std::make_pair((*innerWallIt)->getPosition(), ringCount));
 
                         for each (Squirrel* squir in squirrels) {
                             squir->addWallHole((*innerWallIt)->getPosition(), ringCount);

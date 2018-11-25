@@ -20,7 +20,8 @@ class Squirrel : public game::Enemy {
 public:
     Squirrel(
             resource::ResourceManager &resourceManager,
-            renderer::BasicMeshNodeTechnique *technique);
+            renderer::BasicMeshNodeTechnique *technique,
+            std::vector<std::pair<glm::vec3, int>> *wallHoles);
 
     //Whether or not the squirrel is hitting a wall
     bool hittingWall;
