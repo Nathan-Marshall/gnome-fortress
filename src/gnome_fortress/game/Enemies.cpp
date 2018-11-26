@@ -142,8 +142,8 @@ void Enemies::ProcessWallCollisions(Walls *walls) {
                 float distance = glm::length(turtlePos - wallPos);
 
                 //Need to change this back later once nathans stuff is working
-                //if (distance < (*turtleIt)->GetBoundingRadius()){
-                if (distance < 1.5f && (*turtleIt)->hittingWall == false) {
+                float bound = (*turtleIt)->GetBoundingRadius();
+                if (distance < bound && (*turtleIt)->hittingWall == false) {
                     //We have a collision
                     (*turtleIt)->hittingWall = true;
                     (*innerWallIt)->DoDamage((*turtleIt)->damageOnHit);
@@ -176,25 +176,29 @@ void Enemies::ProcessWallCollisions(Walls *walls) {
                 glm::vec3 squirrelPos = (*squirrelIt)->getPosition();
                 glm::vec3 wallPos = (*innerWallIt)->getPosition();
 
-                float distance = glm::length(squirrelPos - wallPos);
+                glm::vec3 wallLeftPos = wallPos + (glm::vec3(-(*innerWallIt)->GetLength()/2, 0, 0) * (*innerWallIt)->getRotation());
+                glm::vec3 wallRightPos = wallPos + (glm::vec3((*innerWallIt)->GetLength()/2, 0, 0) * (*innerWallIt)->getRotation());
 
-                //Need to change this back later once nathans stuff is working
-                //if (distance < (*turtleIt)->GetBoundingRadius()){
-                if (distance < 1.5f && (*squirrelIt)->hittingWall == false) {
+                float distance = glm::length(squirrelPos - wallPos);
+                float distLeft = glm::length(squirrelPos - wallLeftPos);
+                float distRight = glm::length(squirrelPos - wallRightPos);
+
+                //float bound = (*squirrelIt)->GetBoundingRadius();
+                float bound = 1.25f;
+                if ((distance < bound || distLeft < bound || distRight < bound) && (*squirrelIt)->hittingWall == false) {
                     //We have a collision
                     (*squirrelIt)->hittingWall = true;
                     (*innerWallIt)->DoDamage((*squirrelIt)->damageOnHit);
 
                     if ((*innerWallIt)->GetHealth() <= 0) {
                         //We need to remove the wall
-                        (*innerWallIt)->removeFromParent();
-
                         wallHoles->push_back(std::make_pair((*innerWallIt)->getPosition(), ringCount));
 
                         for each (Squirrel* squir in squirrels) {
                             squir->addWallHole((*innerWallIt)->getPosition(), ringCount);
                         }
 
+                        (*innerWallIt)->removeFromParent();
                         innerWallIt = (*wallIt).erase(innerWallIt);
                     }
                 }

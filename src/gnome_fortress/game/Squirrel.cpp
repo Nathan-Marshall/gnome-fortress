@@ -27,9 +27,8 @@ Squirrel::Squirrel(
     rotate(glm::angleAxis((glm::pi<float>() / 2) + angle, glm::vec3(0, 1, 0)));
 
     health = 10.0f;
-    boundingRadius = (sqrt(3) * 2.5) / 2;
+    boundingRadius = (sqrt(3) / 2.5);
     hittingWall = false;
-    onTheMove = false;
     damageOnHit = 10.0f;
     moveSpeed = 2.0f;
     currentRing = 3;
@@ -53,7 +52,7 @@ void Squirrel::onUpdateSelf(float dt) {
             glm::vec3 hole = holeInfo.first;
             float ringNum = holeInfo.second;
 
-            //Vectors in the direction of tthe origin, and the hole
+            //Vectors in the direction of the origin, and the hole
             glm::vec3 holeVec = getPosition() - hole;
             glm::vec3 origVec = getPosition() - glm::vec3(0, 0, 0);
 
@@ -61,13 +60,10 @@ void Squirrel::onUpdateSelf(float dt) {
             float dist = glm::distance(getPosition(), hole);
 
             //Angle to move to this hole
-            float angle = glm::acos(glm::dot(glm::normalize(origVec), glm::normalize(holeVec)));
+            //float angle = glm::acos(glm::dot(glm::normalize(origVec), glm::normalize(holeVec)));
 
             //If we have a shorter distance on the correct ring, we move to that hole.
-            //until the squirrel starts moving towards a hole, we restrict that the angle 
-            //must be reasonable to avoid going through walls
-            if (dist < shortestDist && ringNum == currentRing && (angle < 15 * (glm::pi<float>() / 180.0f) || onTheMove)) {
-                onTheMove = true;
+            if ((dist < shortestDist && ringNum == currentRing)) {
                 moveVec = holeVec;
                 shortestDist = dist;
                 shortestRing = ringNum;
@@ -82,6 +78,7 @@ void Squirrel::onUpdateSelf(float dt) {
 
         //Move towards the hole
         if (shortestDist != 1000 && currentRing != 0) {
+
             glm::vec3 vel = glm::normalize(moveVec) * moveSpeed;
             translate(glm::vec3(-vel.x, -vel.y, -vel.z) * dt);
         }
