@@ -308,7 +308,6 @@ int MainFunction(void){
         //Spawn some turtles
         SiegeTurtle* turt1 = new SiegeTurtle(resource_manager_g, technique);
         SiegeTurtle* turt2 = new SiegeTurtle(resource_manager_g, technique);
-        SiegeTurtle* turt3 = new SiegeTurtle(resource_manager_g, technique);
 
         enemies->turtles.push_back(turt1);
         enemies->appendChild(turt1);
@@ -316,13 +315,9 @@ int MainFunction(void){
         enemies->turtles.push_back(turt2);
         enemies->appendChild(turt2);
 
-        enemies->turtles.push_back(turt3);
-        enemies->appendChild(turt3);
-
         //Spawn some spiders
         Spider* spi1 = new Spider(resource_manager_g, technique);
         Spider* spi2 = new Spider(resource_manager_g, technique);
-        Spider* spi3 = new Spider(resource_manager_g, technique);
 
         enemies->spiders.push_back(spi1);
         enemies->appendChild(spi1);
@@ -330,8 +325,15 @@ int MainFunction(void){
         enemies->spiders.push_back(spi2);
         enemies->appendChild(spi2);
 
-        enemies->spiders.push_back(spi3);
-        enemies->appendChild(spi3);
+        //Spawn some squirrels
+        Squirrel* squir1 = new Squirrel(resource_manager_g, technique, enemies->wallHoles);
+        Squirrel* squir2 = new Squirrel(resource_manager_g, technique, enemies->wallHoles);
+
+        enemies->squirrels.push_back(squir1);
+        enemies->appendChild(squir1);
+
+        enemies->squirrels.push_back(squir2);
+        enemies->appendChild(squir2);
 
         //Create the third person camera
         model::SceneNode *cameraNodeThird = scene_camera_third_g.getNode();
@@ -349,8 +351,8 @@ int MainFunction(void){
         ground->setPosition(0, 0, 0);
         papaNode->appendChild(ground);
 
+        double spawnTime = glfwGetTime();
         double startTime = glfwGetTime();
-        bool squirrelsSpawned = false;
 
         double prev_time = glfwGetTime();
         // Run the main loop
@@ -360,22 +362,32 @@ int MainFunction(void){
             double delta_time = current_time - prev_time;
             prev_time = glfwGetTime();
 
-            if (current_time - startTime > 15.0 && !squirrelsSpawned) {
-                //Spawn some squirrels
-                Squirrel* squir1 = new Squirrel(resource_manager_g, technique, enemies->wallHoles);
-                Squirrel* squir2 = new Squirrel(resource_manager_g, technique, enemies->wallHoles);
-                Squirrel* squir3 = new Squirrel(resource_manager_g, technique, enemies->wallHoles);
+            if (current_time - spawnTime > 4.0 && current_time - startTime > 10.0) {
+                int randEnemy = (rand() % 6) + 1;
 
-                enemies->squirrels.push_back(squir1);
-                enemies->appendChild(squir1);
+                if (randEnemy == 1) {
+                    //Spawn a turtle
+                    SiegeTurtle* turt = new SiegeTurtle(resource_manager_g, technique);
 
-                enemies->squirrels.push_back(squir2);
-                enemies->appendChild(squir2);
+                    enemies->turtles.push_back(turt);
+                    enemies->appendChild(turt);
+                }
+                else if (randEnemy == 2) {
+                    //Spawn a squirrel
+                    Squirrel* squir = new Squirrel(resource_manager_g, technique, enemies->wallHoles);
 
-                enemies->squirrels.push_back(squir3);
-                enemies->appendChild(squir3);
+                    enemies->squirrels.push_back(squir);
+                    enemies->appendChild(squir);
+                }
+                else if (randEnemy == 3) {
+                    //Spawn a spider
+                    Spider* spidey = new Spider(resource_manager_g, technique);
 
-                squirrelsSpawned = true;
+                    enemies->spiders.push_back(spidey);
+                    enemies->appendChild(spidey);
+                }
+
+                spawnTime = glfwGetTime();
             }
 
             // Clear background
