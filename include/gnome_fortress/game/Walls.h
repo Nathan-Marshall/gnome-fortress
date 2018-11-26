@@ -26,6 +26,7 @@ public:
 
     //Vector to define the walls
     std::vector<std::vector<Wall*>> walls;
+    std::vector<std::pair<glm::vec3, int>> wallHoles;
 
     void onUpdateSelf(float delta_time) override;
 

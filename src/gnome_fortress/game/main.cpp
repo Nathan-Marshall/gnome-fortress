@@ -302,7 +302,7 @@ int MainFunction(void){
         papaNode->appendChild(playerProjectiles);
 
         //Create the enemies
-        Enemies* enemies = new Enemies();
+        Enemies* enemies = new Enemies(walls);
         papaNode->appendChild(enemies);
 
         //Spawn some turtles
@@ -326,8 +326,8 @@ int MainFunction(void){
         enemies->appendChild(spi2);
 
         //Spawn some squirrels
-        Squirrel* squir1 = new Squirrel(resource_manager_g, technique, enemies->wallHoles);
-        Squirrel* squir2 = new Squirrel(resource_manager_g, technique, enemies->wallHoles);
+        Squirrel* squir1 = new Squirrel(resource_manager_g, technique, enemies->walls);
+        Squirrel* squir2 = new Squirrel(resource_manager_g, technique, enemies->walls);
 
         enemies->squirrels.push_back(squir1);
         enemies->appendChild(squir1);
@@ -362,7 +362,7 @@ int MainFunction(void){
             double delta_time = current_time - prev_time;
             prev_time = glfwGetTime();
 
-            if (current_time - spawnTime > 4.0 && current_time - startTime > 10.0) {
+            if (current_time - spawnTime > 5.0 && current_time - startTime > 10.0) {
                 int randEnemy = (rand() % 6) + 1;
 
                 if (randEnemy == 1) {
@@ -374,7 +374,7 @@ int MainFunction(void){
                 }
                 else if (randEnemy == 2) {
                     //Spawn a squirrel
-                    Squirrel* squir = new Squirrel(resource_manager_g, technique, enemies->wallHoles);
+                    Squirrel* squir = new Squirrel(resource_manager_g, technique, enemies->walls);
 
                     enemies->squirrels.push_back(squir);
                     enemies->appendChild(squir);
@@ -399,7 +399,7 @@ int MainFunction(void){
             technique->setProjectionMatrix(active_camera_g->getProjection());
             technique->setViewMatrix(active_camera_g->getView());
 
-            enemies->ProcessCollisions(playerProjectiles, walls);
+            enemies->ProcessCollisions(playerProjectiles);
 
             //Update the scene nodes
             papaNode->update(delta_time);

@@ -9,15 +9,13 @@ namespace game {
 Squirrel::Squirrel(
         resource::ResourceManager &resourceManager,
         renderer::BasicMeshNodeTechnique *technique,
-        std::vector<std::pair<glm::vec3, int>>* enemyWallHoles)
+        Walls* walls)
     : game::Enemy(
         resourceManager.getOrLoadMeshGroup(resources::models::siege_turtle),
         technique
       ) {
 
-    for each (std::pair<glm::vec3, int> hole in *enemyWallHoles) {
-        addWallHole(hole.first, hole.second);
-    }
+    this->walls = walls;
 
     setScale(2.5f);
 
@@ -34,10 +32,6 @@ Squirrel::Squirrel(
     currentRing = 3;
 }
 
-void Squirrel::addWallHole(glm::vec3 holePos, int ringCount) {
-    wallHoles.push_back(std::make_pair(holePos, ringCount));
-}
-
 void Squirrel::onUpdateSelf(float dt) {
 
     if (!hittingWall) {
@@ -47,7 +41,7 @@ void Squirrel::onUpdateSelf(float dt) {
         glm::vec3 moveVec = glm::vec3(0, 0, 0);
 
         //We check every hole in the walls, this vector gets updated by the collision detection in enemies
-        for each(std::pair<glm::vec3, int> holeInfo in wallHoles) {
+        for each(std::pair<glm::vec3, int> holeInfo in walls->wallHoles) {
             //Split up the pair to get the location, and which ring it's on
             glm::vec3 hole = holeInfo.first;
             float ringNum = holeInfo.second;

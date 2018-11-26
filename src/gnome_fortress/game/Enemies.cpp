@@ -4,17 +4,17 @@ namespace gnome_fortress {
 namespace game {
 
 
-Enemies::Enemies() {
-    wallHoles = new std::vector<std::pair<glm::vec3, int>>();
+Enemies::Enemies(Walls* walls) {
+    this->walls = walls;
 }
 
-void Enemies::ProcessCollisions(Projectiles *projectiles, Walls *walls) {
+void Enemies::ProcessCollisions(Projectiles *projectiles) {
 
     //Process any collisions with player fired projectiles
     ProcessProjectileCollisions(projectiles);
 
     //Process any collisions with the walls
-    ProcessWallCollisions(walls);
+    ProcessWallCollisions();
 }
 
 void Enemies::ProcessProjectileCollisions(Projectiles *projectiles) {
@@ -117,7 +117,7 @@ void Enemies::ProcessProjectileCollisions(Projectiles *projectiles) {
     }
 }
 
-void Enemies::ProcessWallCollisions(Walls *walls) {
+void Enemies::ProcessWallCollisions() {
     bool collision = false;
 
     std::vector<std::vector<Wall*>> *wallVec = walls->GetWalls();
@@ -152,11 +152,7 @@ void Enemies::ProcessWallCollisions(Walls *walls) {
                         //We need to remove the wall
                         (*innerWallIt)->removeFromParent();
 
-                        wallHoles->push_back(std::make_pair((*innerWallIt)->getPosition(), ringCount));
-
-                        for each (Squirrel* squir in squirrels) {
-                            squir->addWallHole((*innerWallIt)->getPosition(), ringCount);
-                        }
+                        walls->wallHoles.push_back(std::make_pair((*innerWallIt)->getPosition(), ringCount));
 
                         innerWallIt = (*wallIt).erase(innerWallIt);
                     }
@@ -192,11 +188,7 @@ void Enemies::ProcessWallCollisions(Walls *walls) {
 
                     if ((*innerWallIt)->GetHealth() <= 0) {
                         //We need to remove the wall
-                        wallHoles->push_back(std::make_pair((*innerWallIt)->getPosition(), ringCount));
-
-                        for each (Squirrel* squir in squirrels) {
-                            squir->addWallHole((*innerWallIt)->getPosition(), ringCount);
-                        }
+                        walls->wallHoles.push_back(std::make_pair((*innerWallIt)->getPosition(), ringCount));
 
                         (*innerWallIt)->removeFromParent();
                         innerWallIt = (*wallIt).erase(innerWallIt);
