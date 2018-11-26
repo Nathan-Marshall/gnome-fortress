@@ -10,6 +10,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <time.h>
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -300,12 +301,13 @@ int MainFunction(void){
         playerProjectiles = new Projectiles();
         papaNode->appendChild(playerProjectiles);
 
-        Enemies* enemies = new Enemies();
+        //Create the enemies
+        Enemies* enemies = new Enemies(walls);
         papaNode->appendChild(enemies);
 
+        //Spawn some turtles
         SiegeTurtle* turt1 = new SiegeTurtle(resource_manager_g, technique);
         SiegeTurtle* turt2 = new SiegeTurtle(resource_manager_g, technique);
-        SiegeTurtle* turt3 = new SiegeTurtle(resource_manager_g, technique);
 
         enemies->turtles.push_back(turt1);
         enemies->appendChild(turt1);
@@ -313,8 +315,25 @@ int MainFunction(void){
         enemies->turtles.push_back(turt2);
         enemies->appendChild(turt2);
 
-        enemies->turtles.push_back(turt3);
-        enemies->appendChild(turt3);
+        //Spawn some spiders
+        Spider* spi1 = new Spider(resource_manager_g, technique);
+        Spider* spi2 = new Spider(resource_manager_g, technique);
+
+        enemies->spiders.push_back(spi1);
+        enemies->appendChild(spi1);
+
+        enemies->spiders.push_back(spi2);
+        enemies->appendChild(spi2);
+
+        //Spawn some squirrels
+        Squirrel* squir1 = new Squirrel(resource_manager_g, technique, enemies->walls);
+        Squirrel* squir2 = new Squirrel(resource_manager_g, technique, enemies->walls);
+
+        enemies->squirrels.push_back(squir1);
+        enemies->appendChild(squir1);
+
+        enemies->squirrels.push_back(squir2);
+        enemies->appendChild(squir2);
 
         //Create the third person camera
         model::SceneNode *cameraNodeThird = scene_camera_third_g.getNode();
@@ -328,9 +347,12 @@ int MainFunction(void){
         player->appendChild(cameraNodeFirst);
 
         model::SceneNode *ground = new model::BasicMeshNode(plane->meshes[0], technique);
-        ground->setScale(50);
+        ground->setScale(100);
         ground->setPosition(0, 0, 0);
         papaNode->appendChild(ground);
+
+        double spawnTime = glfwGetTime();
+        double startTime = glfwGetTime();
 
         double prev_time = glfwGetTime();
         // Run the main loop
@@ -339,6 +361,34 @@ int MainFunction(void){
             double current_time = glfwGetTime();
             double delta_time = current_time - prev_time;
             prev_time = glfwGetTime();
+
+            if (current_time - spawnTime > 5.0 && current_time - startTime > 10.0) {
+                int randEnemy = (rand() % 6) + 1;
+
+                if (randEnemy == 1) {
+                    //Spawn a turtle
+                    SiegeTurtle* turt = new SiegeTurtle(resource_manager_g, technique);
+
+                    enemies->turtles.push_back(turt);
+                    enemies->appendChild(turt);
+                }
+                else if (randEnemy == 2) {
+                    //Spawn a squirrel
+                    Squirrel* squir = new Squirrel(resource_manager_g, technique, enemies->walls);
+
+                    enemies->squirrels.push_back(squir);
+                    enemies->appendChild(squir);
+                }
+                else if (randEnemy == 3) {
+                    //Spawn a spider
+                    Spider* spidey = new Spider(resource_manager_g, technique);
+
+                    enemies->spiders.push_back(spidey);
+                    enemies->appendChild(spidey);
+                }
+
+                spawnTime = glfwGetTime();
+            }
 
             // Clear background
             glClearColor(viewport_background_color_g[0], 
@@ -349,7 +399,7 @@ int MainFunction(void){
             technique->setProjectionMatrix(active_camera_g->getProjection());
             technique->setViewMatrix(active_camera_g->getView());
 
-            enemies->ProcessCollisions(playerProjectiles, walls);
+            enemies->ProcessCollisions(playerProjectiles);
 
             //Update the scene nodes
             papaNode->update(delta_time);
@@ -383,5 +433,6 @@ int MainFunction(void){
 }
 
 int main(void) {
+    srand(time(0));
     return gnome_fortress::game::MainFunction();
 }

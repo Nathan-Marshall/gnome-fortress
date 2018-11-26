@@ -14,6 +14,11 @@ namespace game {
 class Walls : public model::SceneNode {
 
 public:
+    const static float OUTER_RADIUS;
+    const static float INNER_RADIUS;
+    const static int WALLS_PER_RING;
+    const static float WALL_WIDTH;
+    const static float WALL_HEIGHT;
 
     Walls(  resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique,
@@ -21,6 +26,7 @@ public:
 
     //Vector to define the walls
     std::vector<std::vector<Wall*>> walls;
+    std::vector<std::pair<glm::vec3, int>> wallHoles;
 
     void onUpdateSelf(float delta_time) override;
 
@@ -30,12 +36,6 @@ public:
 protected:
             
 private:
-    const static float OUTER_RADIUS;
-    const static float INNER_RADIUS;
-    const static int WALLS_PER_RING;
-    const static float WALL_WIDTH;
-    const static float WALL_HEIGHT;
-
     void FillWalls(
             resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique,
