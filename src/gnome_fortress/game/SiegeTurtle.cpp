@@ -21,7 +21,7 @@ SiegeTurtle::SiegeTurtle(
     rotate(glm::angleAxis((glm::pi<float>() / 2) + angle, glm::vec3(0, 1, 0)));
 
     health = 30.0f;
-    boundingRadius = sqrt(2);
+    boundingRadius = (sqrt(3) * 2.5) / 2;
     hittingWall = false;
     damageOnHit = 20.0f;
     moveSpeed = 1.5f;

@@ -27,7 +27,7 @@ Squirrel::Squirrel(
     rotate(glm::angleAxis((glm::pi<float>() / 2) + angle, glm::vec3(0, 1, 0)));
 
     health = 10.0f;
-    boundingRadius = sqrt(3);
+    boundingRadius = (sqrt(3) * 2.5) / 2;
     hittingWall = false;
     onTheMove = false;
     damageOnHit = 10.0f;

@@ -22,7 +22,7 @@ namespace game {
     rotate(glm::angleAxis((glm::pi<float>() / 2) + angle, glm::vec3(0, 1, 0)));
 
     health = 10.0f;
-    boundingRadius = sqrt(2);
+    boundingRadius = (sqrt(3) * 2) / 2;
     moveSpeed = 2.0f;
 }
 
@@ -31,11 +31,12 @@ void Spider::onUpdateSelf(float dt) {
         glm::vec3 moveDir = glm::normalize(getPosition() - glm::vec3(0, 0.1, 0));
 
         if (overWall) {
-            translate(glm::vec3(-moveDir.x, -0.01, -moveDir.z) * 5.0f * dt);
+            translate(glm::vec3(-moveDir.x, -0.1, -moveDir.z) * dt);
             overWall = false;
         }
         else if (getPosition().y > 0.1) {
-            translate(glm::vec3(0, -0.5, 0) * 2.0f * dt);
+            translate(glm::vec3(0, -1, 0) * dt);
+            hittingWall = false;
         }
         else {
             //For now, the spider will just move to the origin
@@ -45,7 +46,7 @@ void Spider::onUpdateSelf(float dt) {
     }
     else {
         //move up a bit, and reset the flag
-        translate(glm::vec3(0, 1, 0) * 1.0f * dt);
+        translate(glm::vec3(0, 1, 0) * dt);
         hittingWall = false;
     }
 }
