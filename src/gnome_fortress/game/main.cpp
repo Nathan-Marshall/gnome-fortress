@@ -119,26 +119,22 @@ void SetScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
     if (yoffset > 0) {
         if (player->getWeaponIndex() < 2) {
             player->incrementWeaponIndex();
-            player->getCurrentWeapon()->setPressed(false); //so that when you come back to this weapon, it isn't still firing 
-            player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
         }
         else if (player->getWeaponIndex() == 2) {
             player->setWeaponIndex(0);
-            player->getCurrentWeapon()->setPressed(false);
-            player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
         }
+        player->getCurrentWeapon()->setPressed(false);
+        player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
     }
     if (yoffset < 0) {
         if (player->getWeaponIndex() > 0) {
             player->decrementWeaponIndex();
-            player->getCurrentWeapon()->setPressed(false);
-            player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
         }
         else if (player->getWeaponIndex() == 0) {
             player->setWeaponIndex(2);
-            player->getCurrentWeapon()->setPressed(false);
-            player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
         }
+        player->getCurrentWeapon()->setPressed(false);
+        player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
     }
 }
 
