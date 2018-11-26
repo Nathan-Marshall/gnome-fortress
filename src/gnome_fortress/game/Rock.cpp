@@ -1,6 +1,5 @@
 #include "gnome_fortress/game/Resources.h"
 #include "gnome_fortress/game/Rock.h"
-#include <iostream>
 
 namespace gnome_fortress {
 namespace game {
@@ -14,23 +13,19 @@ Rock::Rock(
         pointOfOrigin,
         velocity
     ) {
-    std::cout << "IN ROCK.CPP" << std::endl;
+}
+
+const float Rock::DAMAGE = 11.0f;
+
+float Rock::GetDamage() {
+    return DAMAGE;
 }
 
 void Rock::onUpdateSelf(float dt) {
+    lifespan += dt;
 
     setPosition(getPosition() + (velocity * dt));
 
 }
-//resourceManager
-//renderer
-    //POI
-    //velocity 
-
-    //renderer::BasicMeshNodeTechnique *technique,
-    //glm::vec3 pointOfOrigin,
-    //glm::vec3 velocity)
-    //: game::Projectile(
-    //)
 }
 }

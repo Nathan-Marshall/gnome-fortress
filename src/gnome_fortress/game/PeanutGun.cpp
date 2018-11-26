@@ -18,16 +18,28 @@ PeanutGun::PeanutGun(
 
 }
 
-void PeanutGun::onUpdateSelf(float delta_time) {
+/*void onUpdateSelf(float delta_time) {
+
+}*/
+
+void PeanutGun::updateWeaponSelf(float delta_time, Projectiles* vector) {
     cooldown -= delta_time;
+
+    if (pressed && cooldown < 0) {
+        setCooldown(0.3f);
+        Projectile* p = fireBullet(getPosition());
+        vector->projectiles.push_back(p);
+        vector->appendChild(p);
+    }
 }
+
+const float PeanutGun::FIRING_VELOCITY = 15.0f;
 
 Projectile* PeanutGun::fireBullet(glm::vec3 position) {
     glm::vec3 vel = glm::normalize(glm::vec3(getGlobalTransform() * glm::vec4(0, 0, -1, 0)));
-    vel.x *= 5.0; //FIRING_VELOCITY;
-    vel.y *= 5.0; //FIRING_VELOCITY;
-    vel.z *= 5.0; //FIRING_VELOCITY;
-    std::cout << "IN PEANUTGUN.CPP" << std::endl;
+    vel.x *= FIRING_VELOCITY; 
+    vel.y *= FIRING_VELOCITY; 
+    vel.z *= FIRING_VELOCITY;
     Projectile *p = new Rock(bulletMeshGroup, getTechnique(),
         glm::vec3(getGlobalTransform() * glm::vec4(0.03, 0.5, -0.25, 1)), vel);
    // Projectile *p = new Projectile(bulletMeshGroup, getTechnique(),

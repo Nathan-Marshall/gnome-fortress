@@ -22,7 +22,11 @@ public:
         Player *player);
 
 protected:
-    void onUpdateSelf(float dt) override;
+    const static float FIRING_VELOCITY;
+    const static int FIRING_RATE;
+
+    //void onUpdateSelf(float dt) override;
+    void updateWeaponSelf(float dt, Projectiles* vector) override;
 
     //Creating bullets 
     Projectile* fireBullet(glm::vec3 position) override;

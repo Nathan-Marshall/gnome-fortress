@@ -9,6 +9,8 @@ set(HDRS
     include/gnome_fortress/camera/SceneNodeCamera.h
     
     include/gnome_fortress/game/Player.h
+    include/gnome_fortress/game/Acorn.h
+    include/gnome_fortress/game/Acorns.h
     include/gnome_fortress/game/Enemies.h
     include/gnome_fortress/game/Enemy.h
     include/gnome_fortress/game/MushroomGun.h
@@ -54,6 +56,8 @@ set(SRCS
     src/gnome_fortress/camera/SceneNodeCamera.cpp
 
     src/gnome_fortress/game/Player.cpp
+    src/gnome_fortress/game/Acorn.cpp
+    src/gnome_fortress/game/Acorns.cpp
     src/gnome_fortress/game/Enemies.cpp
     src/gnome_fortress/game/Enemy.cpp
     src/gnome_fortress/game/MushroomGun.cpp

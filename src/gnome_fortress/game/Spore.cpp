@@ -1,6 +1,5 @@
 #include "gnome_fortress/game/Resources.h"
 #include "gnome_fortress/game/Spore.h"
-#include <iostream>
 
 namespace gnome_fortress {
 namespace game {
@@ -15,10 +14,17 @@ Spore::Spore(
         pointOfOrigin,
         velocity
     ) {
-    std::cout << "IN SPORE.CPP" << std::endl;
+}
+
+const float Spore::DAMAGE = 8.5f;
+
+float Spore::GetDamage() {
+    return DAMAGE;
 }
 
 void Spore::onUpdateSelf(float dt) {
+    lifespan += dt;
+
     setPosition(getPosition() + (velocity *dt));
 }
 

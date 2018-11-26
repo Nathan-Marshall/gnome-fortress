@@ -12,12 +12,24 @@ Rocket::Rocket(
         technique,
         pointOfOrigin,
         velocity
-    ) {
+    ), 
+    acceleration(1.0f) {
+}
 
+const float Rocket::DAMAGE = 20.0f;
+
+float Rocket::GetDamage() {
+    return DAMAGE;
 }
 
 void Rocket::onUpdateSelf(float dt) {
-    setPosition(getPosition() + (velocity * dt));
+    lifespan += dt;
+
+    //setPosition(getPosition() + (velocity * dt));
+    setPosition(getPosition() + (velocity * dt * acceleration));
+
+    if (lifespan > 1)
+        acceleration += 0.3f;
 }
 }
 }
