@@ -17,6 +17,8 @@ namespace gnome_fortress {
         public:
             Projectiles();
 
+            void onUpdateSelf(float delta_time) override;
+
             std::vector<Projectile*> projectiles;
 
         protected:

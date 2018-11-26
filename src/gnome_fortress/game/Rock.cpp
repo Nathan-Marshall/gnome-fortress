@@ -26,6 +26,7 @@ void Rock::onUpdateSelf(float dt) {
 
     setPosition(getPosition() + (velocity * dt));
 
+    lifespan += 1 * dt;
 }
 }
 }

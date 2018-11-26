@@ -25,6 +25,7 @@ public:
     void DoDamage(float d);
 
     float GetHealth();
+
 protected:
     void onUpdateSelf(float dt) override;
 

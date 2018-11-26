@@ -1,6 +1,7 @@
 #include "gnome_fortress/renderer/Uniform.h"
 
 #include <exception>
+#include <iostream>
 
 namespace gnome_fortress {
 namespace renderer {
@@ -28,7 +29,7 @@ Uniform::Uniform(
 
     location = glGetUniformLocation(shader_program, name.c_str());
     if (location < 0) {
-        throw(std::exception((std::string("Failed to find uniform \"") + name + "\" in shader program.").c_str()));
+        std::cerr << "Failed to find uniform \"" << name.c_str() << "\" in shader program." << std::endl;
     }
 }
 
