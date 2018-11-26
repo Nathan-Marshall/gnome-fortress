@@ -21,6 +21,9 @@ void Enemies::ProcessProjectileCollisions(Projectiles *projectiles) {
     bool collision = false;
 
     std::vector<SiegeTurtle*>::iterator turtleIt;
+    std::vector<Squirrel*>::iterator squirrelIt;
+    std::vector<Spider*>::iterator spiderIt;
+
     std::vector<Projectile*>::iterator projecIt;
 
     for (turtleIt = turtles.begin(); turtleIt < turtles.end();) {
@@ -50,6 +53,66 @@ void Enemies::ProcessProjectileCollisions(Projectiles *projectiles) {
         }
         else {
             turtleIt++;
+        }
+    }
+
+    for (squirrelIt = squirrels.begin(); squirrelIt < squirrels.end();) {
+        for (projecIt = projectiles->projectiles.begin(); projecIt < projectiles->projectiles.end();) {
+            collision = false;
+
+            if (glm::length((*projecIt)->getPosition() - (*squirrelIt)->getPosition()) <= (*squirrelIt)->GetBoundingRadius()) {
+                collision = true;
+            }
+
+            if (collision) {
+                (*squirrelIt)->DoDamage((*projecIt)->GetDamage());
+
+                //Remove the projectile
+                (*projecIt)->removeFromParent();
+                projecIt = projectiles->projectiles.erase(projecIt);
+            }
+            else {
+                projecIt++;
+            }
+        }
+
+        //Remove them if they have no health
+        if ((*squirrelIt)->GetHealth() <= 0.0f) {
+            (*squirrelIt)->removeFromParent();
+            squirrelIt = squirrels.erase(squirrelIt);
+        }
+        else {
+            squirrelIt++;
+        }
+    }
+
+    for (spiderIt = spiders.begin(); spiderIt < spiders.end();) {
+        for (projecIt = projectiles->projectiles.begin(); projecIt < projectiles->projectiles.end();) {
+            collision = false;
+
+            if (glm::length((*projecIt)->getPosition() - (*spiderIt)->getPosition()) <= (*spiderIt)->GetBoundingRadius()) {
+                collision = true;
+            }
+
+            if (collision) {
+                (*spiderIt)->DoDamage((*projecIt)->GetDamage());
+
+                //Remove the projectile
+                (*projecIt)->removeFromParent();
+                projecIt = projectiles->projectiles.erase(projecIt);
+            }
+            else {
+                projecIt++;
+            }
+        }
+
+        //Remove them if they have no health
+        if ((*spiderIt)->GetHealth() <= 0.0f) {
+            (*spiderIt)->removeFromParent();
+            spiderIt = spiders.erase(spiderIt);
+        }
+        else {
+            spiderIt++;
         }
     }
 }
