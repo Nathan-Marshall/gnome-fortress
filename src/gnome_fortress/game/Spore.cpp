@@ -20,6 +20,7 @@ Spore::Spore(
 
 void Spore::onUpdateSelf(float dt) {
     setPosition(getPosition() + (velocity *dt));
+    lifespan += 1 * dt;
 }
 
 }

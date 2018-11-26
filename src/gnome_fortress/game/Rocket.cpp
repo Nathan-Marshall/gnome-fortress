@@ -18,6 +18,7 @@ Rocket::Rocket(
 
 void Rocket::onUpdateSelf(float dt) {
     setPosition(getPosition() + (velocity * dt));
+    lifespan += 1 * dt;
 }
 }
 }

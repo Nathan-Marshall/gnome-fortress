@@ -46,6 +46,10 @@ glm::vec3 Projectile::getVelocity(){
     return velocity;
 }
 
+double Projectile::GetLifespan() {
+    return lifespan;
+}
+
     float Projectile::GetDamage() {
         return DAMAGE;
     }
@@ -53,7 +57,6 @@ glm::vec3 Projectile::getVelocity(){
     void Projectile::onUpdateSelf(float dt) {
         
     setPosition(getPosition() + (velocity * dt));
-
         
     /*std::cout << "POSITION-- x: " << getPosition().x
         << ", y: " << getPosition().y
