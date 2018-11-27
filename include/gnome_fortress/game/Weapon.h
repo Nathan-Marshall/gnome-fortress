@@ -37,9 +37,6 @@ public:
     void onUpdateSelf(float dt) override;
 
 protected:
-    static int FIRING_RATE; //number of bullets per second 
-    static double FIRING_VELOCITY; //speed of individual bullets 
-
     const model::MeshGroup *bulletMeshGroup;
     
     bool firing;
