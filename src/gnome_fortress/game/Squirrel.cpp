@@ -30,11 +30,16 @@ Squirrel::Squirrel(
     damageOnHit = 10.0f;
     moveSpeed = 2.0f;
     currentRing = 3;
+
+    hittingPile = false;
 }
 
 void Squirrel::onUpdateSelf(float dt) {
 
-    if (!hittingWall) {
+    if (hittingPile){ 
+        //Do nothing anymore 
+    }
+    else if (!hittingWall) {
         //Initial values to track and help with our movement
         float shortestDist = 1000.0f;
         float shortestRing = 0.0f;
