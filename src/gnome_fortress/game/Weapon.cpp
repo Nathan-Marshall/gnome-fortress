@@ -38,14 +38,18 @@ void Weapon::setCooldown(float cd) {
     cooldown = cd;
 }
 
-Projectile* Weapon::fireBullet(glm::vec3 position) {
+std::vector<Projectile*> Weapon::fireBullet(glm::vec3 position) {
     glm::vec3 vel = glm::normalize(glm::vec3(getGlobalTransform() * glm::vec4(0, 0, -1, 0)));
     vel.x *= 5.0; //FIRING_VELOCITY;
     vel.y *= 5.0; //FIRING_VELOCITY;
     vel.z *= 5.0; //FIRING_VELOCITY;
     Projectile *p = new Projectile(bulletMeshGroup, getTechnique(),
         glm::vec3(getGlobalTransform() * glm::vec4(0.03,0.5,-0.25,1)), vel);
-    return p;
+
+    std::vector<Projectile*> projecs;
+    projecs.push_back(p);
+
+    return projecs;
 }
 
 void Weapon::onUpdateSelf(float delta_time) {

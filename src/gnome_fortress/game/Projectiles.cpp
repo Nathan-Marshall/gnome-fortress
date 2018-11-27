@@ -14,7 +14,7 @@ namespace gnome_fortress {
             for (projecIt = projectiles.begin(); projecIt < projectiles.end();) {
                 double lifespane = (*projecIt)->GetLifespan();
 
-                if ((*projecIt)->GetLifespan() > 12.0 || (*projecIt)->getPosition().y < 0) {
+                if ((*projecIt)->GetLifespan() > (*projecIt)->GetDeathThreshold() || (*projecIt)->getPosition().y < 0) {
                     //Remove the old projectile
                     (*projecIt)->removeFromParent();
                     projecIt = projectiles.erase(projecIt);

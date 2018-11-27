@@ -14,6 +14,8 @@ Spore::Spore(
         pointOfOrigin,
         velocity
     ) {
+
+    threshold = 10;
 }
 
 const float Spore::DAMAGE = 8.5f;

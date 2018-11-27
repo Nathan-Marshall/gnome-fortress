@@ -31,9 +31,12 @@ public:
 
     virtual float GetDamage();
     double GetLifespan();
+    double GetDeathThreshold();
+
 
 protected:
     double lifespan;
+    double threshold;
     glm::vec3 velocity;
 
 };

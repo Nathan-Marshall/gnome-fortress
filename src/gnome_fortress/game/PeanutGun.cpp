@@ -22,10 +22,15 @@ void PeanutGun::onUpdateSelf(float delta_time) {
     cooldown -= delta_time;
 
     if (pressed && cooldown < 0) {
-        setCooldown(0.3f);
-        Projectile* p = fireBullet(getPosition());
-        bullets->projectiles.push_back(p);
-        bullets->appendChild(p);
+        setCooldown(1.0f);
+        
+        std::vector<Projectile*> p = fireBullet(getPosition());
+
+        for each (Projectile* proj in p)
+        {
+            bullets->projectiles.push_back(proj);
+            bullets->appendChild(proj);
+        }
     }
 }
 
@@ -33,18 +38,35 @@ void PeanutGun::onUpdateSelf(float delta_time) {
     
 }*/
 
-const float PeanutGun::FIRING_VELOCITY = 15.0f;
+const float PeanutGun::FIRING_VELOCITY = 45.0f;
 
-Projectile* PeanutGun::fireBullet(glm::vec3 position) {
-    glm::vec3 vel = glm::normalize(glm::vec3(getGlobalTransform() * glm::vec4(0, 0, -1, 0)));
-    vel.x *= FIRING_VELOCITY; 
-    vel.y *= FIRING_VELOCITY; 
-    vel.z *= FIRING_VELOCITY;
-    Projectile *p = new Rock(bulletMeshGroup, getTechnique(),
-        glm::vec3(getGlobalTransform() * glm::vec4(0.03, 0.5, -0.25, 1)), vel);
-   // Projectile *p = new Projectile(bulletMeshGroup, getTechnique(),
-   //     glm::vec3(getGlobalTransform() * glm::vec4(0.03, 0.5, -0.25, 1)), vel);
-    return p;
+std::vector<Projectile*> PeanutGun::fireBullet(glm::vec3 position) {
+    float spreadAngle = 10.0f * glm::pi<float>() / 180.0f;
+    float circleRad = tan(spreadAngle);
+
+    float distAngle;
+    float circDist;
+
+    std::vector<Projectile*> projecs;
+
+    for (int i = 0; i < 8; i++) {
+        distAngle = rand() / (float)RAND_MAX * (glm::pi<float>() * 2);
+        circDist = rand() / (float)RAND_MAX * circleRad;
+        circDist *= circDist / circleRad;
+
+        glm::vec3 dir = glm::normalize(glm::vec3(circDist * cos(distAngle), circDist * sin(distAngle), -1));
+        
+        glm::vec3 vel = glm::normalize(glm::vec3(getGlobalTransform() * glm::vec4(dir, 0)));
+
+        vel *= FIRING_VELOCITY;
+
+        Projectile *p = new Rock(bulletMeshGroup, getTechnique(),
+            glm::vec3(getGlobalTransform() * glm::vec4(0.03, 0.5, -0.25, 1)), vel);
+
+        projecs.push_back(p);
+    }
+
+    return projecs;
 }
 }
 

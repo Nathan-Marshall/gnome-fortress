@@ -50,6 +50,10 @@ double Projectile::GetLifespan() {
     return lifespan;
 }
 
+double Projectile::GetDeathThreshold() {
+    return threshold;
+}
+
     float Projectile::GetDamage() {
         return DAMAGE;
     }

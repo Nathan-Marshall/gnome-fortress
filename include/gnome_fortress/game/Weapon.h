@@ -31,7 +31,7 @@ public:
     void setCooldown(float cd);
 
     //Creating bullets 
-    virtual Projectile* fireBullet(glm::vec3 position);
+    virtual std::vector<Projectile*> fireBullet(glm::vec3 position);
 
     void onUpdateSelf(float dt);
 

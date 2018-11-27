@@ -13,9 +13,11 @@ Rock::Rock(
         pointOfOrigin,
         velocity
     ) {
+
+    threshold = 0.5;
 }
 
-const float Rock::DAMAGE = 11.0f;
+const float Rock::DAMAGE = 4.0f;
 
 float Rock::GetDamage() {
     return DAMAGE;
