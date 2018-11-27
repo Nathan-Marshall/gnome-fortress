@@ -23,6 +23,7 @@
 #include <glm/gtx/quaternion.hpp>
 
 
+#include "gnome_fortress/game/Acorns.h"
 #include "gnome_fortress/game/Enemies.h"
 #include "gnome_fortress/game/MushroomGun.h"
 #include "gnome_fortress/game/PeanutGun.h"
@@ -68,6 +69,9 @@ game::Walls* walls;
 game::Enemies* enemies;
 game::Projectiles* playerProjectiles;
 
+game::Acorns *acorns;
+//game::Acorn *acorn;
+
 //A vector for swapping through weapons 
 std::vector<Weapon*> weapons;
 
@@ -103,18 +107,11 @@ void CursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 {
     // Fire gun when player left clicks
-    if (button == GLFW_MOUSE_BUTTON_LEFT) {
-        //This block shall be moved later to projectile 
-        std::cout << "Left Mouse Pressed " << std::endl;
-        if (player->getCurrentWeapon()->getCooldown() <= 0) {
-            player->getCurrentWeapon()->setCooldown(0.3f);
-            Projectile* p = player->getCurrentWeapon()->fireBullet(player->getCurrentWeapon()->getPosition());
-            playerProjectiles->projectiles.push_back(p); //Sidenote: it doesn't matter which camera we use here since both rotate equally
-            playerProjectiles->appendChild(p);
-        }
-        else {
-            std::cout << "COOLDOWN TOO HIGH" << std::endl;
-        }
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+        player->getCurrentWeapon()->setPressed(true);
+    }
+    else { 
+        player->getCurrentWeapon()->setPressed(false);
     }
 }
 
@@ -122,22 +119,22 @@ void SetScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
     if (yoffset > 0) {
         if (player->getWeaponIndex() < 2) {
             player->incrementWeaponIndex();
-            player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
         }
         else if (player->getWeaponIndex() == 2) {
             player->setWeaponIndex(0);
-            player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
         }
+        player->getCurrentWeapon()->setPressed(false);
+        player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
     }
     if (yoffset < 0) {
         if (player->getWeaponIndex() > 0) {
             player->decrementWeaponIndex();
-            player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
         }
         else if (player->getWeaponIndex() == 0) {
             player->setWeaponIndex(2);
-            player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
         }
+        player->getCurrentWeapon()->setPressed(false);
+        player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
     }
 }
 
@@ -203,6 +200,69 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     if (key == GLFW_KEY_ESCAPE) {
         exit(0);
     }
+}
+
+void CreateAcornPile(resource::ResourceManager &resourceManager, renderer::BasicMeshNodeTechnique *technique) {
+    //Acorns to be added to pile) 
+    Acorn* acorn1 = new Acorn(resource_manager_g, technique);
+    acorn1->setPosition(0, 0.3, 0);
+    acorns->acorns.push_back(acorn1);
+    acorns->appendChild(acorn1);
+
+    Acorn* acorn2 = new Acorn(resource_manager_g, technique);
+    acorn2->setPosition(.45, 0.3, 0.45); //.25, 0.3, .25
+    acorns->acorns.push_back(acorn2);
+    acorns->appendChild(acorn2);
+
+    Acorn* acorn3 = new Acorn(resource_manager_g, technique);
+    acorn3->setPosition(-.40, 0.3, 0.55);
+    acorns->acorns.push_back(acorn3);
+    acorns->appendChild(acorn3);
+
+    Acorn* acorn4 = new Acorn(resource_manager_g, technique);
+    acorn4->setPosition(-.40, 0.3, -0.55);
+    acorns->acorns.push_back(acorn4);
+    acorns->appendChild(acorn4);
+
+    Acorn* acorn5 = new Acorn(resource_manager_g, technique);
+    acorn5->setPosition(.43, 0.3, -0.63);
+    acorns->acorns.push_back(acorn5);
+    acorns->appendChild(acorn5);
+
+    Acorn* acorn6 = new Acorn(resource_manager_g, technique);
+    acorn6->setPosition(.87, 0.3, -0.10); //.45, .3, -.12
+    acorns->acorns.push_back(acorn6);
+    acorns->appendChild(acorn6);
+
+    Acorn* acorn7 = new Acorn(resource_manager_g, technique);
+    acorn7->setPosition(-.87, 0.3, 0);
+    acorns->acorns.push_back(acorn7);
+    acorns->appendChild(acorn7);
+
+    Acorn* acorn8 = new Acorn(resource_manager_g, technique);
+    acorn8->setPosition(-.48, 0.75, -0.025);
+    acorns->acorns.push_back(acorn8);
+    acorns->appendChild(acorn8);
+
+    Acorn* acorn9 = new Acorn(resource_manager_g, technique);
+    acorn9->setPosition(.48, 0.75, -0.025);
+    acorns->acorns.push_back(acorn9);
+    acorns->appendChild(acorn9);
+
+    Acorn* acorn10 = new Acorn(resource_manager_g, technique);
+    acorn10->setPosition(0, 0.75, 0.45);
+    acorns->acorns.push_back(acorn10);
+    acorns->appendChild(acorn10);
+
+    Acorn* acorn11 = new Acorn(resource_manager_g, technique);
+    acorn11->setPosition(0.1, 0.75, -0.55);
+    acorns->acorns.push_back(acorn11);
+    acorns->appendChild(acorn11);
+
+    Acorn* acorn12 = new Acorn(resource_manager_g, technique);
+    acorn12->setPosition(0, 1.15, 0);
+    acorns->acorns.push_back(acorn12);
+    acorns->appendChild(acorn12);
 }
 
 // Callback for when the window is resized
@@ -282,13 +342,16 @@ int MainFunction(void){
         papaNode->appendChild(walls);
 
         player = new game::Player(resource_manager_g, technique);
-        player->setPosition(0, 0.5f, 0);
+        player->setPosition(-0.05f, 0.7f, 3.0f);
         papaNode->appendChild(player);
 
+        playerProjectiles = new Projectiles();
+        papaNode->appendChild(playerProjectiles);
+
         //Create weapons
-        peanutGun = new PeanutGun(resource_manager_g, technique, player);
-        mushroomGun = new MushroomGun(resource_manager_g, technique, player);
-        pineconeGun = new PineconeGun(resource_manager_g, technique, player);
+        peanutGun = new PeanutGun(resource_manager_g, technique, player, playerProjectiles);
+        mushroomGun = new MushroomGun(resource_manager_g, technique, player, playerProjectiles);
+        pineconeGun = new PineconeGun(resource_manager_g, technique, player, playerProjectiles);
 
         //setCurrentWeapon also appends as the gun as a child to player
         player->setCurrentWeapon(peanutGun);
@@ -297,9 +360,6 @@ int MainFunction(void){
         weapons.push_back(peanutGun);
         weapons.push_back(mushroomGun);
         weapons.push_back(pineconeGun);
-
-        playerProjectiles = new Projectiles();
-        papaNode->appendChild(playerProjectiles);
 
         //Create the enemies
         Enemies* enemies = new Enemies(walls);
@@ -351,6 +411,11 @@ int MainFunction(void){
         ground->setPosition(0, 0, 0);
         papaNode->appendChild(ground);
 
+        acorns = new Acorns();
+        papaNode->appendChild(acorns);
+
+        CreateAcornPile(resource_manager_g, technique);
+
         double spawnTime = glfwGetTime();
         double startTime = glfwGetTime();
 
@@ -401,8 +466,11 @@ int MainFunction(void){
 
             enemies->ProcessCollisions(playerProjectiles);
 
+            acorns->ProcessEnemyCollisions(enemies);
+
             //Update the scene nodes
             papaNode->update(delta_time);
+            //player->getCurrentWeapon()->updateWeaponSelf(delta_time, playerProjectiles);
 
             //Draw the scene nodes
             papaNode->draw(glm::mat4());
@@ -421,6 +489,7 @@ int MainFunction(void){
         delete mushroomGun;
         delete pineconeGun;
         delete walls;
+        delete acorns;
 
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;

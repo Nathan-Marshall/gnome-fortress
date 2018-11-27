@@ -25,6 +25,8 @@ namespace models {
     const std::string rock4 = models::dirname + "rocks/rock4.obj";
     const std::string rock5 = models::dirname + "rocks/rock5.obj";
     const std::string siege_turtle = models::dirname + "siege_turtle/siege_turtle.obj";
+    const std::string spider = models::dirname + "spider/skSpiderLargeMesh.obj";
+    const std::string squirrel = models::dirname + "squirrel/Squirrel.obj";
 }
 
 namespace shaders {

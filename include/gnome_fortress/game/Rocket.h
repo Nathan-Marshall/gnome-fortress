@@ -20,7 +20,13 @@ public:
         glm::vec3 pointOfOrigin,
         glm::vec3 velocity);
 
+    float GetDamage() override;
+
     void onUpdateSelf(float delta_time) override;
+
+private:
+    const static float DAMAGE; 
+    float acceleration; 
 };
 }
 }
