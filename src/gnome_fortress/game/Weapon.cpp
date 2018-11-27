@@ -67,9 +67,9 @@ void Weapon::onUpdateSelf(float delta_time) {
         << std::endl;*/
 }
 
-void Weapon::updateWeaponSelf(float delta_time, Projectiles* vector) {
-    std::cout << "In Weapon updateWeaponSelf..." << std::endl;
-}
+/*void Weapon::updateWeaponSelf(float delta_time, Projectiles* vector) {
+
+}*/
 
 
 }

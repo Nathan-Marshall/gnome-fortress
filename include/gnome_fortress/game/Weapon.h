@@ -35,7 +35,7 @@ public:
 
     void onUpdateSelf(float dt);
 
-    virtual void updateWeaponSelf(float dt, Projectiles* vector);
+    //virtual void updateWeaponSelf(float dt, Projectiles* vector);
 
 protected:
     static int FIRING_RATE; //number of bullets per second 

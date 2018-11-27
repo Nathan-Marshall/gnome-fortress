@@ -29,7 +29,7 @@ void Rocket::onUpdateSelf(float dt) {
     setPosition(getPosition() + (velocity * dt * acceleration));
 
     if (lifespan > 1) {
-        acceleration += 0.3f;
+        acceleration += 0.5f;
     }
     setPosition(getPosition() + (velocity * dt));
     lifespan += 1 * dt;

@@ -11,7 +11,6 @@ Acorn::Acorn(
     : model::BasicMeshGroupNode(resourceManager.getOrLoadMeshGroup(game::resources::models::acorn),
         technique),
     scale(0.7f),
-    maxHealth(50),
     currentHealth(50){
 
     setScale(scale);
@@ -22,6 +21,8 @@ Acorn::Acorn(
     setRotation(s*glm::pi<float>(), glm::vec3(0, 0, 1));
 
 }
+
+const float Acorn::MAX_HEALTH = 50;
 
 float Acorn::getScale() {
     return scale;
@@ -37,15 +38,10 @@ float Acorn::getCurrentHealth() {
 
 void Acorn::takeDamage() {
     currentHealth -= 3.0f;
+    setScale((currentHealth / MAX_HEALTH) * scale);
 }
 
 void Acorn::onUpdateSelf(float dt) {
-    setScale((currentHealth/maxHealth) * scale);
-    /*if (enemyAttacking) {
-        std::cout << "Enemy attacking!!!" << std::endl;
-        //setScale(scale * shrinkRate);
-        //setScale(0);
-    }*/
         
 }
 

@@ -26,10 +26,12 @@ public:
     float getCurrentHealth();
     void takeDamage();
 
+    const static float MAX_HEALTH;
+
 protected: 
     float scale;
     float currentHealth;
-    float maxHealth;
+    
 
     void onUpdateSelf(float dt) override;
 

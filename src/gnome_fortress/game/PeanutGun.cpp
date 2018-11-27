@@ -8,30 +8,30 @@ namespace game {
 PeanutGun::PeanutGun(
     resource::ResourceManager &resourceManager,
     renderer::BasicMeshNodeTechnique *technique,
-    Player *player)
+    Player *player, Projectiles* vector)
     : game::Weapon(
         resourceManager.getOrLoadMeshGroup(resources::models::peanut_gun),
         resourceManager.getOrLoadMeshGroup(resources::models::rock1),
         technique,
         player
     ) {
-
+    bullets = vector;
 }
 
-/*void onUpdateSelf(float delta_time) {
-
-}*/
-
-void PeanutGun::updateWeaponSelf(float delta_time, Projectiles* vector) {
+void PeanutGun::onUpdateSelf(float delta_time) {
     cooldown -= delta_time;
 
     if (pressed && cooldown < 0) {
         setCooldown(0.3f);
         Projectile* p = fireBullet(getPosition());
-        vector->projectiles.push_back(p);
-        vector->appendChild(p);
+        bullets->projectiles.push_back(p);
+        bullets->appendChild(p);
     }
 }
+
+/*void PeanutGun::updateWeaponSelf(float delta_time, Projectiles* vector) {
+    
+}*/
 
 const float PeanutGun::FIRING_VELOCITY = 15.0f;
 

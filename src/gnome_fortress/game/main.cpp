@@ -345,10 +345,13 @@ int MainFunction(void){
         player->setPosition(-0.05f, 0.7f, 3.0f);
         papaNode->appendChild(player);
 
+        playerProjectiles = new Projectiles();
+        papaNode->appendChild(playerProjectiles);
+
         //Create weapons
-        peanutGun = new PeanutGun(resource_manager_g, technique, player);
-        mushroomGun = new MushroomGun(resource_manager_g, technique, player);
-        pineconeGun = new PineconeGun(resource_manager_g, technique, player);
+        peanutGun = new PeanutGun(resource_manager_g, technique, player, playerProjectiles);
+        mushroomGun = new MushroomGun(resource_manager_g, technique, player, playerProjectiles);
+        pineconeGun = new PineconeGun(resource_manager_g, technique, player, playerProjectiles);
 
         //setCurrentWeapon also appends as the gun as a child to player
         player->setCurrentWeapon(peanutGun);
@@ -357,9 +360,6 @@ int MainFunction(void){
         weapons.push_back(peanutGun);
         weapons.push_back(mushroomGun);
         weapons.push_back(pineconeGun);
-
-        playerProjectiles = new Projectiles();
-        papaNode->appendChild(playerProjectiles);
 
         //Create the enemies
         Enemies* enemies = new Enemies(walls);
@@ -470,7 +470,7 @@ int MainFunction(void){
 
             //Update the scene nodes
             papaNode->update(delta_time);
-            player->getCurrentWeapon()->updateWeaponSelf(delta_time, playerProjectiles);
+            //player->getCurrentWeapon()->updateWeaponSelf(delta_time, playerProjectiles);
 
             //Draw the scene nodes
             papaNode->draw(glm::mat4());
