@@ -11,13 +11,13 @@ Squirrel::Squirrel(
         renderer::BasicMeshNodeTechnique *technique,
         Walls* walls)
     : game::Enemy(
-        resourceManager.getOrLoadMeshGroup(resources::models::siege_turtle),
+        resourceManager.getOrLoadMeshGroup(resources::models::squirrel),
         technique
       ) {
 
     this->walls = walls;
 
-    setScale(2.5f);
+    setScale(2.0f);
 
     int numWalls = Walls::NumWalls();
     float angle = ((rand() % (numWalls)) * (2 * glm::pi<float>() / numWalls));

@@ -10,7 +10,7 @@ namespace game {
         resource::ResourceManager &resourceManager,
         renderer::BasicMeshNodeTechnique *technique)
     : game::Enemy(
-        resourceManager.getOrLoadMeshGroup(resources::models::siege_turtle),
+        resourceManager.getOrLoadMeshGroup(resources::models::spider),
         technique
       ) {
 
