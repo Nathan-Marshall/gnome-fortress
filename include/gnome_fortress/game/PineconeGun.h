@@ -19,10 +19,16 @@ public:
     PineconeGun(
         resource::ResourceManager &resourceManager,
         renderer::BasicMeshNodeTechnique *technique,
-        Player *player);
+        Player *player, Projectiles* vector);
 
 protected:
+    const static float FIRING_VELOCITY;
+    const static int FIRING_RATE;
+
+    Projectiles* bullets;
+
     void onUpdateSelf(float dt) override;
+    //void updateWeaponSelf(float dt, Projectiles* vector) override;
 
     //Creating bullets 
     Projectile* fireBullet(glm::vec3 position) override;

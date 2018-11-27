@@ -7,7 +7,7 @@
 #include <glm/gtc/constants.hpp>
 
 #include "gnome_fortress/game/Player.h"
-#include "gnome_fortress/game/Projectile.h"
+#include "gnome_fortress/game/Projectiles.h"
 
 namespace gnome_fortress {
 namespace game {
@@ -23,8 +23,8 @@ public:
     ~Weapon();
 
     //Whether the weapon is firing
-    bool isFiring();
-    void setFiring(bool isPressed);
+    bool isPressed();
+    void setPressed(bool isPressed);
 
     //Gun cooldown 
     float getCooldown();
@@ -32,14 +32,15 @@ public:
 
     //Creating bullets 
     virtual Projectile* fireBullet(glm::vec3 position);
-    
 
-    void onUpdateSelf(float dt) override;
+    void onUpdateSelf(float dt);
+
+    //virtual void updateWeaponSelf(float dt, Projectiles* vector);
 
 protected:
     const model::MeshGroup *bulletMeshGroup;
     
-    bool firing;
+    bool pressed;
     float cooldown;
 
 };

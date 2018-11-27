@@ -29,7 +29,7 @@ public:
 
     void onUpdateSelf(float delta_time) override;
 
-    float GetDamage();
+    virtual float GetDamage();
     double GetLifespan();
 
 protected:
