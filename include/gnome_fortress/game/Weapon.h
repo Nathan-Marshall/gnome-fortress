@@ -31,11 +31,7 @@ public:
     void setCooldown(float cd);
 
     //Creating bullets 
-    virtual Projectile* fireBullet(glm::vec3 position);
-
-    void onUpdateSelf(float dt);
-
-    //virtual void updateWeaponSelf(float dt, Projectiles* vector);
+    virtual Projectile* fireBullet(glm::vec3 position) = 0;
 
 protected:
     const model::MeshGroup *bulletMeshGroup;

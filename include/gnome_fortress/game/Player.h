@@ -15,7 +15,7 @@ namespace game{
 
 class Weapon;
 
-class Player : public model::BasicMeshGroupNode {
+class Player : public model::SceneNode {
 
 public:
     Player(resource::ResourceManager &resourceManager,
@@ -23,13 +23,24 @@ public:
 
     ~Player();
 
+    //GLOBAL SCENE BOUNDS
+    const static float XBOUND_POS;
+    const static float XBOUND_NEG;
+
+    const static float YBOUND_POS;
+    const static float YBOUND_NEG;
+
+    const static float ZBOUND_POS;
+    const static float ZBOUND_NEG;
+
+
     const static float ACCELERATION;
     const static float DECAY;
     
-    bool IsForwardPressed();
-    bool IsBackPressed();
-    bool IsLeftPressed();
-    bool IsRightPressed();
+    bool IsForwardPressed() const;
+    bool IsBackPressed() const;
+    bool IsLeftPressed() const;
+    bool IsRightPressed() const;
 
     void SetForwardPressed(bool isPressed);
     void SetBackPressed(bool isPressed);
@@ -39,9 +50,10 @@ public:
     void SetDownPressed(bool isPressed);
 
     void setCurrentWeapon(Weapon *weapon);
-    Weapon* getCurrentWeapon();
+    Weapon *getCurrentWeapon() const;
 
-    SceneNode* getWeaponContainer();
+    SceneNode *getArm() const;
+    SceneNode *getWeaponContainer() const;
 
     void incrementWeaponIndex();
     void decrementWeaponIndex();
@@ -59,12 +71,13 @@ private:
     bool up;
     bool down;
 
+    glm::vec3 velocity;
+
+    model::BasicMeshGroupNode *playerModel;
     SceneNode *weaponContainer;
     Weapon *currentWeapon;
 
     int weaponIndex;
-
-    glm::vec3 velocity;
 
     void CheckBounds(glm::vec3 translationAmount);
 };

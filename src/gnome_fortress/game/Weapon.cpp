@@ -16,7 +16,6 @@ Weapon::Weapon(
     : model::BasicMeshGroupNode(gunMeshGroup, technique),
       pressed(false), 
       bulletMeshGroup(bMeshGroup) {
-    setPosition(0.8, 0, 0);
 }
 
 Weapon::~Weapon() { 
@@ -37,39 +36,6 @@ float Weapon::getCooldown() {
 void Weapon::setCooldown(float cd) {
     cooldown = cd;
 }
-
-Projectile* Weapon::fireBullet(glm::vec3 position) {
-    glm::vec3 vel = glm::normalize(glm::vec3(getGlobalTransform() * glm::vec4(0, 0, -1, 0)));
-    vel.x *= 5.0; //FIRING_VELOCITY;
-    vel.y *= 5.0; //FIRING_VELOCITY;
-    vel.z *= 5.0; //FIRING_VELOCITY;
-    Projectile *p = new Projectile(bulletMeshGroup, getTechnique(),
-        glm::vec3(getGlobalTransform() * glm::vec4(0.03,0.5,-0.25,1)), vel);
-    return p;
-}
-
-void Weapon::onUpdateSelf(float delta_time) {
-    /*cooldown -= delta_time;
-
-    if (pressed && cooldown < 0) {
-        std::cout << "Shootin'" << std::endl;
-    }
-
-    // DEBUG stuff
-    std::cout << "WEAPON POSITION-- x: " << getPosition().x
-        << ", y: " << getPosition().y
-        << ", z: " << getPosition().z
-        << std::endl;*/
-
-/*    std::cout << "VELOCITY-- x: " << velocity.x
-        << ", y: " << velocity.y
-        << ", z: " << velocity.z
-        << std::endl;*/
-}
-
-/*void Weapon::updateWeaponSelf(float delta_time, Projectiles* vector) {
-
-}*/
 
 
 }

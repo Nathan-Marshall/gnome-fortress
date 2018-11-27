@@ -28,7 +28,6 @@ protected:
     Projectiles* bullets;
 
     void onUpdateSelf(float dt) override;
-    //void updateWeaponSelf(float dt, Projectiles* vector) override;
 
     //Creating bullets 
     Projectile* fireBullet(glm::vec3 position) override;

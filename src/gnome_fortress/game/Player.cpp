@@ -7,10 +7,7 @@ namespace game {
     Player::Player(
             resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique)
-        : model::BasicMeshGroupNode(
-            resourceManager.getOrLoadMeshGroup(resources::models::gnome),
-            technique
-          ),
+        : model::SceneNode(),
           forward(false),
           backward(false),
           left(false),
@@ -18,29 +15,45 @@ namespace game {
           up(false),
           down(false),
           velocity(),
+          playerModel(new model::BasicMeshGroupNode(
+              resourceManager.getOrLoadMeshGroup(resources::models::gnome),
+              technique
+          )),
+          weaponContainer(new model::SceneNode()),
           currentWeapon(nullptr),
           weaponIndex(0)  {
-        weaponContainer = new SceneNode();
-        this->appendChild(weaponContainer);
+
+        appendChild(playerModel);
+
+        getArm()->appendChild(weaponContainer);
+        weaponContainer->setPosition(0.14f, 0.48f, -0.15f);
     }
 
     Player::~Player() {
+        delete playerModel;
         delete weaponContainer;
     }
+
+    const float Player::XBOUND_POS = 35.0f;
+    const float Player::XBOUND_NEG = -35.0f;
+    const float Player::YBOUND_POS = 50.0f;
+    const float Player::YBOUND_NEG = 0.0f;
+    const float Player::ZBOUND_POS = 35.0f;
+    const float Player::ZBOUND_NEG = -35.0f;
 
     const float Player::ACCELERATION = 7.0f;
     const float Player::DECAY = 0.20f;
 
-    bool Player::IsForwardPressed() {
+    bool Player::IsForwardPressed() const {
         return forward;
     }
-    bool Player::IsBackPressed() {
+    bool Player::IsBackPressed() const {
         return backward;
     }
-    bool Player::IsLeftPressed() {
+    bool Player::IsLeftPressed() const {
         return left;
     }
-    bool Player::IsRightPressed() {
+    bool Player::IsRightPressed() const {
         return right;
     }
 
@@ -74,12 +87,16 @@ namespace game {
         currentWeapon = newWeapon;
     }
 
-    model::SceneNode* Player::getWeaponContainer() {
-        return weaponContainer;
+    Weapon *Player::getCurrentWeapon() const {
+        return currentWeapon;
     }
 
-    Weapon* Player::getCurrentWeapon() {
-        return currentWeapon;
+    model::SceneNode *Player::getArm() const {
+        return playerModel->getChild(2);
+    }
+
+    model::SceneNode *Player::getWeaponContainer() const {
+        return weaponContainer;
     }
 
     void Player::incrementWeaponIndex() {
