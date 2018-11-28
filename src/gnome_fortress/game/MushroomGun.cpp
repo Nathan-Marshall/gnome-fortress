@@ -14,6 +14,7 @@ MushroomGun::MushroomGun(
         technique,
         player
     ) {
+    setScale(0.2f);
     bullets = vector;
 }
 
@@ -30,17 +31,6 @@ void MushroomGun::onUpdateSelf(float delta_time) {
     }
 }
 
-/*void MushroomGun::updateWeaponSelf(float delta_time, Projectiles* vector) {
-    cooldown -= delta_time;
-
-    if (pressed && cooldown < 0) {
-        setCooldown(0.7f);
-        Projectile* p = fireBullet(getPosition());
-        vector->projectiles.push_back(p);
-        vector->appendChild(p);
-    }
-}*/
-
 Projectile* MushroomGun::fireBullet(glm::vec3 position) {
     glm::vec3 vel = glm::normalize(glm::vec3(getGlobalTransform() * glm::vec4(0, 0, -1, 0)));
     vel.x *= FIRING_VELOCITY;
@@ -48,8 +38,6 @@ Projectile* MushroomGun::fireBullet(glm::vec3 position) {
     vel.z *= FIRING_VELOCITY;
     Projectile *p = new Spore(bulletMeshGroup, getTechnique(),
         glm::vec3(getGlobalTransform() * glm::vec4(0.03, 0.5, -0.25, 1)), vel);
-    // Projectile *p = new Projectile(bulletMeshGroup, getTechnique(),
-    //     glm::vec3(getGlobalTransform() * glm::vec4(0.03, 0.5, -0.25, 1)), vel);
     return p;
 }
 

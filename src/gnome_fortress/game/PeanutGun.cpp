@@ -15,6 +15,7 @@ PeanutGun::PeanutGun(
         technique,
         player
     ) {
+    setScale(0.2f);
     bullets = vector;
 }
 
@@ -29,10 +30,6 @@ void PeanutGun::onUpdateSelf(float delta_time) {
     }
 }
 
-/*void PeanutGun::updateWeaponSelf(float delta_time, Projectiles* vector) {
-    
-}*/
-
 const float PeanutGun::FIRING_VELOCITY = 15.0f;
 
 Projectile* PeanutGun::fireBullet(glm::vec3 position) {
@@ -42,8 +39,6 @@ Projectile* PeanutGun::fireBullet(glm::vec3 position) {
     vel.z *= FIRING_VELOCITY;
     Projectile *p = new Rock(bulletMeshGroup, getTechnique(),
         glm::vec3(getGlobalTransform() * glm::vec4(0.03, 0.5, -0.25, 1)), vel);
-   // Projectile *p = new Projectile(bulletMeshGroup, getTechnique(),
-   //     glm::vec3(getGlobalTransform() * glm::vec4(0.03, 0.5, -0.25, 1)), vel);
     return p;
 }
 }

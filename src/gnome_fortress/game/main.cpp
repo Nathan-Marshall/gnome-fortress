@@ -49,14 +49,14 @@ const unsigned int window_height_g = 600;
 const glm::vec3 viewport_background_color_g(0.5, 0.5, 0.5);
 
 // Globals that define the OpenGL camera view and projection
-camera::Camera main_camera_g(
-    glm::lookAt(glm::vec3(-15, 15, 15), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
+camera::Camera debug_camera_g(
+    glm::lookAt(glm::vec3(1.5f, 1, 3.0f), glm::vec3(0, 0.7f, 3.0f), glm::vec3(0, 1, 0))
 );
 
 //Camera globals
 camera::SceneNodeCamera scene_camera_first_g;
 camera::SceneNodeCamera scene_camera_third_g;
-camera::Camera *active_camera_g = &scene_camera_first_g;
+camera::Camera *active_camera_g = &debug_camera_g;
 
 //The root scene node
 model::SceneNode *papaNode;
@@ -94,8 +94,7 @@ void CursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
     //Then we can rotate the camera based off of the calculated value
     //The offset from the middle will be larger based on how far they push the cursor to rotate
     player->rotate(x_angle * 0.001, glm::vec3(0, 1, 0));
-    player->getWeaponContainer()->rotate(y_angle * 0.0005, glm::vec3(1, 0, 0));
-    //player->getWeaponContainer()->rotate()
+    player->getArm()->orbit(y_angle * 0.0005, glm::vec3(1, 0, 0), glm::vec3(0, 0.49f, 0.02f));
 
     //Adjust both cameras so that there won't be any shift when we toggle between the two
     
@@ -272,7 +271,7 @@ void ResizeCallback(GLFWwindow* window, int width, int height){
     glViewport(0, 0, width, height);
 
     // Update projection matrix
-    main_camera_g.setViewport(width, height);
+    debug_camera_g.setViewport(width, height);
     scene_camera_first_g.setViewport(width, height);
     scene_camera_third_g.setViewport(width, height);
 }
@@ -343,7 +342,7 @@ int MainFunction(void){
         papaNode->appendChild(walls);
 
         player = new game::Player(resource_manager_g, technique);
-        player->setPosition(-0.05f, 0.7f, 3.0f);
+        player->setPosition(0, 0.7f, 3.0f);
         papaNode->appendChild(player);
 
         playerProjectiles = new Projectiles();
