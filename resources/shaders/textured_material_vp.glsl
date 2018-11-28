@@ -6,7 +6,7 @@ in vec3 normal;
 in vec3 color;
 in vec2 uv;
 
-// global matrices
+// uniforms
 uniform mat4 world_mat;
 uniform mat4 view_mat;
 uniform mat4 projection_mat;

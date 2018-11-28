@@ -16,7 +16,7 @@ in vec4 color_interp;
 in vec2 uv_interp;
 
 // global uniforms
-uniform vec3 sun_dir = vec3(0, 1, 1);
+uniform vec3 sun_dir = vec3(0, 1, 0);
 uniform vec3 sun_color = vec3(1, 0.98, 0.95);
 
 uniform vec3 diffuse_color = vec3(1, 1, 1);

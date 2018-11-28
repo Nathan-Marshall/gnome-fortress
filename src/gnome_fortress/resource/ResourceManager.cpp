@@ -64,6 +64,16 @@ model::Texture *ResourceManager::getOrLoadTexture(const std::string &relativePat
     }
     return textures[relativePath];
 }
+void ResourceManager::loadSkyboxTexture(const std::string &relativePath) {
+    std::string fullPath = resourcesDirectory + relativePath;
+    textures[relativePath] = TextureLoader::LoadSkyboxTexture(fullPath);
+}
+model::Texture *ResourceManager::getOrLoadSkyboxTexture(const std::string &relativePath) {
+    if (textures.find(relativePath) == textures.end()) {
+        loadSkyboxTexture(relativePath);
+    }
+    return textures[relativePath];
+}
 void ResourceManager::unloadTexture(const std::string &relativePath) {
     TextureLoader::UnloadTexture(textures[relativePath]);
     textures.erase(relativePath);
