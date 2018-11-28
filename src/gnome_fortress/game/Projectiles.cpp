@@ -12,7 +12,9 @@ namespace gnome_fortress {
             std::vector<Projectile*>::iterator projecIt;
 
             for (projecIt = projectiles.begin(); projecIt < projectiles.end();) {
-                if ((*projecIt)->GetLifespan() > 8.0 || (*projecIt)->getPosition().y < 0) {
+                double lifespane = (*projecIt)->GetLifespan();
+
+                if ((*projecIt)->GetLifespan() > (*projecIt)->GetDeathThreshold() || (*projecIt)->getPosition().y < 0) {
                     //Remove the old projectile
                     (*projecIt)->removeFromParent();
                     projecIt = projectiles.erase(projecIt);

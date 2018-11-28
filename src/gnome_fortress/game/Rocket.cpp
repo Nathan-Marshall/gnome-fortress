@@ -14,6 +14,8 @@ Rocket::Rocket(
         velocity
     ), 
     acceleration(1.0f) {
+
+    threshold = 10;
 }
 
 const float Rocket::DAMAGE = 20.0f;

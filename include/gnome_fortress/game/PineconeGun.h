@@ -30,7 +30,7 @@ protected:
     void onUpdateSelf(float dt) override;
 
     //Creating bullets 
-    Projectile* fireBullet(glm::vec3 position) override;
+    std::vector<Projectile*> fireBullet(glm::vec3 position) override;
 
 };
 

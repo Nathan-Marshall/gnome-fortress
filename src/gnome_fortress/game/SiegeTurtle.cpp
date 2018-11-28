@@ -13,7 +13,7 @@ SiegeTurtle::SiegeTurtle(
         resourceManager.getOrLoadMeshGroup(resources::models::siege_turtle),
         technique
       ) {
-    setScale(2.5f);
+    setScale(5.5f);
 
     int numWalls = Walls::NumWalls();
     float angle = ((rand() % (numWalls)) * (2 * glm::pi<float>() / numWalls));
@@ -21,7 +21,7 @@ SiegeTurtle::SiegeTurtle(
     rotate(glm::angleAxis((glm::pi<float>() / 2) + angle, glm::vec3(0, 1, 0)));
 
     health = 30.0f;
-    boundingRadius = (sqrt(3) / 2);
+    boundingRadius = 2.75;
     hittingWall = false;
     damageOnHit = 20.0f;
     moveSpeed = 1.5f;
