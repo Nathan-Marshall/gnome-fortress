@@ -33,14 +33,7 @@ public:
     //Creating bullets 
     virtual std::vector<Projectile*> fireBullet(glm::vec3 position);
 
-    void onUpdateSelf(float dt);
-
-    //virtual void updateWeaponSelf(float dt, Projectiles* vector);
-
 protected:
-    static int FIRING_RATE; //number of bullets per second 
-    static float FIRING_VELOCITY; //speed of individual bullets 
-
     const model::MeshGroup *bulletMeshGroup;
     
     bool pressed;

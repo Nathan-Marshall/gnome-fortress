@@ -24,6 +24,8 @@ public:
 
     bool hittingWall;
 
+    bool hittingPile;
+
     bool overWall;
 
 protected:

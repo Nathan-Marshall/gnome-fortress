@@ -34,6 +34,7 @@
 #include "gnome_fortress/game/Wall.h"
 #include "gnome_fortress/camera/SceneNodeCamera.h"
 #include "gnome_fortress/model/Mesh.h"
+#include "gnome_fortress/model/Skybox.h"
 #include "gnome_fortress/resource/ResourceManager.h"
 
 #include "resources_config.h"
@@ -48,14 +49,14 @@ const unsigned int window_height_g = 600;
 const glm::vec3 viewport_background_color_g(0.5, 0.5, 0.5);
 
 // Globals that define the OpenGL camera view and projection
-camera::Camera main_camera_g(
-    glm::lookAt(glm::vec3(-15, 15, 15), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0))
+camera::Camera debug_camera_g(
+    glm::lookAt(glm::vec3(1.5f, 1, 3.0f), glm::vec3(0, 0.7f, 3.0f), glm::vec3(0, 1, 0))
 );
 
 //Camera globals
 camera::SceneNodeCamera scene_camera_first_g;
 camera::SceneNodeCamera scene_camera_third_g;
-camera::Camera *active_camera_g = &scene_camera_first_g;
+camera::Camera *active_camera_g = &debug_camera_g;
 
 //The root scene node
 model::SceneNode *papaNode;
@@ -93,8 +94,7 @@ void CursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
     //Then we can rotate the camera based off of the calculated value
     //The offset from the middle will be larger based on how far they push the cursor to rotate
     player->rotate(x_angle * 0.001, glm::vec3(0, 1, 0));
-    player->getWeaponContainer()->rotate(y_angle * 0.0005, glm::vec3(1, 0, 0));
-    //player->getWeaponContainer()->rotate()
+    player->getArm()->orbit(y_angle * 0.0005, glm::vec3(1, 0, 0), glm::vec3(0, 0.49f, 0.02f));
 
     //Adjust both cameras so that there won't be any shift when we toggle between the two
     
@@ -271,7 +271,7 @@ void ResizeCallback(GLFWwindow* window, int width, int height){
     glViewport(0, 0, width, height);
 
     // Update projection matrix
-    main_camera_g.setViewport(width, height);
+    debug_camera_g.setViewport(width, height);
     scene_camera_first_g.setViewport(width, height);
     scene_camera_third_g.setViewport(width, height);
 }
@@ -316,14 +316,6 @@ int MainFunction(void){
         glfwSetFramebufferSizeCallback(window, ResizeCallback);
         glfwSetScrollCallback(window, SetScrollCallback);
 
-        // Set up z-buffer for rendering
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LESS);
-
-        // Set culling of back faces
-        glCullFace(GL_BACK);
-        glEnable(GL_CULL_FACE);
-
         // Create geometry of the cube and cylinder
         model::MeshGroup *plane = resource_manager_g.getOrLoadMeshGroup(resources::models::ground);
 
@@ -335,14 +327,22 @@ int MainFunction(void){
         technique->addVertexAttribute(renderer::VertexAttribute(program, "color", 3, GL_FLOAT, GL_FALSE));
         technique->addVertexAttribute(renderer::VertexAttribute(program, "uv", 2, GL_FLOAT, GL_FALSE));
 
+        GLuint skyboxProgram = resource_manager_g.getOrLoadShaderProgram(resources::shaders::skybox);
+        auto skyboxTechnique = new renderer::SkyboxTechnique(skyboxProgram, "projection_mat", "view_mat", "world_mat", "normal_mat", "eye_pos", "cube_map");
+        skyboxTechnique->addVertexAttribute(renderer::VertexAttribute(skyboxProgram, "vertex", 3, GL_FLOAT, GL_FALSE));
+        skyboxTechnique->addVertexAttribute(renderer::VertexAttribute(skyboxProgram, "normal", 3, GL_FLOAT, GL_FALSE));
+
         papaNode = new model::SceneNode();
+
+        model::Skybox *skybox = new model::Skybox(resource_manager_g.getOrLoadSkyboxTexture(resources::skybox::noon_grass), skyboxTechnique);
+        papaNode->appendChild(skybox);
 
         // Create the walls
         walls = new Walls(resource_manager_g, technique);
         papaNode->appendChild(walls);
 
         player = new game::Player(resource_manager_g, technique);
-        player->setPosition(-0.05f, 0.7f, 3.0f);
+        player->setPosition(0, 0.7f, 3.0f);
         papaNode->appendChild(player);
 
         playerProjectiles = new Projectiles();
@@ -455,6 +455,14 @@ int MainFunction(void){
                 spawnTime = glfwGetTime();
             }
 
+            enemies->ProcessCollisions(playerProjectiles);
+
+            acorns->ProcessEnemyCollisions(enemies);
+
+            // Update the scene nodes
+            papaNode->update(delta_time);
+
+
             // Clear background
             glClearColor(viewport_background_color_g[0], 
                             viewport_background_color_g[1],
@@ -464,13 +472,8 @@ int MainFunction(void){
             technique->setProjectionMatrix(active_camera_g->getProjection());
             technique->setViewMatrix(active_camera_g->getView());
 
-            enemies->ProcessCollisions(playerProjectiles);
-
-            acorns->ProcessEnemyCollisions(enemies);
-
-            //Update the scene nodes
-            papaNode->update(delta_time);
-            //player->getCurrentWeapon()->updateWeaponSelf(delta_time, playerProjectiles);
+            skyboxTechnique->setProjectionMatrix(active_camera_g->getProjection());
+            skyboxTechnique->setViewMatrix(active_camera_g->getView());
 
             //Draw the scene nodes
             papaNode->draw(glm::mat4());
@@ -483,6 +486,8 @@ int MainFunction(void){
         }
 
         delete technique;
+        delete skyboxTechnique;
+        delete skybox;
         delete player;
         delete enemies;
         delete peanutGun;

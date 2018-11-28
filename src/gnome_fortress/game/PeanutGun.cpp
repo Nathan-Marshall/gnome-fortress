@@ -15,6 +15,7 @@ PeanutGun::PeanutGun(
         technique,
         player
     ) {
+    setScale(0.2f);
     bullets = vector;
 }
 

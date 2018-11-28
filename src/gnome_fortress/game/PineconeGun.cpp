@@ -14,19 +14,9 @@ PineconeGun::PineconeGun(
         technique,
         player
     ) {
+    setScale(0.2f);
     bullets = vector;
 }
-
-/*void PineconeGun::updateWeaponSelf(float delta_time, Projectiles* vector) {
-    cooldown -= delta_time;
-
-    if (pressed && cooldown < 0) {
-        setCooldown(1.4f);
-        Projectile* p = fireBullet(getPosition());
-        vector->projectiles.push_back(p);
-        vector->appendChild(p);
-    }
-}*/
 
 void PineconeGun::onUpdateSelf(float delta_time) {
     cooldown -= delta_time;

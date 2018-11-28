@@ -25,10 +25,15 @@ SiegeTurtle::SiegeTurtle(
     hittingWall = false;
     damageOnHit = 20.0f;
     moveSpeed = 1.5f;
+
+    hittingPile = false;
 }
 
 void SiegeTurtle::onUpdateSelf(float dt) {
-    if (!hittingWall) {
+    if (hittingPile) {
+        //Do nothing any more 
+    }
+    else if (!hittingWall) {
         //For now, the siege turtle will just move to the origin
         glm::vec3 moveDir = glm::normalize(getPosition() - glm::vec3(0, 0.1, 0));
         glm::vec3 vel = moveDir * moveSpeed;

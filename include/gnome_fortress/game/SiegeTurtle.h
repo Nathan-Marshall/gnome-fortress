@@ -25,6 +25,8 @@ public:
     //Whether or not the turtle is hitting a wall
     bool hittingWall;
 
+    bool hittingPile;
+
     //Damage that the turtle will do upon hitting a wall
     float damageOnHit;
 

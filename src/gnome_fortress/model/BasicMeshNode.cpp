@@ -16,6 +16,14 @@ BasicMeshNode::BasicMeshNode(
 
 void BasicMeshNode::onDrawSelf(const glm::mat4 &parent_transform) const {
     if (mesh) {
+        // Set up z-buffer for rendering
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+
+        // Set culling of back faces
+        glCullFace(GL_BACK);
+        glEnable(GL_CULL_FACE);
+
         // bind buffers for mesh
         glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);

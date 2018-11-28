@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-#include "gnome_fortress/model/Mesh.h"
+#include "gnome_fortress/model/Texture.h"
 #include "gnome_fortress/renderer/BasicProjectionTechnique.h"
 
 namespace gnome_fortress {

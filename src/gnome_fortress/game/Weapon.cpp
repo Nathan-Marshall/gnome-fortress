@@ -16,7 +16,6 @@ Weapon::Weapon(
     : model::BasicMeshGroupNode(gunMeshGroup, technique),
       pressed(false), 
       bulletMeshGroup(bMeshGroup) {
-    setPosition(0.8, 0, 0);
 }
 
 Weapon::~Weapon() { 
@@ -58,22 +57,6 @@ void Weapon::onUpdateSelf(float delta_time) {
     if (pressed && cooldown < 0) {
         std::cout << "Shootin'" << std::endl;
     }
-
-    // DEBUG stuff
-    std::cout << "WEAPON POSITION-- x: " << getPosition().x
-        << ", y: " << getPosition().y
-        << ", z: " << getPosition().z
-        << std::endl;*/
-
-/*    std::cout << "VELOCITY-- x: " << velocity.x
-        << ", y: " << velocity.y
-        << ", z: " << velocity.z
-        << std::endl;*/
-}
-
-/*void Weapon::updateWeaponSelf(float delta_time, Projectiles* vector) {
-
-}*/
 
 
 }

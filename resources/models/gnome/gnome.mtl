@@ -1,5 +1,5 @@
 # Blender MTL File: 'None'
-# Material Count: 1
+# Material Count: 2
 
 newmtl gnome
 Ns 511.764706
@@ -11,6 +11,17 @@ Ni 1.000000
 d 1.000000
 illum 2
 map_Kd gnome_diffuse.tga
-map_Ks gnome_spec.tga
 map_Bump gnome_normals.tga
+map_Ks gnome_spec.tga
 refl gnome_reflect.tga
+
+newmtl jetpack
+Ns 100.000000
+Ka 0.200000 0.200000 0.200000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd jetpack_diffuse.png

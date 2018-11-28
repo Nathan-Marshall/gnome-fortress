@@ -23,13 +23,6 @@ public:
     void ProcessEnemyCollisions(Enemies* turtles);
 
 private:
-    bool underAttack;
-
-    //Need a function to actually make sure they start getting removed 
-
-    //So, loop through all the acorns 
-    //If ONE of the acorns is in contact 
-    //Start shriking the LAST acorn in the pile (the top ones)
 
 };
 
