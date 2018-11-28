@@ -56,7 +56,7 @@ camera::Camera debug_camera_g(
 //Camera globals
 camera::SceneNodeCamera scene_camera_first_g;
 camera::SceneNodeCamera scene_camera_third_g;
-camera::Camera *active_camera_g = &debug_camera_g;
+camera::Camera *active_camera_g = &scene_camera_first_g;;
 
 //The root scene node
 model::SceneNode *papaNode;
@@ -402,7 +402,7 @@ int MainFunction(void){
         //Create the first person camera
         model::SceneNode *cameraNodeFirst = scene_camera_first_g.getNode();
         cameraNodeFirst->setPosition(0, 0, -1);
-
+        
         player->appendChild(cameraNodeThird);
         player->appendChild(cameraNodeFirst);
 
