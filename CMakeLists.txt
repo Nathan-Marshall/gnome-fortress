@@ -35,10 +35,12 @@ set(HDRS
     include/gnome_fortress/model/Mesh.h
     include/gnome_fortress/model/MeshGroup.h
     include/gnome_fortress/model/SceneNode.h
+    include/gnome_fortress/model/Skybox.h
     include/gnome_fortress/model/Texture.h
     
     include/gnome_fortress/renderer/BasicMeshNodeTechnique.h
     include/gnome_fortress/renderer/BasicProjectionTechnique.h
+    include/gnome_fortress/renderer/SkyboxTechnique.h
     include/gnome_fortress/renderer/Technique.h
     include/gnome_fortress/renderer/Uniform.h
     include/gnome_fortress/renderer/VertexAttribute.h
@@ -84,10 +86,12 @@ set(SRCS
     src/gnome_fortress/model/Mesh.cpp
     src/gnome_fortress/model/MeshGroup.cpp
     src/gnome_fortress/model/SceneNode.cpp
+    src/gnome_fortress/model/Skybox.cpp
     src/gnome_fortress/model/Texture.cpp
     
     src/gnome_fortress/renderer/BasicMeshNodeTechnique.cpp
     src/gnome_fortress/renderer/BasicProjectionTechnique.cpp
+    src/gnome_fortress/renderer/SkyboxTechnique.cpp
     src/gnome_fortress/renderer/Technique.cpp
     src/gnome_fortress/renderer/Uniform.cpp
     src/gnome_fortress/renderer/VertexAttribute.cpp

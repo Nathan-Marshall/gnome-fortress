@@ -34,6 +34,14 @@ public:
 
     void loadTexture(const std::string &relativePath);
     model::Texture *getOrLoadTexture(const std::string &relativePath);
+    /* When dealing with skyboxes, ResourceManager expects a filename prefix, which refers to 6 separate images.
+     * Each of "_xn.[ext]", "_xp.[ext]", "_yn.[ext]", "_yp.[ext]", "_zn.[ext]", "_zp.[ext]" is appended, one for each
+     * side of the cube map. */
+    void loadSkyboxTexture(const std::string &relativePath);
+    /* When dealing with skyboxes, ResourceManager expects a filename prefix, which refers to 6 separate images.
+     * Each of "_xn.[ext]", "_xp.[ext]", "_yn.[ext]", "_yp.[ext]", "_zn.[ext]", "_zp.[ext]" is appended, one for each
+     * side of the cube map. */
+    model::Texture *getOrLoadSkyboxTexture(const std::string &relativePath);
     void unloadTexture(const std::string &relativePath);
 
     void unloadAll();

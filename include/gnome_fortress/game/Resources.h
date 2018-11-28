@@ -33,6 +33,13 @@ namespace shaders {
     const std::string dirname = "shaders/";
 
     const std::string textured_material = shaders::dirname + "textured_material";
+    const std::string skybox = shaders::dirname + "skybox";
+}
+
+namespace skybox {
+    const std::string dirname = "skybox/";
+
+    const std::string noon_grass = skybox::dirname + "noon_grass/noon_grass.png";
 }
 
 }
