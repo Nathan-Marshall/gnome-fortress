@@ -1,21 +1,14 @@
 # Blender MTL File: 'None'
-# Material Count: 2
-
-newmtl None
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
+# Material Count: 1
 
 newmtl squirrel128
-Ns 0.000000
+Ns 10.000000
 Ka 0.200000 0.200000 0.200000
-Kd 0.800000 0.800000 0.800000
-Ks 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
 Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd squirrel128.png
+map_Kd squirrel_diffuse.png
+map_Ks squirrel_spec.png
