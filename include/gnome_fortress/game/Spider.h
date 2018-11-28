@@ -28,6 +28,8 @@ public:
 
     bool overWall;
 
+    int currentRot = 0;
+
 protected:
     void onUpdateSelf(float dt) override;
 

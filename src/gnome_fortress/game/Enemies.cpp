@@ -1,5 +1,5 @@
 #include "gnome_fortress/game/Enemies.h"
-
+#include <iostream>
 namespace gnome_fortress {
 namespace game {
 
@@ -211,21 +211,25 @@ void Enemies::ProcessWallCollisions() {
                 wallPos.y = 0;
 
                 float widthDistance = glm::length(spiderPos - wallPos);
-                float heightDiff = ((*spiderIt)->getPosition().y) - Walls::WALL_HEIGHT/2;
+                float heightDiff = ((*spiderIt)->getPosition().y) - Walls::WALL_HEIGHT;
 
-                if (widthDistance < (*spiderIt)->GetBoundingRadius() && heightDiff < (*spiderIt)->GetBoundingRadius()/2 && (*spiderIt)->hittingWall == false) {
+                bool inside = (glm::length(wallPos - glm::vec3(0, 0, 0)) > glm::length(spiderPos - glm::vec3(0, 0, 0)) + Walls::WALL_WIDTH);
+
+                if (widthDistance < (*spiderIt)->GetBoundingRadius() && heightDiff < 0 && !inside) {
                     (*spiderIt)->hittingWall = true;
                 }
-                else if (heightDiff >(*spiderIt)->GetBoundingRadius() / 2) {
+                if (heightDiff > 0 && !inside) {
                     (*spiderIt)->overWall = true;
                 }
-                else {
+                if (heightDiff > 0 && inside && widthDistance < (Walls::WALL_WIDTH * 2)) {
                     (*spiderIt)->overWall = false;
                 }
                 innerWallIt++;
-            
             }
         }
+        std::cout << "Hitting: " << (*spiderIt)->hittingWall << " ";
+        std::cout << "Over: " << (*spiderIt)->overWall << "\n\n";
+
     }
 }
 
