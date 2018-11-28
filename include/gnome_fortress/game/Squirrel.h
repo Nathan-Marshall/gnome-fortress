@@ -27,6 +27,9 @@ public:
     bool hittingWall;
     bool onTheMove;
 
+    //Whether or not the squirrel is at the acorn pile
+    bool hittingPile;
+
     Walls* walls;
 
     //Damage that the squirrel will do upon hitting a wall

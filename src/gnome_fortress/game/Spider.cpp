@@ -24,10 +24,15 @@ namespace game {
     health = 10.0f;
     boundingRadius = (sqrt(3) * 2) / 2;
     moveSpeed = 2.0f;
+    hittingWall = false;
+    hittingPile = false;
 }
 
 void Spider::onUpdateSelf(float dt) {
-    if (!hittingWall) {
+    if (hittingPile) {
+        //Do nothing any more 
+    }
+    else if (!hittingWall) {
         glm::vec3 moveDir = glm::normalize(getPosition() - glm::vec3(0, 0.1, 0));
 
         if (overWall) {
