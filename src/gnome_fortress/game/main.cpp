@@ -58,6 +58,8 @@ camera::SceneNodeCamera scene_camera_first_g;
 camera::SceneNodeCamera scene_camera_third_g;
 camera::Camera *active_camera_g = &scene_camera_first_g;;
 
+float cameraAngle = 0.0f;
+
 //The root scene node
 model::SceneNode *papaNode;
 
@@ -71,7 +73,6 @@ game::Enemies* enemies;
 game::Projectiles* playerProjectiles;
 
 game::Acorns *acorns;
-//game::Acorn *acorn;
 
 //A vector for swapping through weapons 
 std::vector<Weapon*> weapons;
@@ -91,13 +92,19 @@ void CursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
     //We want to set the cursor back to the middle each time
     glfwSetCursorPos(window, half_x, half_y);
 
+    cameraAngle += y_angle * 0.0005;
+
+    if (cameraAngle > glm::pi<float>() / 2 || cameraAngle < -glm::pi<float>() / 2) {
+        cameraAngle -= y_angle * 0.0005;
+        y_angle = 0.0f;
+    }
+
     //Then we can rotate the camera based off of the calculated value
     //The offset from the middle will be larger based on how far they push the cursor to rotate
     player->rotate(x_angle * 0.001, glm::vec3(0, 1, 0));
     player->getArm()->orbit(y_angle * 0.0005, glm::vec3(1, 0, 0), glm::vec3(0, 0.49f, 0.02f));
 
     //Adjust both cameras so that there won't be any shift when we toggle between the two
-    
     //Rotate the first person camera
     scene_camera_first_g.getNode()->rotate(y_angle * 0.0005, glm::vec3(1.0, 0, 0));
     //Orbit the third person camera about the origin to keep the player centered on the screen
@@ -401,7 +408,7 @@ int MainFunction(void){
 
         //Create the first person camera
         model::SceneNode *cameraNodeFirst = scene_camera_first_g.getNode();
-        cameraNodeFirst->setPosition(0, 0, -1);
+        cameraNodeFirst->setPosition(0.1, 0.4, -1);
         
         player->appendChild(cameraNodeThird);
         player->appendChild(cameraNodeFirst);
