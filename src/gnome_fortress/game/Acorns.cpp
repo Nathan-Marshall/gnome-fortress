@@ -17,7 +17,7 @@ void Acorns::ProcessEnemyCollisions(Enemies* enemies) {
     for (turtleIter = enemies->turtles.begin(); turtleIter < enemies->turtles.end();) {
     
         if (acorns.size() > 0) {
-            if (glm::length((*turtleIter)->getPosition() - glm::vec3(0, 0, 0)) < 1.3) {
+            if (glm::length((*turtleIter)->getPosition() - glm::vec3(0, 0, 0)) < 4.0) {
                 acorns.back()->takeDamage();
                 (*turtleIter)->hittingPile = true;
             }
