@@ -26,33 +26,53 @@ namespace game {
     moveSpeed = 2.0f;
     hittingWall = false;
     hittingPile = false;
+
+    currentRot = 0;
 }
 
 void Spider::onUpdateSelf(float dt) {
+
+    //Rotation of the spider
+    if (hittingWall && currentRot != 1) {
+        translateY(0.2);
+        rotate(glm::angleAxis(90 * glm::pi<float>() / 180.0f, glm::vec3(1, 0, 0)));
+        currentRot = 1;
+    }
+    if (overWall && currentRot == 1) {
+        rotate(glm::angleAxis(-90 * glm::pi<float>() / 180.0f, glm::vec3(1, 0, 0)));
+        currentRot = 2;
+    }
+    else if (getPosition().y > 0.1 && !overWall && currentRot == 2) {
+        rotate(glm::angleAxis(-90 * glm::pi<float>() / 180.0f, glm::vec3(1,0,0)));
+        currentRot = 3;
+    }
+    else if (getPosition().y < 0.1 && currentRot == 3){
+        rotate(glm::angleAxis(90 * glm::pi<float>() / 180.0f, glm::vec3(1, 0, 0)));
+        currentRot = 0;
+    }
+
     if (hittingPile) {
         //Do nothing any more 
     }
-    else if (!hittingWall) {
+    else {
         glm::vec3 moveDir = glm::normalize(getPosition() - glm::vec3(0, 0.1, 0));
 
-        if (overWall) {
-            translate(glm::vec3(-moveDir.x, -0.1, -moveDir.z) * dt);
-            overWall = false;
-        }
-        else if (getPosition().y > 0.1) {
-            translate(glm::vec3(0, -1, 0) * dt);
-            hittingWall = false;
-        }
-        else {
-            //For now, the spider will just move to the origin
+        if (currentRot == 0) {
             glm::vec3 vel = moveDir * moveSpeed;
             translate(glm::vec3(-vel.x, -vel.y, -vel.z) * dt);
         }
-    }
-    else {
-        //move up a bit, and reset the flag
-        translate(glm::vec3(0, 1, 0) * dt);
-        hittingWall = false;
+        else if (currentRot == 1) {
+            translate(glm::vec3(0, 1, 0) * dt);
+            hittingWall = false;
+        }
+        else if (currentRot == 2) {
+            translate(glm::vec3(-moveDir.x, 0, -moveDir.z) * dt);
+            overWall = false;
+        }
+        else if (currentRot == 3) {
+            translate(glm::vec3(0, -1, 0) * dt);
+            hittingWall = false;
+        }
     }
 }
 

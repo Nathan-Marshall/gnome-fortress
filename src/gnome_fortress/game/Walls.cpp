@@ -7,8 +7,8 @@ namespace game {
 const float Walls::INNER_RADIUS = 7.0f;
 const float Walls::OUTER_RADIUS = 22.0f;
 const int Walls::WALLS_PER_RING = 15;
-const float Walls::WALL_HEIGHT = 3.0f;
-const float Walls::WALL_WIDTH = 0.5f;
+const float Walls::WALL_HEIGHT = 4.5f;
+const float Walls::WALL_WIDTH = 2.0f;
 
 Walls::Walls(
         resource::ResourceManager &resourceManager,
@@ -44,8 +44,8 @@ void Walls::FillWalls(
 
             wall->SetDimensions(wallLength, WALL_HEIGHT, WALL_WIDTH);
             wall->rotate(orientAngle, glm::vec3(0, 1, 0));
-            wall->setPosition(glm::vec3(ringRadius * (cos(angle)), 0.5, ringRadius * sin(angle)));
-            wall->setScale(glm::vec3(wallLength, WALL_HEIGHT, WALL_WIDTH));
+            wall->setPosition(glm::vec3(ringRadius * (cos(angle)), -0.2, ringRadius * sin(angle)));
+            wall->setScale(glm::vec3(wallLength, WALL_HEIGHT, WALL_WIDTH * (2 * i + 1)));
 
             wallRing->push_back(wall);
             this->appendChild(wall);

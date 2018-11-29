@@ -14,7 +14,7 @@ Wall::Wall(
         renderer::BasicMeshNodeTechnique *technique,
         float wallHealth)
     : model::BasicMeshGroupNode(
-        resourceManager.getOrLoadMeshGroup(resources::models::cube),
+        resourceManager.getOrLoadMeshGroup(resources::models::fence),
         technique
     ),
     health(wallHealth) {

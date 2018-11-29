@@ -27,6 +27,7 @@ namespace models {
     const std::string siege_turtle = models::dirname + "siege_turtle/siege_turtle.obj";
     const std::string spider = models::dirname + "spider/skSpiderLargeMesh.obj";
     const std::string squirrel = models::dirname + "squirrel/Squirrel.obj";
+    const std::string fence = models::dirname + "fences/fence.obj";
 }
 
 namespace shaders {
