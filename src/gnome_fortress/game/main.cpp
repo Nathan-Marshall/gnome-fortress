@@ -45,8 +45,8 @@ namespace game {
 
 // Globals that define the OpenGL window and viewport
 const std::string window_title_g = "Gnome Fortress";
-const unsigned int window_width_g = 1800;
-const unsigned int window_height_g = 1200;
+const unsigned int window_width_g = 800;
+const unsigned int window_height_g = 600;
 const glm::vec3 viewport_background_color_g(0.5, 0.5, 0.5);
 
 // Globals that define the OpenGL camera view and projection
