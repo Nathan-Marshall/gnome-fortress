@@ -6,8 +6,15 @@ namespace gnome_fortress {
 namespace game {
     Player::Player(
             resource::ResourceManager &resourceManager,
-            renderer::BasicMeshNodeTechnique *technique)
+            renderer::BasicMeshNodeTechnique *technique,
+            RocketStreamTechnique *rocketStreamTechnique)
         : model::SceneNode(),
+          rocketStream1(
+              new RocketStream(resourceManager.getOrLoadTexture(resources::textures::flame4x4), rocketStreamTechnique)
+          ),
+          rocketStream2(
+              new RocketStream(resourceManager.getOrLoadTexture(resources::textures::flame4x4), rocketStreamTechnique)
+          ),
           forward(false),
           backward(false),
           left(false),
@@ -24,6 +31,12 @@ namespace game {
           weaponIndex(0)  {
 
         appendChild(playerModel);
+        appendChild(rocketStream1);
+        rocketStream1->setPosition(-0.1, 0.44, 0.1);
+        rocketStream1->setRotation(glm::pi<float>(), glm::vec3(1, 0, 0));
+        appendChild(rocketStream2);
+        rocketStream2->setPosition(0.1, 0.44, 0.1);
+        rocketStream2->setRotation(glm::pi<float>(), glm::vec3(1, 0, 0));
 
         getArm()->appendChild(weaponContainer);
         weaponContainer->setPosition(0.14f, 0.48f, -0.15f);
@@ -123,26 +136,36 @@ namespace game {
             acceleration = getRotation() * glm::vec3(0, 0, 1);
             velocity -= (acceleration * ACCELERATION) * dt;
         }
-        else if (backward) {
+        if (backward) {
             acceleration = getRotation() * glm::vec3(0, 0, 1);
             velocity += (acceleration * ACCELERATION) * dt;
         }
-        else if (left) {
+        if (left) {
             acceleration = getRotation() * glm::vec3(1, 0, 0);
             velocity -= (acceleration * ACCELERATION) * dt;
         }
-        else if (right) {
+        if (right) {
             acceleration = getRotation() * glm::vec3(1, 0, 0);
             velocity += (acceleration * ACCELERATION) * dt;
+        }
+        if (up) {
+            acceleration = getRotation() * glm::vec3(0, 1, 0);
+            velocity += (acceleration * ACCELERATION) * dt;
+        }
+        if (down) {
+            acceleration = getRotation() * glm::vec3(0, 1, 0);
+            velocity -= (acceleration * ACCELERATION) * dt;
         }
 
-        else if (up) {
-            acceleration = getRotation() * glm::vec3(0, 1, 0);
-            velocity += (acceleration * ACCELERATION) * dt;
-        }
-        else if (down) {
-            acceleration = getRotation() * glm::vec3(0, 1, 0);
-            velocity -= (acceleration * ACCELERATION) * dt;
+        if (up) {
+            rocketStream1->setPower(1.0f);
+            rocketStream2->setPower(1.0f);
+        } else if (down) {
+            rocketStream1->setPower(0.1f);
+            rocketStream2->setPower(0.1f);
+        } else {
+            rocketStream1->setPower(0.4f);
+            rocketStream2->setPower(0.4f);
         }
 
         velocity *= glm::pow(DECAY, dt);

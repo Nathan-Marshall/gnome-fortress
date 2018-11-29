@@ -13,6 +13,16 @@ namespace resource {
 GLuint ShaderProgramLoader::LoadShaderProgram(const std::string &shader_prefix) {
     std::string vp_source_str = ReadTextFile(shader_prefix + "_vp.glsl");
     const GLchar *vp_source = vp_source_str.c_str();
+    
+    std::string gp_source_str = "";
+    const GLchar *gp_source = nullptr;
+    try {
+        gp_source_str = ReadTextFile(shader_prefix + "_gp.glsl");
+        gp_source = gp_source_str.c_str();
+    } catch (std::ios_base::failure ex) {
+        // no geometry shader
+    }
+
     std::string fp_source_str = ReadTextFile(shader_prefix + "_fp.glsl");
     const GLchar *fp_source = fp_source_str.c_str();
 
@@ -28,6 +38,23 @@ GLuint ShaderProgramLoader::LoadShaderProgram(const std::string &shader_prefix) 
         char buffer[512];
         glGetShaderInfoLog(vs, 512, NULL, buffer);
         throw(std::ios_base::failure(std::string("Error compiling vertex shader: ") + std::string(buffer)));
+    }
+
+    GLuint gs = 0;
+    if (gp_source) {
+        // Create a shader from the geometry program source code
+        gs = glCreateShader(GL_GEOMETRY_SHADER);
+        glShaderSource(gs, 1, &gp_source, NULL);
+        glCompileShader(gs);
+
+        // Check if shader compiled successfully
+        GLint status;
+        glGetShaderiv(gs, GL_COMPILE_STATUS, &status);
+        if (status != GL_TRUE) {
+            char buffer[512];
+            glGetShaderInfoLog(gs, 512, NULL, buffer);
+            throw(std::ios_base::failure(std::string("Error compiling geometry shader: ") + std::string(buffer)));
+        }
     }
 
     // Create a shader from the fragment program source code
@@ -47,6 +74,9 @@ GLuint ShaderProgramLoader::LoadShaderProgram(const std::string &shader_prefix) 
     // together
     GLuint program = glCreateProgram();
     glAttachShader(program, vs);
+    if (gs) {
+        glAttachShader(program, gs);
+    }
     glAttachShader(program, fs);
     glLinkProgram(program);
 
@@ -60,6 +90,9 @@ GLuint ShaderProgramLoader::LoadShaderProgram(const std::string &shader_prefix) 
 
     // Delete memory used by shaders, since they were already compiled and linked
     glDeleteShader(vs);
+    if (gs) {
+        glDeleteShader(gs);
+    }
     glDeleteShader(fs);
 
     return program;

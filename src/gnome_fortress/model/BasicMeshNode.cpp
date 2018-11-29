@@ -14,7 +14,12 @@ BasicMeshNode::BasicMeshNode(
 
 }
 
-void BasicMeshNode::onDrawSelf(const glm::mat4 &parent_transform) const {
+void BasicMeshNode::onDrawSelf(const glm::mat4 &parent_transform, unsigned int pass) const {
+    // only draw during the first pass (no blending)
+    if (pass != 0) {
+        return;
+    }
+
     if (mesh) {
         // Set up z-buffer for rendering
         glEnable(GL_DEPTH_TEST);
@@ -23,6 +28,9 @@ void BasicMeshNode::onDrawSelf(const glm::mat4 &parent_transform) const {
         // Set culling of back faces
         glCullFace(GL_BACK);
         glEnable(GL_CULL_FACE);
+
+        // disable blending
+        glDisable(GL_BLEND);
 
         // bind buffers for mesh
         glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);

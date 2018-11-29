@@ -30,6 +30,7 @@
 #include "gnome_fortress/game/PineconeGun.h"
 #include "gnome_fortress/game/Player.h"
 #include "gnome_fortress/game/Resources.h"
+#include "gnome_fortress/game/RocketStream.h"
 #include "gnome_fortress/game/Walls.h"
 #include "gnome_fortress/game/Wall.h"
 #include "gnome_fortress/camera/SceneNodeCamera.h"
@@ -339,16 +340,22 @@ int MainFunction(void){
         skyboxTechnique->addVertexAttribute(renderer::VertexAttribute(skyboxProgram, "vertex", 3, GL_FLOAT, GL_FALSE));
         skyboxTechnique->addVertexAttribute(renderer::VertexAttribute(skyboxProgram, "normal", 3, GL_FLOAT, GL_FALSE));
 
+        GLuint rocketStreamProgram = resource_manager_g.getOrLoadShaderProgram(resources::shaders::rocket_stream);
+        auto rocketStreamTechnique = new RocketStreamTechnique(rocketStreamProgram, "projection_mat", "view_mat", "world_mat", "normal_mat", "eye_pos", "timer", "power", "main_texture");
+        rocketStreamTechnique->addVertexAttribute(renderer::VertexAttribute(rocketStreamProgram, "vertex", 3, GL_FLOAT, GL_FALSE));
+        rocketStreamTechnique->addVertexAttribute(renderer::VertexAttribute(rocketStreamProgram, "normal", 3, GL_FLOAT, GL_FALSE));
+        rocketStreamTechnique->addVertexAttribute(renderer::VertexAttribute(rocketStreamProgram, "color", 3, GL_FLOAT, GL_FALSE));
+
         papaNode = new model::SceneNode();
 
-        model::Skybox *skybox = new model::Skybox(resource_manager_g.getOrLoadSkyboxTexture(resources::skybox::noon_grass), skyboxTechnique);
+        model::Skybox *skybox = new model::Skybox(resource_manager_g.getOrLoadSkyboxTexture(resources::textures::noon_grass), skyboxTechnique);
         papaNode->appendChild(skybox);
 
         // Create the walls
         walls = new Walls(resource_manager_g, technique);
         papaNode->appendChild(walls);
 
-        player = new game::Player(resource_manager_g, technique);
+        player = new game::Player(resource_manager_g, technique, rocketStreamTechnique);
         player->setPosition(0, 0.7f, 3.0f);
         papaNode->appendChild(player);
 
@@ -482,8 +489,14 @@ int MainFunction(void){
             skyboxTechnique->setProjectionMatrix(active_camera_g->getProjection());
             skyboxTechnique->setViewMatrix(active_camera_g->getView());
 
-            //Draw the scene nodes
-            papaNode->draw(glm::mat4());
+            rocketStreamTechnique->setProjectionMatrix(active_camera_g->getProjection());
+            rocketStreamTechnique->setViewMatrix(active_camera_g->getView());
+            rocketStreamTechnique->setTimer(current_time);
+
+            // Draw the scene nodes (first pass)
+            papaNode->draw(glm::mat4(), 0);
+            // Second pass (usually for blending)
+            papaNode->draw(glm::mat4(), 1);
 
             // Push buffer drawn in the background onto the display
             glfwSwapBuffers(window);
