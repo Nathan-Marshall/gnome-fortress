@@ -14,7 +14,9 @@ SceneNode::SceneNode()
       rotation(),
       scale_vec(1, 1, 1),
       parent(nullptr),
-      children() {    
+      children(),
+      enabled(true),
+      visible(true) {    
 }
 
 void SceneNode::update(float delta_time) {
@@ -22,9 +24,9 @@ void SceneNode::update(float delta_time) {
     onUpdateChildren(delta_time);
 }
 
-void SceneNode::draw(const glm::mat4 &parent_transform) const {
-    onDrawSelf(parent_transform);
-    onDrawChildren(parent_transform);
+void SceneNode::draw(const glm::mat4 &parent_transform, unsigned int pass/* = 0*/) const {
+    onDrawSelf(parent_transform, pass);
+    onDrawChildren(parent_transform, pass);
 }
 
 // === LOCAL TRANSFORMATIONS ===
@@ -304,6 +306,22 @@ void SceneNode::removeFromParent() {
     }
 }
 
+bool SceneNode::isEnabled() const {
+    return enabled;
+}
+
+void SceneNode::setEnabled(bool e) {
+    enabled = e;
+}
+
+bool SceneNode::isVisibile() const {
+    return visible;
+}
+
+void SceneNode::setVisibile(bool v) {
+    visible = v;
+}
+
 // === PROTECTED ===
 
 void SceneNode::applyTransform() const {
@@ -323,17 +341,21 @@ void SceneNode::onUpdateSelf(float delta_time) {
 
 void SceneNode::onUpdateChildren(float delta_time) {
     for (SceneNode *child : children) {
-        child->update(delta_time);
+        if (child->enabled) {
+            child->update(delta_time);
+        }
     }
 }
 
-void SceneNode::onDrawSelf(const glm::mat4 &parent_transform) const {
+void SceneNode::onDrawSelf(const glm::mat4 &parent_transform, unsigned int pass) const {
     // override to add draw behaviour
 }
 
-void SceneNode::onDrawChildren(const glm::mat4 &parent_transform) const {
+void SceneNode::onDrawChildren(const glm::mat4 &parent_transform, unsigned int pass) const {
     for (SceneNode *child : children) {
-        child->draw(parent_transform * getTransformMatrix());
+        if (child->visible) {
+            child->draw(parent_transform * getTransformMatrix(), pass);
+        }
     }
 }
 

@@ -18,8 +18,9 @@ public:
     // updates this node and all its children
     virtual void update(float delta_time);
 
-    // draws this node and all its children, applying the local transformation
-    virtual void draw(const glm::mat4 &parent_transform) const;
+    /* Draws this node and all its children, applying the local transformation.
+     * Nodes can perform different operations depending on the pass number. */
+    virtual void draw(const glm::mat4 &parent_transform, unsigned int pass = 0) const;
 
     // === LOCAL TRANSFORMATIONS ===
 
@@ -178,6 +179,16 @@ public:
      * This is not particularily fast because the parent must first search for this node. */
     void removeFromParent();
 
+    // Nodes that are not enabled do not have their update function called
+    bool isEnabled() const;
+    // Nodes that are not enabled do not have their update function called
+    void setEnabled(bool enabled);
+
+    // Nodes that are not visible do not have their draw function called
+    bool isVisibile() const;
+    // Nodes that are not visible do not have their draw function called
+    void setVisibile(bool visible);
+
 protected:
     // Uses the gl functions to transform the top of the matrix stack by the local transformations
     void applyTransform() const;
@@ -189,10 +200,10 @@ protected:
     virtual void onUpdateChildren(float delta_time);
 
     // instructions for what to do when drawing self, after applying transformations (does not include drawing children)
-    virtual void onDrawSelf(const glm::mat4 &parent_transform) const;
+    virtual void onDrawSelf(const glm::mat4 &parent_transform, unsigned int pass) const;
 
     // instructions for what to do when drawing children, after applying transformations
-    virtual void onDrawChildren(const glm::mat4 &parent_transform) const;
+    virtual void onDrawChildren(const glm::mat4 &parent_transform, unsigned int pass) const;
 
 private:
     glm::vec3 position;
@@ -201,6 +212,9 @@ private:
 
     SceneNode *parent;
     std::vector<SceneNode *> children;
+
+    bool enabled;
+    bool visible;
 };
 
 }

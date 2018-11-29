@@ -33,14 +33,16 @@ namespace models {
 namespace shaders {
     const std::string dirname = "shaders/";
 
-    const std::string textured_material = shaders::dirname + "textured_material";
+    const std::string rocket_stream = shaders::dirname + "rocket_stream";
     const std::string skybox = shaders::dirname + "skybox";
+    const std::string textured_material = shaders::dirname + "textured_material";
 }
 
-namespace skybox {
-    const std::string dirname = "skybox/";
+namespace textures {
+    const std::string dirname = "textures/";
 
-    const std::string noon_grass = skybox::dirname + "noon_grass/noon_grass.png";
+    const std::string noon_grass = textures::dirname + "skyboxes/noon_grass/noon_grass.png";
+    const std::string flame4x4 = textures::dirname + "particles/flame4x4.png";
 }
 
 }

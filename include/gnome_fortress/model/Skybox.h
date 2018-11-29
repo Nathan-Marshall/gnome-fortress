@@ -12,7 +12,7 @@ public:
     Skybox(const Texture *texture, renderer::SkyboxTechnique *technique);
     ~Skybox();
 
-    void onDrawSelf(const glm::mat4 &parent_transform) const override;
+    void onDrawSelf(const glm::mat4 &parent_transform, unsigned int pass) const override;
 
     const model::Mesh *getMesh() const;
 

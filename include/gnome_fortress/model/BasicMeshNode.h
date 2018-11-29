@@ -13,7 +13,7 @@ public:
             const model::Mesh *mesh,
             renderer::BasicMeshNodeTechnique *technique);
 
-    void onDrawSelf(const glm::mat4 &parent_transform) const override;
+    void onDrawSelf(const glm::mat4 &parent_transform, unsigned int pass) const override;
 
     const model::Mesh *getMesh() const;
 

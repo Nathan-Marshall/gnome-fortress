@@ -24,6 +24,8 @@ set(HDRS
     include/gnome_fortress/game/Resources.h
     include/gnome_fortress/game/Rock.h
     include/gnome_fortress/game/Rocket.h
+    include/gnome_fortress/game/RocketStream.h
+    include/gnome_fortress/game/RocketStreamTechnique.h
     include/gnome_fortress/game/Spore.h
     include/gnome_fortress/game/Weapon.h
     include/gnome_fortress/game/Wall.h
@@ -34,6 +36,7 @@ set(HDRS
     include/gnome_fortress/model/Material.h
     include/gnome_fortress/model/Mesh.h
     include/gnome_fortress/model/MeshGroup.h
+    include/gnome_fortress/model/PointSet.h
     include/gnome_fortress/model/SceneNode.h
     include/gnome_fortress/model/Skybox.h
     include/gnome_fortress/model/Texture.h
@@ -74,6 +77,8 @@ set(SRCS
     src/gnome_fortress/game/Projectiles.cpp
     src/gnome_fortress/game/Rock.cpp
     src/gnome_fortress/game/Rocket.cpp
+    src/gnome_fortress/game/RocketStream.cpp
+    src/gnome_fortress/game/RocketStreamTechnique.cpp
     src/gnome_fortress/game/Spore.cpp
     src/gnome_fortress/game/main.cpp
     src/gnome_fortress/game/Weapon.cpp
@@ -85,6 +90,7 @@ set(SRCS
     src/gnome_fortress/model/Material.cpp
     src/gnome_fortress/model/Mesh.cpp
     src/gnome_fortress/model/MeshGroup.cpp
+    src/gnome_fortress/model/PointSet.cpp
     src/gnome_fortress/model/SceneNode.cpp
     src/gnome_fortress/model/Skybox.cpp
     src/gnome_fortress/model/Texture.cpp

@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 
+#include "gnome_fortress/game/RocketStream.h"
 #include "gnome_fortress/model/BasicMeshGroupNode.h"
 #include "gnome_fortress/resource/ResourceManager.h"
 
@@ -19,7 +20,8 @@ class Player : public model::SceneNode {
 
 public:
     Player(resource::ResourceManager &resourceManager,
-            renderer::BasicMeshNodeTechnique *technique);
+            renderer::BasicMeshNodeTechnique *technique,
+            RocketStreamTechnique *rocketStreamTechnique);
 
     ~Player();
 
@@ -52,8 +54,8 @@ public:
     void setCurrentWeapon(Weapon *weapon);
     Weapon *getCurrentWeapon() const;
 
-    SceneNode *getArm() const;
-    SceneNode *getWeaponContainer() const;
+    model::SceneNode *getArm() const;
+    model::SceneNode *getWeaponContainer() const;
 
     void incrementWeaponIndex();
     void decrementWeaponIndex();
@@ -64,6 +66,9 @@ protected:
     void onUpdateSelf(float dt) override;
 
 private:
+    RocketStream *rocketStream1;
+    RocketStream *rocketStream2;
+
     bool forward;
     bool backward;
     bool left;
