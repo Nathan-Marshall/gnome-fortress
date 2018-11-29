@@ -1,5 +1,5 @@
 #include "gnome_fortress/game/Enemies.h"
-
+#include <iostream>
 namespace gnome_fortress {
 namespace game {
 
@@ -172,16 +172,10 @@ void Enemies::ProcessWallCollisions() {
                 glm::vec3 squirrelPos = (*squirrelIt)->getPosition();
                 glm::vec3 wallPos = (*innerWallIt)->getPosition();
 
-                glm::vec3 wallLeftPos = wallPos + (glm::vec3(-(*innerWallIt)->GetLength()/2, 0, 0) * (*innerWallIt)->getRotation());
-                glm::vec3 wallRightPos = wallPos + (glm::vec3((*innerWallIt)->GetLength()/2, 0, 0) * (*innerWallIt)->getRotation());
-
                 float distance = glm::length(squirrelPos - wallPos);
-                float distLeft = glm::length(squirrelPos - wallLeftPos);
-                float distRight = glm::length(squirrelPos - wallRightPos);
 
-                //float bound = (*squirrelIt)->GetBoundingRadius();
-                float bound = 1.25f;
-                if ((distance < bound || distLeft < bound || distRight < bound) && (*squirrelIt)->hittingWall == false) {
+                float bound = (*squirrelIt)->GetBoundingRadius();
+                if (distance < bound && (*squirrelIt)->hittingWall == false) {
                     //We have a collision
                     (*squirrelIt)->hittingWall = true;
                     (*innerWallIt)->DoDamage((*squirrelIt)->damageOnHit);
@@ -211,19 +205,20 @@ void Enemies::ProcessWallCollisions() {
                 wallPos.y = 0;
 
                 float widthDistance = glm::length(spiderPos - wallPos);
-                float heightDiff = ((*spiderIt)->getPosition().y) - Walls::WALL_HEIGHT/2;
+                float heightDiff = ((*spiderIt)->getPosition().y) - Walls::WALL_HEIGHT / 3;
 
-                if (widthDistance < (*spiderIt)->GetBoundingRadius() && heightDiff < (*spiderIt)->GetBoundingRadius()/2 && (*spiderIt)->hittingWall == false) {
+                bool inside = (glm::length(wallPos - glm::vec3(0, 0, 0)) > glm::length(spiderPos - glm::vec3(0, 0, 0)));
+
+                if (widthDistance < (*spiderIt)->GetBoundingRadius() / 6 && heightDiff < 0 && !inside) {
                     (*spiderIt)->hittingWall = true;
                 }
-                else if (heightDiff >(*spiderIt)->GetBoundingRadius() / 2) {
+                if (heightDiff > 0 && !inside) {
                     (*spiderIt)->overWall = true;
                 }
-                else {
+                if (heightDiff > 0 && inside && widthDistance < (Walls::WALL_WIDTH * 2)) {
                     (*spiderIt)->overWall = false;
                 }
                 innerWallIt++;
-            
             }
         }
     }
