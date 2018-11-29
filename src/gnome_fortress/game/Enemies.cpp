@@ -172,16 +172,10 @@ void Enemies::ProcessWallCollisions() {
                 glm::vec3 squirrelPos = (*squirrelIt)->getPosition();
                 glm::vec3 wallPos = (*innerWallIt)->getPosition();
 
-                glm::vec3 wallLeftPos = wallPos + (glm::vec3(-(*innerWallIt)->GetLength()/2, 0, 0) * (*innerWallIt)->getRotation());
-                glm::vec3 wallRightPos = wallPos + (glm::vec3((*innerWallIt)->GetLength()/2, 0, 0) * (*innerWallIt)->getRotation());
-
                 float distance = glm::length(squirrelPos - wallPos);
-                float distLeft = glm::length(squirrelPos - wallLeftPos);
-                float distRight = glm::length(squirrelPos - wallRightPos);
 
-                //float bound = (*squirrelIt)->GetBoundingRadius();
-                float bound = 1.25f;
-                if ((distance < bound || distLeft < bound || distRight < bound) && (*squirrelIt)->hittingWall == false) {
+                float bound = (*squirrelIt)->GetBoundingRadius();
+                if (distance < bound && (*squirrelIt)->hittingWall == false) {
                     //We have a collision
                     (*squirrelIt)->hittingWall = true;
                     (*innerWallIt)->DoDamage((*squirrelIt)->damageOnHit);
@@ -215,7 +209,7 @@ void Enemies::ProcessWallCollisions() {
 
                 bool inside = (glm::length(wallPos - glm::vec3(0, 0, 0)) > glm::length(spiderPos - glm::vec3(0, 0, 0)) + Walls::WALL_WIDTH);
 
-                if (widthDistance < (*spiderIt)->GetBoundingRadius() && heightDiff < 0 && !inside) {
+                if (widthDistance < (*spiderIt)->GetBoundingRadius() / 6 && heightDiff < 0 && !inside) {
                     (*spiderIt)->hittingWall = true;
                 }
                 if (heightDiff > 0 && !inside) {

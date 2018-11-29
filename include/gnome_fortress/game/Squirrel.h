@@ -37,6 +37,8 @@ public:
     
     int currentRing;
 
+    float orbitDeg;
+
 protected:
     void onUpdateSelf(float dt) override;
 

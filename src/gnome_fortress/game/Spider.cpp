@@ -22,7 +22,7 @@ namespace game {
     rotate(glm::angleAxis((glm::pi<float>() / 2) + angle, glm::vec3(0, 1, 0)));
 
     health = 10.0f;
-    boundingRadius = (sqrt(3) / 6);
+    boundingRadius = (sqrt(3) * 2) / 2;
     moveSpeed = 2.0f;
     hittingWall = false;
     hittingPile = false;
