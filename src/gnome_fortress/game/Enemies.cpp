@@ -221,9 +221,6 @@ void Enemies::ProcessWallCollisions() {
                 innerWallIt++;
             }
         }
-        std::cout << "Hitting: " << (*spiderIt)->hittingWall << " ";
-        std::cout << "Over: " << (*spiderIt)->overWall << "\n\n";
-
     }
 }
 
