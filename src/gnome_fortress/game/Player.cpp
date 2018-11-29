@@ -157,10 +157,10 @@ namespace game {
             velocity -= (acceleration * ACCELERATION) * dt;
         }
 
-        if (up) {
+        if (up && !down) {
             rocketStream1->setPower(1.0f);
             rocketStream2->setPower(1.0f);
-        } else if (down) {
+        } else if (down && !up) {
             rocketStream1->setPower(0.1f);
             rocketStream2->setPower(0.1f);
         } else {

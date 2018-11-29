@@ -54,8 +54,8 @@ public:
     void setCurrentWeapon(Weapon *weapon);
     Weapon *getCurrentWeapon() const;
 
-    SceneNode *getArm() const;
-    SceneNode *getWeaponContainer() const;
+    model::SceneNode *getArm() const;
+    model::SceneNode *getWeaponContainer() const;
 
     void incrementWeaponIndex();
     void decrementWeaponIndex();
