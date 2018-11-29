@@ -21,7 +21,7 @@ Squirrel::Squirrel(
 
     int numWalls = Walls::NumWalls();
     float angle = ((rand() % (numWalls)) * (2 * glm::pi<float>() / numWalls));
-    setPosition(glm::vec3(30 * cos(angle), -0.2, -30 * sin(angle)));
+    setPosition(glm::vec3(30 * cos(angle), 0.2, -30 * sin(angle)));
     rotate(glm::angleAxis((glm::pi<float>() / 2) + angle, glm::vec3(0, 1, 0)));
 
     health = 10.0f;

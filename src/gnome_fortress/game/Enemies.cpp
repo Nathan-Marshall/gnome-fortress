@@ -205,9 +205,9 @@ void Enemies::ProcessWallCollisions() {
                 wallPos.y = 0;
 
                 float widthDistance = glm::length(spiderPos - wallPos);
-                float heightDiff = ((*spiderIt)->getPosition().y) - Walls::WALL_HEIGHT;
+                float heightDiff = ((*spiderIt)->getPosition().y) - Walls::WALL_HEIGHT / 3;
 
-                bool inside = (glm::length(wallPos - glm::vec3(0, 0, 0)) > glm::length(spiderPos - glm::vec3(0, 0, 0)) + Walls::WALL_WIDTH);
+                bool inside = (glm::length(wallPos - glm::vec3(0, 0, 0)) > glm::length(spiderPos - glm::vec3(0, 0, 0)));
 
                 if (widthDistance < (*spiderIt)->GetBoundingRadius() / 6 && heightDiff < 0 && !inside) {
                     (*spiderIt)->hittingWall = true;

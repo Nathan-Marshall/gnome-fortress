@@ -29,7 +29,7 @@ uniform sampler2D gloss_map;
 uniform int gloss_map_on = 0;
 
 // Material attributes (constants)
-float ambient_intensity = 0.1;
+float ambient_intensity = 0.3;
 
 struct BlinnPhongResult {
     float diffuse_intensity;
