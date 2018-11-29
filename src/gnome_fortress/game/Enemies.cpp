@@ -174,7 +174,7 @@ void Enemies::ProcessWallCollisions() {
 
                 float distance = glm::length(squirrelPos - wallPos);
 
-                float bound = (*squirrelIt)->GetBoundingRadius();
+                float bound = (*squirrelIt)->GetBoundingRadius() / 2;
                 if (distance < bound && (*squirrelIt)->hittingWall == false) {
                     //We have a collision
                     (*squirrelIt)->hittingWall = true;

@@ -25,7 +25,7 @@ Squirrel::Squirrel(
     rotate(glm::angleAxis((glm::pi<float>() / 2) + angle, glm::vec3(0, 1, 0)));
 
     health = 10.0f;
-    boundingRadius = (sqrt(3) / 2.5);
+    boundingRadius = (sqrt(3) * 2) / 2;
     hittingWall = false;
     damageOnHit = 10.0f;
     moveSpeed = 2.0f;
@@ -80,7 +80,10 @@ void Squirrel::onUpdateSelf(float dt) {
         }
 
         //We update our ring number once we reach the hole
-        if (shortestDist < 0.5 || (shortestDist != 1000 && glm::length(getPosition() - glm::vec3(0,0,0)) < glm::length(hole - glm::vec3(0,0,0)))) {
+        if (shortestDist < 0.5 || (shortestDist != 1000 && glm::length(getPosition() - glm::vec3(0,0,0)) < glm::length(hole - glm::vec3(0,0,0)) + Walls::WALL_WIDTH)) {
+            glm::vec3 moveDir = glm::normalize(getPosition() - glm::vec3(0, 0.5, 0));
+            glm::vec3 vel = moveDir * moveSpeed;
+            translate(glm::vec3(-vel.x, -vel.y, -vel.z) * 3.0f * dt);
             currentRing--;
             shortestDist = 1000.0f;
         }
