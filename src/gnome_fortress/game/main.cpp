@@ -22,6 +22,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
 
+#include <irrKlang\irrKlang.h>
+using namespace irrklang;
 
 #include "gnome_fortress/game/Acorns.h"
 #include "gnome_fortress/game/Enemies.h"
@@ -429,6 +431,9 @@ int MainFunction(void){
         papaNode->appendChild(acorns);
 
         CreateAcornPile(resource_manager_g, technique);
+
+        ISoundEngine *SoundEngine = createIrrKlangDevice();
+        //SoundEngine->play2D("E:\Documents\University\Third Year\COMP3501\gnome-fortress\resources\audio\breakout.mp3", GL_TRUE);
 
         double spawnTime = glfwGetTime();
         double startTime = glfwGetTime();
