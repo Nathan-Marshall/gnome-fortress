@@ -327,24 +327,16 @@ int MainFunction(void){
         // Create geometry of the cube and cylinder
         model::MeshGroup *plane = resource_manager_g.getOrLoadMeshGroup(resources::models::ground);
 
-        // Set up shaders
-        GLuint program = resource_manager_g.getOrLoadShaderProgram(resources::shaders::textured_material);
-        auto technique = new renderer::BasicMeshNodeTechnique(program, "projection_mat", "view_mat", "world_mat", "normal_mat", "eye_pos", "diffuse_color", "specular_color", "specular_exponent", "diffuse_map", "diffuse_map_on", "gloss_map", "gloss_map_on");
-        technique->addVertexAttribute(renderer::VertexAttribute(program, "vertex", 3, GL_FLOAT, GL_FALSE));
-        technique->addVertexAttribute(renderer::VertexAttribute(program, "normal", 3, GL_FLOAT, GL_FALSE));
-        technique->addVertexAttribute(renderer::VertexAttribute(program, "color", 3, GL_FLOAT, GL_FALSE));
-        technique->addVertexAttribute(renderer::VertexAttribute(program, "uv", 2, GL_FLOAT, GL_FALSE));
+        // Set up shaders and techniques
+        GLuint mtlThreeTermProgram = resource_manager_g.getOrLoadShaderProgram(resources::shaders::textured_material);
+        auto mtlThreeTermTechnique = new renderer::BasicMeshNodeTechnique(mtlThreeTermProgram);
+        mtlThreeTermTechnique->setEnvMap(resource_manager_g.getOrLoadSkyboxTexture(resources::textures::noon_grass));
 
         GLuint skyboxProgram = resource_manager_g.getOrLoadShaderProgram(resources::shaders::skybox);
-        auto skyboxTechnique = new renderer::SkyboxTechnique(skyboxProgram, "projection_mat", "view_mat", "world_mat", "normal_mat", "eye_pos", "cube_map");
-        skyboxTechnique->addVertexAttribute(renderer::VertexAttribute(skyboxProgram, "vertex", 3, GL_FLOAT, GL_FALSE));
-        skyboxTechnique->addVertexAttribute(renderer::VertexAttribute(skyboxProgram, "normal", 3, GL_FLOAT, GL_FALSE));
+        auto skyboxTechnique = new renderer::SkyboxTechnique(skyboxProgram);
 
         GLuint rocketStreamProgram = resource_manager_g.getOrLoadShaderProgram(resources::shaders::rocket_stream);
-        auto rocketStreamTechnique = new RocketStreamTechnique(rocketStreamProgram, "projection_mat", "view_mat", "world_mat", "normal_mat", "eye_pos", "timer", "power", "main_texture");
-        rocketStreamTechnique->addVertexAttribute(renderer::VertexAttribute(rocketStreamProgram, "vertex", 3, GL_FLOAT, GL_FALSE));
-        rocketStreamTechnique->addVertexAttribute(renderer::VertexAttribute(rocketStreamProgram, "normal", 3, GL_FLOAT, GL_FALSE));
-        rocketStreamTechnique->addVertexAttribute(renderer::VertexAttribute(rocketStreamProgram, "color", 3, GL_FLOAT, GL_FALSE));
+        auto rocketStreamTechnique = new RocketStreamTechnique(rocketStreamProgram);
 
         papaNode = new model::SceneNode();
 
@@ -352,10 +344,10 @@ int MainFunction(void){
         papaNode->appendChild(skybox);
 
         // Create the walls
-        walls = new Walls(resource_manager_g, technique);
+        walls = new Walls(resource_manager_g, mtlThreeTermTechnique);
         papaNode->appendChild(walls);
 
-        player = new game::Player(resource_manager_g, technique, rocketStreamTechnique);
+        player = new game::Player(resource_manager_g, mtlThreeTermTechnique, rocketStreamTechnique);
         player->setPosition(0, 0.7f, 3.0f);
         papaNode->appendChild(player);
 
@@ -363,9 +355,9 @@ int MainFunction(void){
         papaNode->appendChild(playerProjectiles);
 
         //Create weapons
-        peanutGun = new PeanutGun(resource_manager_g, technique, player, playerProjectiles);
-        mushroomGun = new MushroomGun(resource_manager_g, technique, player, playerProjectiles);
-        pineconeGun = new PineconeGun(resource_manager_g, technique, player, playerProjectiles);
+        peanutGun = new PeanutGun(resource_manager_g, mtlThreeTermTechnique, player, playerProjectiles);
+        mushroomGun = new MushroomGun(resource_manager_g, mtlThreeTermTechnique, player, playerProjectiles);
+        pineconeGun = new PineconeGun(resource_manager_g, mtlThreeTermTechnique, player, playerProjectiles);
 
         //setCurrentWeapon also appends as the gun as a child to player
         player->setCurrentWeapon(peanutGun);
@@ -380,8 +372,8 @@ int MainFunction(void){
         papaNode->appendChild(enemies);
 
         //Spawn some turtles
-        SiegeTurtle* turt1 = new SiegeTurtle(resource_manager_g, technique);
-        SiegeTurtle* turt2 = new SiegeTurtle(resource_manager_g, technique);
+        SiegeTurtle* turt1 = new SiegeTurtle(resource_manager_g, mtlThreeTermTechnique);
+        SiegeTurtle* turt2 = new SiegeTurtle(resource_manager_g, mtlThreeTermTechnique);
 
         enemies->turtles.push_back(turt1);
         enemies->appendChild(turt1);
@@ -390,8 +382,8 @@ int MainFunction(void){
         enemies->appendChild(turt2);
 
         //Spawn some spiders
-        Spider* spi1 = new Spider(resource_manager_g, technique);
-        Spider* spi2 = new Spider(resource_manager_g, technique);
+        Spider* spi1 = new Spider(resource_manager_g, mtlThreeTermTechnique);
+        Spider* spi2 = new Spider(resource_manager_g, mtlThreeTermTechnique);
 
         enemies->spiders.push_back(spi1);
         enemies->appendChild(spi1);
@@ -400,8 +392,8 @@ int MainFunction(void){
         enemies->appendChild(spi2);
 
         //Spawn some squirrels
-        Squirrel* squir1 = new Squirrel(resource_manager_g, technique, enemies->walls);
-        Squirrel* squir2 = new Squirrel(resource_manager_g, technique, enemies->walls);
+        Squirrel* squir1 = new Squirrel(resource_manager_g, mtlThreeTermTechnique, enemies->walls);
+        Squirrel* squir2 = new Squirrel(resource_manager_g, mtlThreeTermTechnique, enemies->walls);
 
         enemies->squirrels.push_back(squir1);
         enemies->appendChild(squir1);
@@ -420,7 +412,7 @@ int MainFunction(void){
         player->appendChild(cameraNodeThird);
         player->appendChild(cameraNodeFirst);
 
-        model::SceneNode *ground = new model::BasicMeshNode(plane->meshes[0], technique);
+        model::SceneNode *ground = new model::BasicMeshNode(plane->meshes[0], mtlThreeTermTechnique);
         ground->setScale(100);
         ground->setPosition(0, 0, 0);
         papaNode->appendChild(ground);
@@ -428,7 +420,7 @@ int MainFunction(void){
         acorns = new Acorns();
         papaNode->appendChild(acorns);
 
-        CreateAcornPile(resource_manager_g, technique);
+        CreateAcornPile(resource_manager_g, mtlThreeTermTechnique);
 
         double spawnTime = glfwGetTime();
         double startTime = glfwGetTime();
@@ -446,21 +438,21 @@ int MainFunction(void){
 
                 if (randEnemy == 1) {
                     //Spawn a turtle
-                    SiegeTurtle* turt = new SiegeTurtle(resource_manager_g, technique);
+                    SiegeTurtle* turt = new SiegeTurtle(resource_manager_g, mtlThreeTermTechnique);
 
                     enemies->turtles.push_back(turt);
                     enemies->appendChild(turt);
                 }
                 else if (randEnemy == 2) {
                     //Spawn a squirrel
-                    Squirrel* squir = new Squirrel(resource_manager_g, technique, enemies->walls);
+                    Squirrel* squir = new Squirrel(resource_manager_g, mtlThreeTermTechnique, enemies->walls);
 
                     enemies->squirrels.push_back(squir);
                     enemies->appendChild(squir);
                 }
                 else if (randEnemy == 3) {
                     //Spawn a spider
-                    Spider* spidey = new Spider(resource_manager_g, technique);
+                    Spider* spidey = new Spider(resource_manager_g, mtlThreeTermTechnique);
 
                     enemies->spiders.push_back(spidey);
                     enemies->appendChild(spidey);
@@ -483,8 +475,8 @@ int MainFunction(void){
                             viewport_background_color_g[2], 0.0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            technique->setProjectionMatrix(active_camera_g->getProjection());
-            technique->setViewMatrix(active_camera_g->getView());
+            mtlThreeTermTechnique->setProjectionMatrix(active_camera_g->getProjection());
+            mtlThreeTermTechnique->setViewMatrix(active_camera_g->getView());
 
             skyboxTechnique->setProjectionMatrix(active_camera_g->getProjection());
             skyboxTechnique->setViewMatrix(active_camera_g->getView());
@@ -505,8 +497,9 @@ int MainFunction(void){
             glfwPollEvents();
         }
 
-        delete technique;
+        delete mtlThreeTermTechnique;
         delete skyboxTechnique;
+        delete rocketStreamTechnique;
         delete skybox;
         delete player;
         delete enemies;

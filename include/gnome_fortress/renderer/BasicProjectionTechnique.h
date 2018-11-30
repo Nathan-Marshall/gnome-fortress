@@ -9,13 +9,7 @@ namespace renderer {
 
 class BasicProjectionTechnique : public Technique {
 public:
-    BasicProjectionTechnique(
-            GLuint program,
-            const std::string &proj_name,
-            const std::string &view_name,
-            const std::string &model_name,
-            const std::string &normal_name,
-            const std::string &eye_pos_name);
+    BasicProjectionTechnique(GLuint program);
 
     void setProjectionMatrix(const glm::mat4 &matrix);
 
@@ -25,10 +19,10 @@ public:
     void setModelMatrix(const glm::mat4 &matrix);
 
 private:
-    glm::mat4 projection;
-    glm::mat4 view;
-    glm::mat4 model;
-    glm::mat4 normal;
+    glm::mat4 projection_mat;
+    glm::mat4 view_mat;
+    glm::mat4 world_mat;
+    glm::mat4 normal_mat;
     glm::vec3 eye_pos;
 };
 
