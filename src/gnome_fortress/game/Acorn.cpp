@@ -21,7 +21,7 @@ Acorn::Acorn(
     setRotation(s*glm::pi<float>(), glm::vec3(0, 0, 1));
 
     // turn on environment mapping
-    static_cast<model::BasicMeshNode *>(getChild(0))->setEnvMapFactor(0.2);
+    static_cast<model::BasicMeshNode *>(getChild(1))->setEnvMapFactor(0.3);
 }
 
 const float Acorn::MAX_HEALTH = 50;
