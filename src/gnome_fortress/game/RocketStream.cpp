@@ -29,7 +29,10 @@ void RocketStream::onDrawSelf(const glm::mat4 &parent_transform, unsigned int pa
     }
 
     // Set up z-buffer for rendering
-    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    // don't write to the depth buffer or we won't see the nice blending on the particles
+    glDepthMask(GL_FALSE);
 
     // Set culling of back faces
     glCullFace(GL_BACK);
@@ -56,6 +59,9 @@ void RocketStream::onDrawSelf(const glm::mat4 &parent_transform, unsigned int pa
     technique->activate();
     glDrawArrays(pointSet->mode, 0, pointSet->num_vertices);
     technique->deactivate();
+
+    // reset writing to the depth buffer or bad things happen
+    glDepthMask(GL_TRUE);
 }
 
 const model::PointSet *RocketStream::getPointSet() const {
