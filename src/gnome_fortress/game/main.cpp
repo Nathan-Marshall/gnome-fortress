@@ -57,7 +57,7 @@ camera::Camera debug_camera_g(
 //Camera globals
 camera::SceneNodeCamera scene_camera_first_g;
 camera::SceneNodeCamera scene_camera_third_g;
-camera::Camera *active_camera_g = &scene_camera_first_g;;
+camera::Camera *active_camera_g = &scene_camera_first_g;
 
 float cameraAngle = 0.0f;
 

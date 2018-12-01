@@ -44,8 +44,11 @@ void BasicMeshNode::onDrawSelf(const glm::mat4 &parent_transform, unsigned int p
         technique->bindDiffuseTexture(mesh->material->map_Kd);
         technique->bindGlossTexture(mesh->material->map_Ks);
 
+        // if env_map_factor is higher than 0, then bind the texture for environment mapping
         technique->setEnvMapFactor(env_map_factor);
-        technique->bindEnvMap();
+        if (env_map_factor) {
+            technique->bindEnvMap();
+        }
 
         // update model matrix
         technique->setModelMatrix(parent_transform * getTransformMatrix());

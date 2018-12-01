@@ -61,16 +61,16 @@ BlinnPhongResult calculateBlinnPhong(vec3 light_dir) {
     return BlinnPhongResult(Id, Is);
 }
 
-vec3 calculateEnvMapColor(vec3 light_dir) {
+vec3 calculateEnvMapColor() {
     vec3 N = normalize(normal_interp); // normal vector
 
-    vec3 L = normalize(light_dir); // light vector
+    vec3 V = normalize(eye_pos - position_interp); // view vector
 
-    float NL = max(dot(N, L), 0.0); // dot product of light and normal (ignore if coming from behind)
+    float NV = max(dot(N, V), 0.0); // dot product of light and normal
     
     // Compute indirect lighting
     // Reflection vector
-    vec3 Lr = 2.0 * NL * N - L;
+    vec3 Lr = 2.0 * NV * N - V;
     // Query environment map
     vec4 il = texture(env_map, Lr);
 
@@ -93,7 +93,7 @@ void main()
 
     vec3 env_map_result = vec3(0, 0, 0);
     if (env_map_factor > 0) {
-        env_map_result = calculateEnvMapColor(sun_dir);
+        env_map_result = calculateEnvMapColor();
     }
     
     // Assign light to the fragment

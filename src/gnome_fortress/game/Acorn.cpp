@@ -20,6 +20,7 @@ Acorn::Acorn(
     float s = 0.3f + (random * diff);
     setRotation(s*glm::pi<float>(), glm::vec3(0, 0, 1));
 
+    // turn on environment mapping
     static_cast<model::BasicMeshNode *>(getChild(0))->setEnvMapFactor(0.2);
 }
 
