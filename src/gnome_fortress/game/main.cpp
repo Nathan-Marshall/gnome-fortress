@@ -63,6 +63,9 @@ camera::Camera *active_camera_g = &scene_camera_first_g;;
 
 float cameraAngle = 0.0f;
 
+//Our main sound engine
+ISoundEngine *SoundEngine;
+
 //The root scene node
 model::SceneNode *papaNode;
 
@@ -348,6 +351,11 @@ int MainFunction(void){
         rocketStreamTechnique->addVertexAttribute(renderer::VertexAttribute(rocketStreamProgram, "normal", 3, GL_FLOAT, GL_FALSE));
         rocketStreamTechnique->addVertexAttribute(renderer::VertexAttribute(rocketStreamProgram, "color", 3, GL_FLOAT, GL_FALSE));
 
+        SoundEngine = createIrrKlangDevice();
+        SoundEngine->setSoundVolume(0.1);
+
+        irrklang::ISound *backgroundTrack = SoundEngine->play2D(resource_manager_g.getOrLoadAudioClip(resources::audioClips::bit_builders), GL_TRUE);
+
         papaNode = new model::SceneNode();
 
         model::Skybox *skybox = new model::Skybox(resource_manager_g.getOrLoadSkyboxTexture(resources::textures::noon_grass), skyboxTechnique);
@@ -378,12 +386,12 @@ int MainFunction(void){
         weapons.push_back(pineconeGun);
 
         //Create the enemies
-        Enemies* enemies = new Enemies(walls);
+        Enemies* enemies = new Enemies(walls, SoundEngine);
         papaNode->appendChild(enemies);
 
         //Spawn some turtles
-        SiegeTurtle* turt1 = new SiegeTurtle(resource_manager_g, technique);
-        SiegeTurtle* turt2 = new SiegeTurtle(resource_manager_g, technique);
+        SiegeTurtle* turt1 = new SiegeTurtle(resource_manager_g, technique, SoundEngine);
+        SiegeTurtle* turt2 = new SiegeTurtle(resource_manager_g, technique, SoundEngine);
 
         enemies->turtles.push_back(turt1);
         enemies->appendChild(turt1);
@@ -392,8 +400,8 @@ int MainFunction(void){
         enemies->appendChild(turt2);
 
         //Spawn some spiders
-        Spider* spi1 = new Spider(resource_manager_g, technique);
-        Spider* spi2 = new Spider(resource_manager_g, technique);
+        Spider* spi1 = new Spider(resource_manager_g, technique, SoundEngine);
+        Spider* spi2 = new Spider(resource_manager_g, technique, SoundEngine);
 
         enemies->spiders.push_back(spi1);
         enemies->appendChild(spi1);
@@ -402,8 +410,8 @@ int MainFunction(void){
         enemies->appendChild(spi2);
 
         //Spawn some squirrels
-        Squirrel* squir1 = new Squirrel(resource_manager_g, technique, enemies->walls);
-        Squirrel* squir2 = new Squirrel(resource_manager_g, technique, enemies->walls);
+        Squirrel* squir1 = new Squirrel(resource_manager_g, technique, enemies->walls, SoundEngine);
+        Squirrel* squir2 = new Squirrel(resource_manager_g, technique, enemies->walls, SoundEngine);
 
         enemies->squirrels.push_back(squir1);
         enemies->appendChild(squir1);
@@ -432,9 +440,6 @@ int MainFunction(void){
 
         CreateAcornPile(resource_manager_g, technique);
 
-        ISoundEngine *SoundEngine = createIrrKlangDevice();
-        //SoundEngine->play2D("E:\Documents\University\Third Year\COMP3501\gnome-fortress\resources\audio\breakout.mp3", GL_TRUE);
-
         double spawnTime = glfwGetTime();
         double startTime = glfwGetTime();
 
@@ -446,26 +451,32 @@ int MainFunction(void){
             double delta_time = current_time - prev_time;
             prev_time = glfwGetTime();
 
+            glm::vec3 playerPos = player->getPosition();
+            glm::vec3 lookAt = scene_camera_third_g.getNode()->getRotation() * glm::vec3(0, 0, -1);
+            glm::vec3 upVec = scene_camera_third_g.getNode()->getRotation() * glm::vec3(0, 1, 0);
+
+            SoundEngine->setListenerPosition(irrklang::vec3df(playerPos.x, playerPos.y, playerPos.z), irrklang::vec3df(lookAt.x, lookAt.y, lookAt.z));
+
             if (current_time - spawnTime > 5.0 && current_time - startTime > 10.0) {
                 int randEnemy = (rand() % 6) + 1;
 
                 if (randEnemy == 1) {
                     //Spawn a turtle
-                    SiegeTurtle* turt = new SiegeTurtle(resource_manager_g, technique);
+                    SiegeTurtle* turt = new SiegeTurtle(resource_manager_g, technique, SoundEngine);
 
                     enemies->turtles.push_back(turt);
                     enemies->appendChild(turt);
                 }
                 else if (randEnemy == 2) {
                     //Spawn a squirrel
-                    Squirrel* squir = new Squirrel(resource_manager_g, technique, enemies->walls);
+                    Squirrel* squir = new Squirrel(resource_manager_g, technique, enemies->walls, SoundEngine);
 
                     enemies->squirrels.push_back(squir);
                     enemies->appendChild(squir);
                 }
                 else if (randEnemy == 3) {
                     //Spawn a spider
-                    Spider* spidey = new Spider(resource_manager_g, technique);
+                    Spider* spidey = new Spider(resource_manager_g, technique, SoundEngine);
 
                     enemies->spiders.push_back(spidey);
                     enemies->appendChild(spidey);

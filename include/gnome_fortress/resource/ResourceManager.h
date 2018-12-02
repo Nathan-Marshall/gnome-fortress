@@ -32,6 +32,10 @@ public:
      * fragment shader.*/
     void unloadShaderProgram(const std::string &relativePath);
 
+    //Load the full path of the audio clip
+    void loadAudioClip(const std::string &relativePath);
+    const char* getOrLoadAudioClip(const std::string &relativePath);
+
     void loadTexture(const std::string &relativePath);
     model::Texture *getOrLoadTexture(const std::string &relativePath);
     /* When dealing with skyboxes, ResourceManager expects a filename prefix, which refers to 6 separate images.
@@ -52,6 +56,7 @@ private:
     std::unordered_map<std::string, model::MeshGroup *> meshGroups;
     std::unordered_map<std::string, GLuint> shaderPrograms;
     std::unordered_map<std::string, model::Texture *> textures;
+    std::unordered_map<std::string, std::string> audioClips;
 };
 
 }

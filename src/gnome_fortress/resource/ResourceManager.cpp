@@ -54,6 +54,17 @@ void ResourceManager::unloadShaderProgram(const std::string &relativePath) {
     shaderPrograms.erase(relativePath);
 }
 
+void ResourceManager::loadAudioClip(const std::string &relativePath) {
+    std::string fullPath = resourcesDirectory + relativePath;
+    audioClips[relativePath] = fullPath;
+}
+const char* ResourceManager::getOrLoadAudioClip(const std::string &relativePath) {
+    if (audioClips.find(relativePath) == audioClips.end()) {
+        loadAudioClip(relativePath);
+    }
+    return audioClips[relativePath].c_str();
+}
+
 void ResourceManager::loadTexture(const std::string &relativePath) {
     std::string fullPath = resourcesDirectory + relativePath;
     textures[relativePath] = TextureLoader::LoadTexture(fullPath);

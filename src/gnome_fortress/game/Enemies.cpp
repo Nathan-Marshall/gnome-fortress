@@ -4,8 +4,9 @@ namespace gnome_fortress {
 namespace game {
 
 
-Enemies::Enemies(Walls* walls) {
+Enemies::Enemies(Walls* walls, irrklang::ISoundEngine *soundEngine) {
     this->walls = walls;
+    this->soundEngine = soundEngine;
 }
 
 void Enemies::ProcessCollisions(Projectiles *projectiles) {
@@ -148,6 +149,8 @@ void Enemies::ProcessWallCollisions() {
                     (*turtleIt)->hittingWall = true;
                     (*innerWallIt)->DoDamage((*turtleIt)->damageOnHit);
 
+                    (*turtleIt)->PlayAttackSound();
+
                     if ((*innerWallIt)->GetHealth() <= 0) {
                         //We need to remove the wall
                         (*innerWallIt)->removeFromParent();
@@ -179,6 +182,8 @@ void Enemies::ProcessWallCollisions() {
                     //We have a collision
                     (*squirrelIt)->hittingWall = true;
                     (*innerWallIt)->DoDamage((*squirrelIt)->damageOnHit);
+
+                    (*squirrelIt)->PlayAttackSound();
 
                     if ((*innerWallIt)->GetHealth() <= 0) {
                         //We need to remove the wall

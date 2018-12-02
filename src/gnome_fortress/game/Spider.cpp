@@ -8,11 +8,15 @@ namespace game {
 
     Spider::Spider(
         resource::ResourceManager &resourceManager,
-        renderer::BasicMeshNodeTechnique *technique)
+        renderer::BasicMeshNodeTechnique *technique,
+        irrklang::ISoundEngine *soundEngine)
     : game::Enemy(
         resourceManager.getOrLoadMeshGroup(resources::models::spider),
         technique
       ) {
+
+    this->soundEngine = soundEngine;
+    attackSoundByte = resourceManager.getOrLoadAudioClip(resources::audioClips::spider_atk);
 
     setScale(2.0f);
 
