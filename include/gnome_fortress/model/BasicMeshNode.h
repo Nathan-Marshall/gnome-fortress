@@ -19,8 +19,11 @@ public:
 
     renderer::BasicMeshNodeTechnique *getTechnique() const;
 
+    void setEnvMapFactor(float factor);
+
 private:
     const model::Mesh *mesh;
+    float env_map_factor;
     renderer::BasicMeshNodeTechnique *technique;
 };
 

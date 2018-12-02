@@ -10,20 +10,7 @@ namespace renderer {
 
 class BasicMeshNodeTechnique : public BasicProjectionTechnique {
 public:
-    BasicMeshNodeTechnique(
-            GLuint program,
-            const std::string &proj_name,
-            const std::string &view_name,
-            const std::string &model_name,
-            const std::string &normal_name,
-            const std::string &eye_pos_name,
-            const std::string &diffuse_color_name,
-            const std::string &specular_color_name,
-            const std::string &specular_exponent_name,
-            const std::string &diffuse_map_name,
-            const std::string &diffuse_map_on_name,
-            const std::string &gloss_map_name,
-            const std::string &gloss_map_on_name);
+    BasicMeshNodeTechnique(GLuint program);
 
     void setDiffuseColor(const glm::vec3 &color);
     void setSpecularColor(const glm::vec3 &color);
@@ -32,8 +19,13 @@ public:
     void bindDiffuseTexture(const model::Texture *texture);
     void bindGlossTexture(const model::Texture *texture);
 
+    void setEnvMapFactor(float factor);
+    void setEnvMap(const model::Texture *texture);
+    void bindEnvMap();
+
 protected:
     void bindTexture(const model::Texture *texture);
+    void bindCubeMap(const model::Texture *texture);
 
 private:
     glm::vec3 diffuse_color;
@@ -44,6 +36,10 @@ private:
     GLint diffuse_map_on;
     GLint gloss_map_index;
     GLint gloss_map_on;
+
+    const model::Texture *env_map;
+    GLint env_map_index;
+    GLfloat env_map_factor;
 };
 
 }

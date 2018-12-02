@@ -10,6 +10,7 @@ BasicMeshNode::BasicMeshNode(
         const Mesh *mesh,
         renderer::BasicMeshNodeTechnique *technique)
     : mesh(mesh),
+      env_map_factor(0),
       technique(technique) {
 
 }
@@ -37,12 +38,18 @@ void BasicMeshNode::onDrawSelf(const glm::mat4 &parent_transform, unsigned int p
         glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
         
-        // bind textures
+        // set uniforms and bind textures
         technique->setDiffuseColor(mesh->material->Kd);
         technique->setSpecularColor(mesh->material->Ks);
         technique->setSpecularExponent(mesh->material->Ns);
         technique->bindDiffuseTexture(mesh->material->map_Kd);
         technique->bindGlossTexture(mesh->material->map_Ks);
+
+        // if env_map_factor is higher than 0, then bind the texture for environment mapping
+        technique->setEnvMapFactor(env_map_factor);
+        if (env_map_factor) {
+            technique->bindEnvMap();
+        }
 
         // update model matrix
         technique->setModelMatrix(parent_transform * getTransformMatrix());
@@ -60,6 +67,10 @@ const Mesh *BasicMeshNode::getMesh() const {
 
 renderer::BasicMeshNodeTechnique *BasicMeshNode::getTechnique() const {
     return technique;
+}
+
+void BasicMeshNode::setEnvMapFactor(float factor) {
+    env_map_factor = factor;
 }
 
 }

@@ -10,14 +10,7 @@ namespace renderer {
 
 class SkyboxTechnique : public BasicProjectionTechnique {
 public:
-    SkyboxTechnique(
-            GLuint program,
-            const std::string &proj_name,
-            const std::string &view_name,
-            const std::string &model_name,
-            const std::string &normal_name,
-            const std::string &eye_pos_name,
-            const std::string &cube_map_name);
+    SkyboxTechnique(GLuint program);
 
     void bindSkyboxTexture(const model::Texture *texture);
 

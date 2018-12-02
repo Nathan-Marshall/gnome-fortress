@@ -10,16 +10,7 @@ namespace game {
 
 class RocketStreamTechnique : public renderer::BasicProjectionTechnique {
 public:
-    RocketStreamTechnique(
-        GLuint program,
-        const std::string &proj_name,
-        const std::string &view_name,
-        const std::string &model_name,
-        const std::string &normal_name,
-        const std::string &eye_pos_name,
-        const std::string &timer_name,
-        const std::string &power_name,
-        const std::string &main_texture_name);
+    RocketStreamTechnique(GLuint program);
 
     void setTimer(float time);
 

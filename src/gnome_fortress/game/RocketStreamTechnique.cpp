@@ -5,24 +5,19 @@
 namespace gnome_fortress {
 namespace game {
 
-RocketStreamTechnique::RocketStreamTechnique(
-        GLuint program,
-        const std::string &proj_name,
-        const std::string &view_name,
-        const std::string &model_name,
-        const std::string &normal_name,
-        const std::string &eye_pos_name,
-        const std::string &timer_name,
-        const std::string &power_name,
-        const std::string &main_texture_name)
-    : BasicProjectionTechnique(program, proj_name, view_name, model_name, normal_name, eye_pos_name),
+RocketStreamTechnique::RocketStreamTechnique(GLuint program)
+    : BasicProjectionTechnique(program),
       timer(0),
       power(1.0f),
       main_texture_index(0) {
 
-    addUniform(renderer::Uniform(program, timer_name, GL_FLOAT, 1, 1, 1), &timer);
-    addUniform(renderer::Uniform(program, power_name, GL_FLOAT, 1, 1, 1), &power);
-    addUniform(renderer::Uniform(program, main_texture_name, GL_INT, 1, 1, 1), &main_texture_index);
+    addUniform(renderer::Uniform(program, "timer", GL_FLOAT, 1, 1, 1), &timer);
+    addUniform(renderer::Uniform(program, "power", GL_FLOAT, 1, 1, 1), &power);
+    addUniform(renderer::Uniform(program, "main_texture", GL_INT, 1, 1, 1), &main_texture_index);
+
+    addVertexAttribute(renderer::VertexAttribute(program, "vertex", 3, GL_FLOAT, GL_FALSE));
+    addVertexAttribute(renderer::VertexAttribute(program, "normal", 3, GL_FLOAT, GL_FALSE));
+    addVertexAttribute(renderer::VertexAttribute(program, "color", 3, GL_FLOAT, GL_FALSE));
 }
 
 void RocketStreamTechnique::setTimer(float time) {
