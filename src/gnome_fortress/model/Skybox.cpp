@@ -29,6 +29,7 @@ void Skybox::onDrawSelf(const glm::mat4 &parent_transform, unsigned int pass) co
     // Set up z-buffer for rendering
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
+    glDepthMask(GL_TRUE);
 
     // Set culling of back faces
     glCullFace(GL_BACK);

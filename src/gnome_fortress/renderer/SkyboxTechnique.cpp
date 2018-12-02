@@ -5,18 +5,14 @@
 namespace gnome_fortress {
 namespace renderer {
 
-SkyboxTechnique::SkyboxTechnique(
-        GLuint program,
-        const std::string &proj_name,
-        const std::string &view_name,
-        const std::string &model_name,
-        const std::string &normal_name,
-        const std::string &eye_pos_name,
-        const std::string &cube_map_name)
-    : BasicProjectionTechnique(program, proj_name, view_name, model_name, normal_name, eye_pos_name),
+SkyboxTechnique::SkyboxTechnique(GLuint program)
+    : BasicProjectionTechnique(program),
       cube_map_index(0) {
 
-    addUniform(Uniform(program, cube_map_name, GL_INT, 1, 1, 1), &cube_map_index);
+    addUniform(Uniform(program, "cube_map", GL_INT, 1, 1, 1), &cube_map_index);
+
+    addVertexAttribute(renderer::VertexAttribute(program, "vertex", 3, GL_FLOAT, GL_FALSE));
+    addVertexAttribute(renderer::VertexAttribute(program, "normal", 3, GL_FLOAT, GL_FALSE));
 }
 
 void SkyboxTechnique::bindSkyboxTexture(const model::Texture *texture) {
