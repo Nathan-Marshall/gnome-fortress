@@ -13,12 +13,13 @@ namespace models {
     const std::string acorn = models::dirname + "acorn/acorn.obj";
     const std::string berry = models::dirname + "pinecone_gun/berry.obj";
     const std::string cube = models::dirname + "cube/cube.obj";
+    const std::string fence = models::dirname + "fences/fence.obj";
     const std::string gnome = models::dirname + "gnome/gnome.obj";
+    const std::string ground = models::dirname + "ground/ground.obj";
     const std::string jetpack = models::dirname + "jetpack/jetpack.obj";
     const std::string mushroom_gun = models::dirname + "mushroom_gun/mushroom_gun.obj";
     const std::string peanut_gun = models::dirname + "peanut_gun/peanut_gun.obj";
     const std::string pinecone_gun = models::dirname + "pinecone_gun/pinecone_gun.obj";
-    const std::string ground = models::dirname + "ground/ground.obj";
     const std::string rock1 = models::dirname + "rocks/rock1.obj";
     const std::string rock2 = models::dirname + "rocks/rock2.obj";
     const std::string rock3 = models::dirname + "rocks/rock3.obj";
@@ -27,7 +28,7 @@ namespace models {
     const std::string siege_turtle = models::dirname + "siege_turtle/siege_turtle.obj";
     const std::string spider = models::dirname + "spider/skSpiderLargeMesh.obj";
     const std::string squirrel = models::dirname + "squirrel/Squirrel.obj";
-    const std::string fence = models::dirname + "fences/fence.obj";
+    const std::string tree2 = models::dirname + "trees/tree002-2/tree002-2.obj";
 }
 
 namespace shaders {

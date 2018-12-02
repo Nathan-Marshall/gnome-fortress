@@ -351,6 +351,9 @@ int MainFunction(void){
         model::Skybox *skybox = new model::Skybox(resource_manager_g.getOrLoadSkyboxTexture(resources::textures::noon_grass), skyboxTechnique);
         papaNode->appendChild(skybox);
 
+        auto tree = new model::BasicMeshGroupNode(resource_manager_g.getOrLoadMeshGroup(resources::models::tree2), technique);
+        papaNode->appendChild(tree);
+
         // Create the walls
         walls = new Walls(resource_manager_g, technique);
         papaNode->appendChild(walls);
