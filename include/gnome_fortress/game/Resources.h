@@ -55,8 +55,9 @@ namespace audioClips {
     const std::string spider_atk = audioClips::dirname + "enemies/spider_atk.mp3";
     const std::string turtle_atk = audioClips::dirname + "enemies/turtle_atk.mp3";
     const std::string squirrel_atk = audioClips::dirname + "enemies/squirrel_atk.mp3";
-
-
+    const std::string shotgun = audioClips::dirname + "weapons/shotgun.mp3";
+    const std::string mushroom = audioClips::dirname + "weapons/mushroom.mp3";
+    const std::string rocket = audioClips::dirname + "weapons/rocket.mp3";
 }
 
 }

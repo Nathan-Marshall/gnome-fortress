@@ -373,9 +373,9 @@ int MainFunction(void){
         papaNode->appendChild(playerProjectiles);
 
         //Create weapons
-        peanutGun = new PeanutGun(resource_manager_g, technique, player, playerProjectiles);
-        mushroomGun = new MushroomGun(resource_manager_g, technique, player, playerProjectiles);
-        pineconeGun = new PineconeGun(resource_manager_g, technique, player, playerProjectiles);
+        peanutGun = new PeanutGun(resource_manager_g, technique, player, playerProjectiles, SoundEngine);
+        mushroomGun = new MushroomGun(resource_manager_g, technique, player, playerProjectiles, SoundEngine);
+        pineconeGun = new PineconeGun(resource_manager_g, technique, player, playerProjectiles, SoundEngine);
 
         //setCurrentWeapon also appends as the gun as a child to player
         player->setCurrentWeapon(peanutGun);

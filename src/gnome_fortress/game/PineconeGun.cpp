@@ -7,13 +7,16 @@ namespace game {
 PineconeGun::PineconeGun(
     resource::ResourceManager &resourceManager,
     renderer::BasicMeshNodeTechnique *technique,
-    Player *player, Projectiles* vector)
+    Player *player, Projectiles* vector, irrklang::ISoundEngine *soundEngine)
     : game::Weapon(
         resourceManager.getOrLoadMeshGroup(resources::models::pinecone_gun),
         resourceManager.getOrLoadMeshGroup(resources::models::berry),
         technique,
         player
     ) {
+    this->soundEngine = soundEngine;
+    fireSoundByte = resourceManager.getOrLoadAudioClip(resources::audioClips::rocket);
+
     setScale(0.2f);
     bullets = vector;
 }
@@ -47,6 +50,9 @@ std::vector<Projectile*> PineconeGun::fireBullet(glm::vec3 position) {
     //     glm::vec3(getGlobalTransform() * glm::vec4(0.03, 0.5, -0.25, 1)), vel);
     
     std::vector<Projectile*> projecs;
+
+    PlayWeaponSound();
+
     projecs.push_back(p);
 
     return projecs;

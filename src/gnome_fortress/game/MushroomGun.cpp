@@ -1,19 +1,21 @@
 #include "gnome_fortress/game/MushroomGun.h"
 #include "gnome_fortress/game/Resources.h"
 #include "gnome_fortress/game/Spore.h"
-
 namespace gnome_fortress {
 namespace game {
 MushroomGun::MushroomGun(
     resource::ResourceManager &resourceManager,
     renderer::BasicMeshNodeTechnique *technique,
-    Player *player, Projectiles* vector)
+    Player *player, Projectiles* vector, irrklang::ISoundEngine *soundEngine)
     : game::Weapon(
         resourceManager.getOrLoadMeshGroup(resources::models::mushroom_gun),
         resourceManager.getOrLoadMeshGroup(resources::models::rock5),
         technique,
         player
     ) {
+    this->soundEngine = soundEngine;
+    fireSoundByte = resourceManager.getOrLoadAudioClip(resources::audioClips::mushroom);
+
     setScale(0.2f);
     bullets = vector;
 }
@@ -45,6 +47,8 @@ std::vector<Projectile*> MushroomGun::fireBullet(glm::vec3 position) {
     // Projectile *p = new Projectile(bulletMeshGroup, getTechnique(),
     //     glm::vec3(getGlobalTransform() * glm::vec4(0.03, 0.5, -0.25, 1)), vel);
     
+    PlayWeaponSound();
+
     std::vector<Projectile*> projecs;
     projecs.push_back(p);
 

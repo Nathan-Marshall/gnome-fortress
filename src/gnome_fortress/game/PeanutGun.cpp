@@ -8,13 +8,16 @@ namespace game {
 PeanutGun::PeanutGun(
     resource::ResourceManager &resourceManager,
     renderer::BasicMeshNodeTechnique *technique,
-    Player *player, Projectiles* vector)
+    Player *player, Projectiles* vector, irrklang::ISoundEngine *soundEngine)
     : game::Weapon(
         resourceManager.getOrLoadMeshGroup(resources::models::peanut_gun),
         resourceManager.getOrLoadMeshGroup(resources::models::rock1),
         technique,
         player
     ) {
+    this->soundEngine = soundEngine;
+    fireSoundByte = resourceManager.getOrLoadAudioClip(resources::audioClips::shotgun);
+
     setScale(0.2f);
     bullets = vector;
 }
@@ -66,6 +69,8 @@ std::vector<Projectile*> PeanutGun::fireBullet(glm::vec3 position) {
 
         projecs.push_back(p);
     }
+
+    PlayWeaponSound();
 
     return projecs;
 }

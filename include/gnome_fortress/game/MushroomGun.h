@@ -19,7 +19,7 @@ public:
     MushroomGun(
         resource::ResourceManager &resourceManager,
         renderer::BasicMeshNodeTechnique *technique,
-        Player *player, Projectiles* vector);
+        Player *player, Projectiles* vector, irrklang::ISoundEngine *soundEngine);
 
 protected:
     const static float FIRING_VELOCITY;
