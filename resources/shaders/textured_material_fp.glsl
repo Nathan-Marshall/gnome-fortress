@@ -28,6 +28,9 @@ uniform int diffuse_map_on = 0;
 uniform sampler2D gloss_map;
 uniform int gloss_map_on = 0;
 
+uniform samplerCube env_map;
+uniform float env_map_factor = 0;
+
 // Material attributes (constants)
 float ambient_intensity = 0.3;
 
@@ -58,6 +61,22 @@ BlinnPhongResult calculateBlinnPhong(vec3 light_dir) {
     return BlinnPhongResult(Id, Is);
 }
 
+vec3 calculateEnvMapColor() {
+    vec3 N = normalize(normal_interp); // normal vector
+
+    vec3 V = normalize(eye_pos - position_interp); // view vector
+
+    float NV = max(dot(N, V), 0.0); // dot product of light and normal
+    
+    // Compute indirect lighting
+    // Reflection vector
+    vec3 Lr = 2.0 * NV * N - V;
+    // Query environment map
+    vec4 il = texture(env_map, Lr);
+
+    return vec3(il);
+}
+
 vec3 multiplyColors(vec3 c1, vec3 c2) {
     return vec3(c1[0] * c2[0], c1[1] * c2[1], c1[2] * c2[2]);
 }
@@ -70,8 +89,13 @@ void main()
 
     //BlinnPhongResult blinn_phong_result = calculateBlinnPhong(light_pos - position_interp);
     BlinnPhongResult blinn_phong_result = calculateBlinnPhong(sun_dir);
-	vec4 blinn_phong_color = vec4(multiplyColors( ambient_color_final + blinn_phong_result.diffuse_intensity*diffuse_color_final + blinn_phong_result.specular_intensity*specular_color_final, sun_color ), 1);
+	vec3 blinn_phong_color = multiplyColors( ambient_color_final + blinn_phong_result.diffuse_intensity*diffuse_color_final + blinn_phong_result.specular_intensity*specular_color_final, sun_color );
+
+    vec3 env_map_result = vec3(0, 0, 0);
+    if (env_map_factor > 0) {
+        env_map_result = calculateEnvMapColor();
+    }
     
     // Assign light to the fragment
-    gl_FragColor = blinn_phong_color;
+    gl_FragColor = vec4(blinn_phong_color * (1 - env_map_factor) + env_map_result * env_map_factor, 1);
 }
