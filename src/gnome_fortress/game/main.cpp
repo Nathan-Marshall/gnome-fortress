@@ -299,9 +299,11 @@ model::BasicMeshGroupNode *createRandomTree(renderer::BasicMeshNodeTechnique *te
         });
     }
 
-    // scale and position
+    // scale, rotation, position
     float randomScale = 6 + 1.5f * (rand() / (float)RAND_MAX);
     tree->setScale(randomScale);
+    float randomRotation = 2 * glm::pi<float>() * (rand() / (float)RAND_MAX);
+    tree->setRotation(randomRotation, glm::vec3(0, 1, 0));
     tree->setPosition(pos);
 
     // add to scene
