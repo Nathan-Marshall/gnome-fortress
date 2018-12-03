@@ -11,6 +11,7 @@ BasicMeshNode::BasicMeshNode(
         renderer::BasicMeshNodeTechnique *technique)
     : mesh(mesh),
       backCulling(true),
+      blendingEnabled(false),
       ambient_factor(0.3),
       env_map_factor(0),
       technique(technique) {
@@ -18,15 +19,13 @@ BasicMeshNode::BasicMeshNode(
 }
 
 void BasicMeshNode::onDrawSelf(const glm::mat4 &parent_transform, unsigned int pass) const {
-    bool blendingOn = mesh->material->d < 1 || mesh->material->map_d != nullptr;
-
     // if not blending, only draw during the first pass
-    if (!blendingOn && pass != 0) {
+    if (!blendingEnabled && pass != 0) {
         return;
     }
 
     // if blending, only draw during the second pass
-    if (blendingOn && pass != 1) {
+    if (blendingEnabled && pass != 1) {
         return;
     }
 
@@ -44,7 +43,7 @@ void BasicMeshNode::onDrawSelf(const glm::mat4 &parent_transform, unsigned int p
             glDisable(GL_CULL_FACE);
         }
 
-        if (blendingOn) {
+        if (blendingEnabled) {
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             glBlendEquation(GL_FUNC_ADD);
@@ -92,6 +91,10 @@ renderer::BasicMeshNodeTechnique *BasicMeshNode::getTechnique() const {
 
 void BasicMeshNode::setBackCulling(bool culling) {
     backCulling = culling;
+}
+
+void BasicMeshNode::setBlendingEnabled(bool enabled) {
+    blendingEnabled = enabled;
 }
 
 void BasicMeshNode::setAmbientFactor(float factor) {

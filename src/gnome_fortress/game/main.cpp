@@ -273,43 +273,87 @@ void CreateAcornPile(resource::ResourceManager &resourceManager, renderer::Basic
     acorns->appendChild(acorn12);
 }
 
-model::BasicMeshGroupNode *createRandomTree(renderer::BasicMeshNodeTechnique *technique, const glm::vec3 &pos) {
-    int treeModelIndex = 1;//rand() % 2;
+model::BasicMeshGroupNode *createRandomTree(renderer::BasicMeshNodeTechnique *technique) {
+    int treeModelIndex = rand() % 5;
 
-    model::BasicMeshGroupNode *tree;
+    std::string treeModel = "";
+
     if (treeModelIndex == 0) {
-        tree = new model::BasicMeshGroupNode(resource_manager_g.getOrLoadMeshGroup(resources::models::tree_conifer), technique);
-        tree->forEachChild([](model::SceneNode *child) {
-            auto meshNode = dynamic_cast<model::BasicMeshNode *>(child);
-            // turn off back face culling and add extra ambient light for leaves
-            if (meshNode && meshNode->getMesh() && meshNode->getMesh()->material && (meshNode->getMesh()->material->name == "Leaves" || meshNode->getMesh()->material->name == "Leaves1")) {
-                meshNode->setBackCulling(false);
-                meshNode->setAmbientFactor(0.7);
-            }
-        });
-    } else {
-        tree = new model::BasicMeshGroupNode(resource_manager_g.getOrLoadMeshGroup(resources::models::tree2), technique);
-        tree->forEachChild([](model::SceneNode *child) {
-            auto meshNode = dynamic_cast<model::BasicMeshNode *>(child);
-            // turn off back face culling and add extra ambient light for leaves
-            if (meshNode && meshNode->getMesh() && meshNode->getMesh()->material && meshNode->getMesh()->material->name == "Leaf") {
-                meshNode->setBackCulling(false);
-                meshNode->setAmbientFactor(0.7);
-            }
-        });
+        treeModel = resources::models::tree_conifer;
+    } else if (treeModelIndex == 1) {
+        treeModel = resources::models::tree2;
+    } else if (treeModelIndex == 2) {
+        treeModel = resources::models::tree3;
+    } else if (treeModelIndex == 3) {
+        treeModel = resources::models::tree4;
+    } else if (treeModelIndex == 4) {
+        treeModel = resources::models::tree5;
     }
 
-    // scale, rotation, position
-    float randomScale = 6 + 1.5f * (rand() / (float)RAND_MAX);
+    model::BasicMeshGroupNode *tree = new model::BasicMeshGroupNode(resource_manager_g.getOrLoadMeshGroup(treeModel), technique);
+    // search for leaf meshes in the mesh group by checking the materials they use
+    tree->forEachChild([](model::SceneNode *child) {
+        auto meshNode = dynamic_cast<model::BasicMeshNode *>(child);
+        if (!meshNode || !meshNode->getMesh() || !meshNode->getMesh()->material) {
+            return;
+        }
+        const std::string &matName = meshNode->getMesh()->material->name;
+        if (matName == "Leaf" || matName == "Leaves" || matName == "Leaves1") {
+            // turn off back face culling and add extra ambient light for leaves
+            meshNode->setBackCulling(false);
+            meshNode->setAmbientFactor(0.7);
+        }
+    });
+
+    // scale, rotation
+    float randomScale = 15 + 3.0f * (rand() / (float)RAND_MAX);
     tree->setScale(randomScale);
     float randomRotation = 2 * glm::pi<float>() * (rand() / (float)RAND_MAX);
     tree->setRotation(randomRotation, glm::vec3(0, 1, 0));
-    tree->setPosition(pos);
 
     // add to scene
     papaNode->appendChild(tree);
 
     return tree;
+}
+
+void distributeTrees(const std::vector<model::BasicMeshGroupNode *> &trees, float minDist, float maxDist, float collisionRadius) {
+    float collisionRadSq = collisionRadius * collisionRadius;
+    float maxMinDiff = (maxDist - minDist);
+
+    std::vector<glm::vec3> treePositions;
+
+    for each (auto tree in trees) {
+        glm::vec3 pos;
+
+        bool collision = true;
+        while (collision) {
+            // get x and z coordinates from -1 to 1
+            float randX = -1 + 2 * (rand() / (float)RAND_MAX);
+            float randZ = -1 + 2 * (rand() / (float)RAND_MAX);
+
+            // set the position so that it lies on the edge of a square with side length 2 (XZ plane, centered at the origin)
+            pos = glm::vec3(randX, 0 , randZ) * minDist;
+            pos /= glm::sqrt(randX*randX + randZ*randZ);
+
+            // adjust the position so that it lies outside the square with side length (2*minDist) and inside the square with side length (2*maxDist)
+            pos.x += randX * maxMinDiff;
+            pos.z += randZ * maxMinDiff;
+
+            // find a new position if the tree is too close to another tree
+            collision = false;
+            for each (auto &otherPos in treePositions) {
+                glm::vec3 diff = pos - otherPos;
+                if (glm::abs(diff.x * diff.z) < collisionRadSq) {
+                    collision = true;
+                    break;
+                }
+            }
+        }
+
+        tree->setPosition(pos);
+        treePositions.push_back(pos);
+    }
 }
 
 // Callback for when the window is resized
@@ -383,9 +427,6 @@ int MainFunction(void){
         papaNode->appendChild(skybox);
 
 
-        createRandomTree(mtlThreeTermTechnique, glm::vec3(0, 0, 0));
-
-
         // Create the walls
         walls = new Walls(resource_manager_g, mtlThreeTermTechnique);
         papaNode->appendChild(walls);
@@ -456,9 +497,17 @@ int MainFunction(void){
         player->appendChild(cameraNodeFirst);
 
         model::SceneNode *ground = new model::BasicMeshNode(plane->meshes[0], mtlThreeTermTechnique);
-        ground->setScale(100);
+        ground->setScale(1000);
         ground->setPosition(0, 0, 0);
         papaNode->appendChild(ground);
+
+        // Randomly create and distribute trees (randomly selected model, rotation, scale, position)
+        std::vector<model::BasicMeshGroupNode *> trees;
+        int numTrees = 80;
+        for (int i = 0; i < numTrees; i++) {
+            trees.push_back(createRandomTree(mtlThreeTermTechnique));
+        }
+        distributeTrees(trees, player->XBOUND_POS, player->XBOUND_POS + 15, 2.0f);
 
         acorns = new Acorns();
         papaNode->appendChild(acorns);

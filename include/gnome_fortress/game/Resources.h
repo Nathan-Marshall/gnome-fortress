@@ -30,6 +30,9 @@ namespace models {
     const std::string squirrel = models::dirname + "squirrel/Squirrel.obj";
     const std::string tree_conifer = models::dirname + "trees/Conifer_1_OBJ/Tree_Conifer_1.obj";
     const std::string tree2 = models::dirname + "trees/tree002-2/tree002-2.obj";
+    const std::string tree3 = models::dirname + "trees/Low_Poly_Tree_Obj/Low_Poly_Tree_1.obj";
+    const std::string tree4 = models::dirname + "trees/Low_Poly_Tree_Obj/Low_Poly_Tree_2.obj";
+    const std::string tree5 = models::dirname + "trees/Low_Poly_Tree_Obj/Low_Poly_Tree_3.obj";
 }
 
 namespace shaders {

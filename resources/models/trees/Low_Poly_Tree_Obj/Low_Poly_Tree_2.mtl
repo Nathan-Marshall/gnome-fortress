@@ -1,25 +1,26 @@
 # Blender MTL File: 'None'
 # Material Count: 2
 
-newmtl Bark
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 1.000000 1.000000 1.000000
-Ks 0.100000 0.100000 0.100000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd bark.png
-
 newmtl Leaf
-Ns 92.156863
+Ns 9.803922
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
-Ks 0.100000 0.100000 0.100000
+Ks 0.018000 0.018000 0.018000
 Ke 0.000000 0.000000 0.000000
-Ni 1.000000
+Ni 1.500000
 d 1.000000
 illum 2
-map_Kd leaf_diffuse.png
-map_d leaf_alpha.png
+map_Kd Dal_6.png
+map_Bump Dal_6_bump.png
+map_d Dal_6_op.png
+
+newmtl Trunk
+Ns 9.803922
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.018000 0.018000 0.018000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Kabuk_4.png

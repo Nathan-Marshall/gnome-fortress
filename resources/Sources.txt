@@ -14,4 +14,5 @@ Skybox (Noon Grass) - https://hdrihaven.com/hdri/?c=outdoor&h=noon_grass
 Fences - https://www.turbosquid.com/AssetManager/Index.cfm?stgAction=getFiles&subAction=Download&intID=600091&intType=3
 Flame 4x4 - Assignment 4
 Tree (Conifer) - https://www.turbosquid.com/FullPreview/Index.cfm/ID/563952
-Tree2 - https://www.turbosquid.com/FullPreview/Index.cfm/ID/1044821
+Tree 2 - https://www.turbosquid.com/FullPreview/Index.cfm/ID/1044821
+Trees 3 through 5 - https://www.turbosquid.com/FullPreview/Index.cfm/ID/1048432

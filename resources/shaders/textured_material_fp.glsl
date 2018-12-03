@@ -41,18 +41,13 @@ struct BlinnPhongResult {
     float specular_intensity;
 };
 
+// calculate useful values
+vec3 V = normalize(eye_pos - position_interp); // view vector
+vec3 N = normalize(normal_interp); // normal vector
+
 // returns a vec2 containing the diffuse and specular intensities
 BlinnPhongResult calculateBlinnPhong(vec3 light_dir) {
     // Compute Lambertian lighting Id
-
-    vec3 V = normalize(eye_pos - position_interp); // view vector
-
-    vec3 N = normalize(normal_interp); // normal vector
-    // reverse the normal if it faces away from the camera, to light each side independently if backface culling is off
-    if (dot(V, N) < 0) {
-        N = -N;
-    }
-
     vec3 L = normalize(light_dir); // light vector
 
     float Id = max(dot(N, L), 0.0);
@@ -68,14 +63,6 @@ BlinnPhongResult calculateBlinnPhong(vec3 light_dir) {
 }
 
 vec3 calculateEnvMapColor() {
-    vec3 V = normalize(eye_pos - position_interp); // view vector
-
-    vec3 N = normalize(normal_interp); // normal vector
-    // reverse the normal if it faces away from the camera, to light each side independently if backface culling is off
-    if (dot(V, N) < 0) {
-        N = -N;
-    }
-
     float NV = max(dot(N, V), 0.0); // dot product of light and normal
     
     // Compute indirect lighting
@@ -93,11 +80,16 @@ vec3 multiplyColors(vec3 c1, vec3 c2) {
 
 void main() 
 {
+    // reverse the normal if it faces away from the camera, to light each side independently if backface culling is off
+    if (dot(V, N) < 0) {
+        N = -N;
+    }
+
     float final_alpha = alpha;
     if (alpha_map_on > 0) {
         final_alpha *= texture(alpha_map, uv_interp).r;
     }
-    // if no alpha, completely cull the pixel (right now, we're not using painter's algorithm, so cull with a high threshold)
+    // if no alpha, completely cull the pixel (right now, we're not blending or using painter's algorithm, so cull with a high threshold)
     if (final_alpha < 0.5) {
         discard;
     }
