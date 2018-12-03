@@ -65,6 +65,10 @@ const char* ResourceManager::getOrLoadAudioClip(const std::string &relativePath)
     return audioClips[relativePath].c_str();
 }
 
+void ResourceManager::unloadAudioClip(const std::string &relativePath) {
+    audioClips.erase(relativePath);
+}
+
 void ResourceManager::loadTexture(const std::string &relativePath) {
     std::string fullPath = resourcesDirectory + relativePath;
     textures[relativePath] = TextureLoader::LoadTexture(fullPath);
@@ -99,6 +103,9 @@ void ResourceManager::unloadAll() {
     }
     while (!textures.empty()) {
         unloadTexture(textures.begin()->first);
+    }
+    while (!audioClips.empty()) {
+        unloadAudioClip(audioClips.begin()->first);
     }
 }
 
