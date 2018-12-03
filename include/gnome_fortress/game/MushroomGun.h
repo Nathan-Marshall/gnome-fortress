@@ -24,6 +24,7 @@ public:
 protected:
     const static float FIRING_VELOCITY;
     const static int FIRING_RATE;
+    const static float POISON_RADIUS;
 
     Projectiles* bullets;
 
@@ -31,6 +32,8 @@ protected:
 
     //Creating bullets 
     std::vector<Projectile*> fireBullet(glm::vec3 position) override;
+
+    float GetPoisonRadius();
 };
 
 }

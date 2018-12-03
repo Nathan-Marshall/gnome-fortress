@@ -8,6 +8,9 @@
 #include <vector>
 
 #include "Projectile.h"
+#include "Spore.h"
+#include "Rocket.h"
+#include "Rock.h"
 
 namespace gnome_fortress {
     namespace game {
@@ -21,11 +24,15 @@ namespace gnome_fortress {
 
             std::vector<Projectile*> projectiles;
 
+            std::vector<glm::vec3>* GetPoisons();
+            std::vector<glm::vec3>* GetExplosions();
+
         protected:
 
 
         private:
-
+            std::vector<glm::vec3> poisonPositions;
+            std::vector<glm::vec3> explosPositions;
         };
 
 

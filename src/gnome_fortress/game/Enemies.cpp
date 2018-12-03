@@ -14,6 +14,9 @@ void Enemies::ProcessCollisions(Projectiles *projectiles) {
     //Process any collisions with player fired projectiles
     ProcessProjectileCollisions(projectiles);
 
+    //Process with AOE effects (poison, explosions)
+    ProcessAOECollisions(projectiles->GetPoisons(), projectiles->GetExplosions());
+
     //Process any collisions with the walls
     ProcessWallCollisions();
 }
@@ -227,6 +230,10 @@ void Enemies::ProcessWallCollisions() {
             }
         }
     }
+}
+
+void Enemies::ProcessAOECollisions(std::vector<glm::vec3> *poisons, std::vector<glm::vec3> *explosions) {
+    //Nothing for now
 }
 
 

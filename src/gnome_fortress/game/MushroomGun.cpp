@@ -21,6 +21,11 @@ MushroomGun::MushroomGun(
 }
 
 const float MushroomGun::FIRING_VELOCITY = 10.0f;
+const float MushroomGun::POISON_RADIUS = 3.0f;
+
+float MushroomGun::GetPoisonRadius() {
+    return POISON_RADIUS;
+}
 
 void MushroomGun::onUpdateSelf(float delta_time) {
     cooldown -= delta_time;
@@ -42,15 +47,13 @@ std::vector<Projectile*> MushroomGun::fireBullet(glm::vec3 position) {
     vel.x *= FIRING_VELOCITY;
     vel.y *= FIRING_VELOCITY;
     vel.z *= FIRING_VELOCITY;
-    Projectile *p = new Spore(bulletMeshGroup, getTechnique(),
+    Spore *s = new Spore(bulletMeshGroup, getTechnique(),
         glm::vec3(getGlobalTransform() * glm::vec4(0.03, 0.5, -0.25, 1)), vel);
-    // Projectile *p = new Projectile(bulletMeshGroup, getTechnique(),
-    //     glm::vec3(getGlobalTransform() * glm::vec4(0.03, 0.5, -0.25, 1)), vel);
     
     PlayWeaponSound();
 
     std::vector<Projectile*> projecs;
-    projecs.push_back(p);
+    projecs.push_back(s);
 
     return projecs;
 }

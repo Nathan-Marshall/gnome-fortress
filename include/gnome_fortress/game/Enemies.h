@@ -32,6 +32,7 @@ public:
 
     void ProcessCollisions(Projectiles *projectiles);
     void ProcessProjectileCollisions(Projectiles *projectiles);
+    void ProcessAOECollisions(std::vector<glm::vec3>* poisons, std::vector<glm::vec3>* explosions);
     void ProcessWallCollisions();
 protected:
 
