@@ -21,11 +21,6 @@ MushroomGun::MushroomGun(
 }
 
 const float MushroomGun::FIRING_VELOCITY = 10.0f;
-const float MushroomGun::POISON_RADIUS = 3.0f;
-
-float MushroomGun::GetPoisonRadius() {
-    return POISON_RADIUS;
-}
 
 void MushroomGun::onUpdateSelf(float delta_time) {
     cooldown -= delta_time;

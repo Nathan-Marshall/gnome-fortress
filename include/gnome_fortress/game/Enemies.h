@@ -14,6 +14,8 @@
 #include "Squirrel.h"
 #include "Spider.h"
 #include "irrKlang\irrKlang.h"
+#include "Spore.h"
+#include "Rocket.h"
 
 namespace gnome_fortress {
 namespace game {

@@ -233,7 +233,85 @@ void Enemies::ProcessWallCollisions() {
 }
 
 void Enemies::ProcessAOECollisions(std::vector<glm::vec3> *poisons, std::vector<glm::vec3> *explosions) {
-    //Nothing for now
+    std::vector<SiegeTurtle*>::iterator turtleIt;
+    std::vector<Squirrel*>::iterator squirrelIt;
+    std::vector<Spider*>::iterator spiderIt;
+
+    std::vector<glm::vec3>::iterator poisonIt;
+    std::vector<glm::vec3>::iterator exploIt;
+
+    float pRad = Spore::DAMAGE_RAD;
+    float pDmg = Spore::DAMAGE;
+
+    float rRad = Rocket::DAMAGE;
+    float rDmg = Rocket::DAMAGE_RAD;
+
+    for (turtleIt = turtles.begin(); turtleIt < turtles.end();) {
+        glm::vec3 turtPos = (*turtleIt)->getPosition();
+        for (poisonIt = poisons->begin(); poisonIt < poisons->end(); poisonIt++) {
+            if (glm::length(turtPos - (*poisonIt)) < pRad) {
+                (*turtleIt)->DoDamage(pDmg);
+            }
+        }
+        for (exploIt = explosions->begin(); exploIt < explosions->end(); exploIt++) {
+            if (glm::length(turtPos - (*exploIt)) < pRad) {
+                (*turtleIt)->DoDamage(rDmg);
+            }
+        }
+
+        //Remove them if they have no health
+        if ((*turtleIt)->GetHealth() <= 0.0f) {
+            (*turtleIt)->removeFromParent();
+            turtleIt = turtles.erase(turtleIt);
+        }
+        else {
+            turtleIt++;
+        }
+    }
+    for (squirrelIt = squirrels.begin(); squirrelIt < squirrels.end();) {
+        glm::vec3 squirPos = (*squirrelIt)->getPosition();
+        for (poisonIt = poisons->begin(); poisonIt < poisons->end(); poisonIt++) {
+            if (glm::length(squirPos - (*poisonIt)) < pRad) {
+                (*squirrelIt)->DoDamage(pDmg);
+            }
+        }
+        for (exploIt = explosions->begin(); exploIt < explosions->end(); exploIt++) {
+            if (glm::length(squirPos - (*exploIt)) < pRad) {
+                (*squirrelIt)->DoDamage(rDmg);
+            }
+        }
+
+        //Remove them if they have no health
+        if ((*squirrelIt)->GetHealth() <= 0.0f) {
+            (*squirrelIt)->removeFromParent();
+            squirrelIt = squirrels.erase(squirrelIt);
+        }
+        else {
+            squirrelIt++;
+        }
+    }
+    for (spiderIt = spiders.begin(); spiderIt < spiders.end();) {
+        glm::vec3 spiPos = (*spiderIt)->getPosition();
+        for (poisonIt = poisons->begin(); poisonIt < poisons->end(); poisonIt++) {
+            if (glm::length(spiPos - (*poisonIt)) < pRad) {
+                (*spiderIt)->DoDamage(pDmg);
+            }
+        }
+        for (exploIt = explosions->begin(); exploIt < explosions->end(); exploIt++) {
+            if (glm::length(spiPos - (*exploIt)) < pRad) {
+                (*spiderIt)->DoDamage(rDmg);
+            }
+        }
+
+        //Remove them if they have no health
+        if ((*spiderIt)->GetHealth() <= 0.0f) {
+            (*spiderIt)->removeFromParent();
+            spiderIt = spiders.erase(spiderIt);
+        }
+        else {
+            spiderIt++;
+        }
+    }
 }
 
 

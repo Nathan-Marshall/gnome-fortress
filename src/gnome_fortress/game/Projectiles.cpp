@@ -5,7 +5,8 @@ namespace gnome_fortress {
 
 
         Projectiles::Projectiles() {
-            //Nothing yet
+            poisonPositions = new std::vector<glm::vec3>();
+            explosPositions = new std::vector<glm::vec3>();
         }
 
         void Projectiles::onUpdateSelf(float delta_time) {
@@ -25,11 +26,11 @@ namespace gnome_fortress {
 
                     if (s) {
                         //We have a valid spore
-                        poisonPositions.push_back(s->getPosition());
+                        poisonPositions->push_back(s->getPosition());
                     }
                     else if (r) {
                         //We have a valid rocket
-                        explosPositions.push_back(r->getPosition());
+                        explosPositions->push_back(r->getPosition());
                     }
 
                     (*projecIt)->removeFromParent();
@@ -41,5 +42,12 @@ namespace gnome_fortress {
             }
         }
 
+        std::vector<glm::vec3>* Projectiles::GetPoisons() {
+            return poisonPositions;
+        }
+
+        std::vector<glm::vec3>* Projectiles::GetExplosions() {
+            return explosPositions;
+        }
     }
 }
