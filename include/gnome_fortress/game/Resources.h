@@ -28,6 +28,7 @@ namespace models {
     const std::string siege_turtle = models::dirname + "siege_turtle/siege_turtle.obj";
     const std::string spider = models::dirname + "spider/skSpiderLargeMesh.obj";
     const std::string squirrel = models::dirname + "squirrel/Squirrel.obj";
+    const std::string tree_conifer = models::dirname + "trees/Conifer_1_OBJ/Tree_Conifer_1.obj";
     const std::string tree2 = models::dirname + "trees/tree002-2/tree002-2.obj";
 }
 

@@ -1,0 +1,48 @@
+# Blender MTL File: 'None'
+# Material Count: 4
+
+newmtl ConiferBark1
+Ns 29.411765
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd BarkPine1.jpg
+
+newmtl ConiferBranches
+Ns 29.411765
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd BarkPine1.jpg
+
+newmtl Leaves
+Ns 39.215686
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.090000 0.090000 0.090000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Fantasy_conifer_2.png
+map_d Fantasy_conifer_2_alpha.png
+
+newmtl Leaves1
+Ns 9.803922
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Fantasy_conifer_1.png
+map_d Fantasy_conifer_1_alpha.png

@@ -273,6 +273,43 @@ void CreateAcornPile(resource::ResourceManager &resourceManager, renderer::Basic
     acorns->appendChild(acorn12);
 }
 
+model::BasicMeshGroupNode *createRandomTree(renderer::BasicMeshNodeTechnique *technique, const glm::vec3 &pos) {
+    int treeModelIndex = 1;//rand() % 2;
+
+    model::BasicMeshGroupNode *tree;
+    if (treeModelIndex == 0) {
+        tree = new model::BasicMeshGroupNode(resource_manager_g.getOrLoadMeshGroup(resources::models::tree_conifer), technique);
+        tree->forEachChild([](model::SceneNode *child) {
+            auto meshNode = dynamic_cast<model::BasicMeshNode *>(child);
+            // turn off back face culling and add extra ambient light for leaves
+            if (meshNode && meshNode->getMesh() && meshNode->getMesh()->material && (meshNode->getMesh()->material->name == "Leaves" || meshNode->getMesh()->material->name == "Leaves1")) {
+                meshNode->setBackCulling(false);
+                meshNode->setAmbientFactor(0.7);
+            }
+        });
+    } else {
+        tree = new model::BasicMeshGroupNode(resource_manager_g.getOrLoadMeshGroup(resources::models::tree2), technique);
+        tree->forEachChild([](model::SceneNode *child) {
+            auto meshNode = dynamic_cast<model::BasicMeshNode *>(child);
+            // turn off back face culling and add extra ambient light for leaves
+            if (meshNode && meshNode->getMesh() && meshNode->getMesh()->material && meshNode->getMesh()->material->name == "Leaf") {
+                meshNode->setBackCulling(false);
+                meshNode->setAmbientFactor(0.7);
+            }
+        });
+    }
+
+    // scale and position
+    float randomScale = 6 + 1.5f * (rand() / (float)RAND_MAX);
+    tree->setScale(randomScale);
+    tree->setPosition(pos);
+
+    // add to scene
+    papaNode->appendChild(tree);
+
+    return tree;
+}
+
 // Callback for when the window is resized
 void ResizeCallback(GLFWwindow* window, int width, int height){
     // Set OpenGL viewport based on framebuffer width and height
@@ -343,8 +380,9 @@ int MainFunction(void){
         model::Skybox *skybox = new model::Skybox(resource_manager_g.getOrLoadSkyboxTexture(resources::textures::noon_grass), skyboxTechnique);
         papaNode->appendChild(skybox);
 
-        auto tree = new model::BasicMeshGroupNode(resource_manager_g.getOrLoadMeshGroup(resources::models::tree2), technique);
-        papaNode->appendChild(tree);
+
+        createRandomTree(mtlThreeTermTechnique, glm::vec3(0, 0, 0));
+
 
         // Create the walls
         walls = new Walls(resource_manager_g, mtlThreeTermTechnique);
