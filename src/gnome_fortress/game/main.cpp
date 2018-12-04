@@ -273,6 +273,51 @@ void CreateAcornPile(resource::ResourceManager &resourceManager, renderer::Basic
     acorns->appendChild(acorn12);
 }
 
+void createOuterFences(std::vector<model::BasicMeshGroupNode *> &fences, renderer::BasicMeshNodeTechnique *technique) {
+    int fencesPerSide = 14;
+    float sideLength = 70.0f;
+    float fenceLength = sideLength / fencesPerSide;
+
+    /*
+    for (int side = 0; side < 4; side++) {
+        for (int i = 0; i < fencesPerSide; i++) {
+            model::BasicMeshGroupNode *fence = new model::BasicMeshGroupNode(resource_manager_g.getOrLoadMeshGroup(resources::models::flat_fence), technique);
+
+            // scale, position, rotation
+            fence->setScale(fenceLength * 1.08f);
+            glm::vec3 position = glm::vec3(-sideLength / 2 + i * fenceLength + fenceLength / 2 + 0.08f, 0, sideLength / 2);
+            float rotation = glm::pi<float>() / 2 * side;
+            fence->setOrbit(rotation, glm::vec3(0, 1, 0), glm::vec3(0, 0, 0), position);
+
+            auto meshNode = dynamic_cast<model::BasicMeshNode *>(fence->getChild(0));
+            if (meshNode) {
+                meshNode->setBackCulling(false);
+                meshNode->setAmbientFactor(0.8f);
+            }
+
+            // add to scene
+            papaNode->appendChild(fence);
+
+            // add to array
+            fences.push_back(fence);
+        }
+    }
+    */
+
+    /* Because we are not batching right now, having individual fences segments causes many draw calls which slows down rendering.
+     * To work around this for now, we have created a single model with all fences in fixed positions. */
+
+    model::BasicMeshGroupNode *fence = new model::BasicMeshGroupNode(resource_manager_g.getOrLoadMeshGroup(resources::models::full_flat_fence), technique);
+    fence->setScale(sideLength);
+    auto meshNode = dynamic_cast<model::BasicMeshNode *>(fence->getChild(1));
+    if (meshNode) {
+        meshNode->setBackCulling(false);
+        meshNode->setAmbientFactor(0.8f);
+    }
+    papaNode->appendChild(fence);
+    fences.push_back(fence);
+}
+
 model::BasicMeshGroupNode *createRandomTree(renderer::BasicMeshNodeTechnique *technique) {
     int treeModelIndex = rand() % 5;
 
@@ -501,6 +546,9 @@ int MainFunction(void){
         ground->setPosition(0, 0, 0);
         papaNode->appendChild(ground);
 
+        std::vector<model::BasicMeshGroupNode *> outerFences;
+        createOuterFences(outerFences, mtlThreeTermTechnique);
+
         // Randomly create and distribute trees (randomly selected model, rotation, scale, position)
         std::vector<model::BasicMeshGroupNode *> trees;
         int numTrees = 80;
@@ -589,6 +637,12 @@ int MainFunction(void){
             glfwPollEvents();
         }
 
+        for each (auto fence in outerFences) {
+            delete fence;
+        }
+        for each (auto tree in trees) {
+            delete tree;
+        }
         delete mtlThreeTermTechnique;
         delete skyboxTechnique;
         delete rocketStreamTechnique;
