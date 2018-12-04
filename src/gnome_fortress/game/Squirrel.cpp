@@ -9,11 +9,14 @@ namespace game {
 Squirrel::Squirrel(
         resource::ResourceManager &resourceManager,
         renderer::BasicMeshNodeTechnique *technique,
-        Walls* walls)
+        Walls* walls, irrklang::ISoundEngine *soundEngine)
     : game::Enemy(
         resourceManager.getOrLoadMeshGroup(resources::models::squirrel),
         technique
       ) {
+
+    this->soundEngine = soundEngine;
+    attackSoundByte = resourceManager.getOrLoadAudioClip(resources::audioClips::squirrel_atk);
 
     this->walls = walls;
 

@@ -22,6 +22,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
 
+#include <irrKlang\irrKlang.h>
+using namespace irrklang;
 
 #include "gnome_fortress/game/Acorns.h"
 #include "gnome_fortress/game/Enemies.h"
@@ -60,6 +62,9 @@ camera::SceneNodeCamera scene_camera_third_g;
 camera::Camera *active_camera_g = &scene_camera_first_g;
 
 float cameraAngle = 0.0f;
+
+//Our main sound engine
+ISoundEngine *SoundEngine;
 
 //The root scene node
 model::SceneNode *papaNode;
@@ -466,6 +471,11 @@ int MainFunction(void){
         GLuint rocketStreamProgram = resource_manager_g.getOrLoadShaderProgram(resources::shaders::rocket_stream);
         auto rocketStreamTechnique = new RocketStreamTechnique(rocketStreamProgram);
 
+        SoundEngine = createIrrKlangDevice();
+        SoundEngine->setSoundVolume(0.1);
+
+        irrklang::ISound *backgroundTrack = SoundEngine->play2D(resource_manager_g.getOrLoadAudioClip(resources::audioClips::bit_builders), GL_TRUE);
+
         papaNode = new model::SceneNode();
 
         model::Skybox *skybox = new model::Skybox(resource_manager_g.getOrLoadSkyboxTexture(resources::textures::noon_grass), skyboxTechnique);
@@ -484,9 +494,9 @@ int MainFunction(void){
         papaNode->appendChild(playerProjectiles);
 
         //Create weapons
-        peanutGun = new PeanutGun(resource_manager_g, mtlThreeTermTechnique, player, playerProjectiles);
-        mushroomGun = new MushroomGun(resource_manager_g, mtlThreeTermTechnique, player, playerProjectiles);
-        pineconeGun = new PineconeGun(resource_manager_g, mtlThreeTermTechnique, player, playerProjectiles);
+        peanutGun = new PeanutGun(resource_manager_g, mtlThreeTermTechnique, player, playerProjectiles, SoundEngine);
+        mushroomGun = new MushroomGun(resource_manager_g, mtlThreeTermTechnique, player, playerProjectiles, SoundEngine);
+        pineconeGun = new PineconeGun(resource_manager_g, mtlThreeTermTechnique, player, playerProjectiles, SoundEngine);
 
         //setCurrentWeapon also appends as the gun as a child to player
         player->setCurrentWeapon(peanutGun);
@@ -497,12 +507,12 @@ int MainFunction(void){
         weapons.push_back(pineconeGun);
 
         //Create the enemies
-        Enemies* enemies = new Enemies(walls);
+        Enemies* enemies = new Enemies(walls, SoundEngine);
         papaNode->appendChild(enemies);
 
         //Spawn some turtles
-        SiegeTurtle* turt1 = new SiegeTurtle(resource_manager_g, mtlThreeTermTechnique);
-        SiegeTurtle* turt2 = new SiegeTurtle(resource_manager_g, mtlThreeTermTechnique);
+        SiegeTurtle* turt1 = new SiegeTurtle(resource_manager_g, mtlThreeTermTechnique, SoundEngine);
+        SiegeTurtle* turt2 = new SiegeTurtle(resource_manager_g, mtlThreeTermTechnique, SoundEngine);
 
         enemies->turtles.push_back(turt1);
         enemies->appendChild(turt1);
@@ -511,8 +521,8 @@ int MainFunction(void){
         enemies->appendChild(turt2);
 
         //Spawn some spiders
-        Spider* spi1 = new Spider(resource_manager_g, mtlThreeTermTechnique);
-        Spider* spi2 = new Spider(resource_manager_g, mtlThreeTermTechnique);
+        Spider* spi1 = new Spider(resource_manager_g, mtlThreeTermTechnique, SoundEngine);
+        Spider* spi2 = new Spider(resource_manager_g, mtlThreeTermTechnique, SoundEngine);
 
         enemies->spiders.push_back(spi1);
         enemies->appendChild(spi1);
@@ -521,8 +531,8 @@ int MainFunction(void){
         enemies->appendChild(spi2);
 
         //Spawn some squirrels
-        Squirrel* squir1 = new Squirrel(resource_manager_g, mtlThreeTermTechnique, enemies->walls);
-        Squirrel* squir2 = new Squirrel(resource_manager_g, mtlThreeTermTechnique, enemies->walls);
+        Squirrel* squir1 = new Squirrel(resource_manager_g, mtlThreeTermTechnique, enemies->walls, SoundEngine);
+        Squirrel* squir2 = new Squirrel(resource_manager_g, mtlThreeTermTechnique, enemies->walls, SoundEngine);
 
         enemies->squirrels.push_back(squir1);
         enemies->appendChild(squir1);
@@ -573,26 +583,32 @@ int MainFunction(void){
             double delta_time = current_time - prev_time;
             prev_time = glfwGetTime();
 
+            glm::vec3 playerPos = player->getPosition();
+            glm::vec3 lookAt = scene_camera_third_g.getNode()->getRotation() * glm::vec3(0, 0, -1);
+            glm::vec3 upVec = scene_camera_third_g.getNode()->getRotation() * glm::vec3(0, 1, 0);
+
+            SoundEngine->setListenerPosition(irrklang::vec3df(playerPos.x, playerPos.y, playerPos.z), irrklang::vec3df(lookAt.x, lookAt.y, lookAt.z));
+
             if (current_time - spawnTime > 5.0 && current_time - startTime > 10.0) {
                 int randEnemy = (rand() % 6) + 1;
 
                 if (randEnemy == 1) {
                     //Spawn a turtle
-                    SiegeTurtle* turt = new SiegeTurtle(resource_manager_g, mtlThreeTermTechnique);
+                    SiegeTurtle* turt = new SiegeTurtle(resource_manager_g, mtlThreeTermTechnique, SoundEngine);
 
                     enemies->turtles.push_back(turt);
                     enemies->appendChild(turt);
                 }
                 else if (randEnemy == 2) {
                     //Spawn a squirrel
-                    Squirrel* squir = new Squirrel(resource_manager_g, mtlThreeTermTechnique, enemies->walls);
+                    Squirrel* squir = new Squirrel(resource_manager_g, mtlThreeTermTechnique, enemies->walls, SoundEngine);
 
                     enemies->squirrels.push_back(squir);
                     enemies->appendChild(squir);
                 }
                 else if (randEnemy == 3) {
                     //Spawn a spider
-                    Spider* spidey = new Spider(resource_manager_g, mtlThreeTermTechnique);
+                    Spider* spidey = new Spider(resource_manager_g, mtlThreeTermTechnique, SoundEngine);
 
                     enemies->spiders.push_back(spidey);
                     enemies->appendChild(spidey);

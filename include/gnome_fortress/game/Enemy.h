@@ -7,6 +7,7 @@
 #include <glm/gtc/constants.hpp>
 
 #include "gnome_fortress/model/BasicMeshGroupNode.h"
+#include "irrKlang\irrKlang.h"
 
 namespace gnome_fortress {
 namespace game {
@@ -20,8 +21,11 @@ public:
 
     float GetBoundingRadius();
     float GetHealth();
+    const char* GetAttackSound();
+
     void DoDamage(float damage);
 
+    void PlayAttackSound();
 protected:
     void onUpdateSelf(float dt) override;
 
@@ -29,8 +33,11 @@ protected:
     float boundingRadius;
     float moveSpeed;
 
+    const char* attackSoundByte;
+    irrklang::ISoundEngine *soundEngine;
+
 private:
-    
+
 };
 
 

@@ -21,7 +21,7 @@ public:
     Squirrel(
             resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique,
-            Walls* walls);
+            Walls* walls, irrklang::ISoundEngine *soundEngine);
 
     //Whether or not the squirrel is hitting a wall
     bool hittingWall;
@@ -41,6 +41,7 @@ public:
 
 protected:
     void onUpdateSelf(float dt) override;
+
 
 private:
 

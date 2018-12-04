@@ -20,7 +20,8 @@ class Spider : public game::Enemy {
 public:
     Spider(
             resource::ResourceManager &resourceManager,
-            renderer::BasicMeshNodeTechnique *technique);
+            renderer::BasicMeshNodeTechnique *technique,
+            irrklang::ISoundEngine *soundEngine);
 
     bool hittingWall;
 

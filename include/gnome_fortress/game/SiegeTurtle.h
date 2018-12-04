@@ -20,7 +20,8 @@ class SiegeTurtle : public game::Enemy {
 public:
     SiegeTurtle(
             resource::ResourceManager &resourceManager,
-            renderer::BasicMeshNodeTechnique *technique);
+            renderer::BasicMeshNodeTechnique *technique,
+            irrklang::ISoundEngine *soundEngine);
 
     //Whether or not the turtle is hitting a wall
     bool hittingWall;
