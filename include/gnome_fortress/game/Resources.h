@@ -45,6 +45,21 @@ namespace textures {
     const std::string flame4x4 = textures::dirname + "particles/flame4x4.png";
 }
 
+namespace audioClips {
+    const std::string dirname = "audio/";
+
+    const std::string breakout = audioClips::dirname + "background/breakout.mp3";
+    const std::string action_rhythm = audioClips::dirname + "background/action_rhythm.mp3";
+    const std::string bit_builders = audioClips::dirname + "background/bit_builders.mp3";
+    const std::string bog_creatures = audioClips::dirname + "background/bog_creatures.mp3";
+    const std::string spider_atk = audioClips::dirname + "enemies/spider_atk.mp3";
+    const std::string turtle_atk = audioClips::dirname + "enemies/turtle_atk.mp3";
+    const std::string squirrel_atk = audioClips::dirname + "enemies/squirrel_atk.mp3";
+    const std::string shotgun = audioClips::dirname + "weapons/shotgun.mp3";
+    const std::string mushroom = audioClips::dirname + "weapons/mushroom.mp3";
+    const std::string rocket = audioClips::dirname + "weapons/rocket.mp3";
+}
+
 }
 
 }

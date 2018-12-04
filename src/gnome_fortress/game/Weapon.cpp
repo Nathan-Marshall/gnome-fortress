@@ -50,5 +50,13 @@ namespace game {
 
         return projecs;
     }
+
+    void Weapon::PlayWeaponSound() {
+        irrklang::ISound *effect = soundEngine->play2D(fireSoundByte, GL_FALSE, GL_TRUE);
+        if (effect) {
+            effect->setVolume(1.0);
+            effect->setIsPaused(false);
+        }
+    }
 }
 }

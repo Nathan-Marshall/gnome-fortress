@@ -8,6 +8,7 @@
 
 #include "gnome_fortress/game/Player.h"
 #include "gnome_fortress/game/Projectiles.h"
+#include "irrKlang\irrKlang.h"
 
 namespace gnome_fortress {
 namespace game {
@@ -33,11 +34,16 @@ public:
     //Creating bullets 
     virtual std::vector<Projectile*> fireBullet(glm::vec3 position);
 
+    void PlayWeaponSound();
+
 protected:
     const model::MeshGroup *bulletMeshGroup;
     
     bool pressed;
     float cooldown;
+
+    const char* fireSoundByte;
+    irrklang::ISoundEngine *soundEngine;
 
 };
 }

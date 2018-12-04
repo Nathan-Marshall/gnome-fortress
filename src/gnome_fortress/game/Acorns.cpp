@@ -19,6 +19,7 @@ void Acorns::ProcessEnemyCollisions(Enemies* enemies) {
         if (acorns.size() > 0) {
             if (glm::length((*turtleIter)->getPosition() - glm::vec3(0, 0, 0)) < 4.0) {
                 acorns.back()->takeDamage();
+                //(*turtleIter)->PlayAttackSound();
                 (*turtleIter)->hittingPile = true;
             }
             
@@ -35,6 +36,7 @@ void Acorns::ProcessEnemyCollisions(Enemies* enemies) {
         if (acorns.size() > 0) {
             if (glm::length((*spiderIter)->getPosition() - glm::vec3(0, 0, 0)) < 1.3) {
                 acorns.back()->takeDamage();
+                //(*spiderIter)->PlayAttackSound();
                 (*spiderIter)->hittingPile = true; 
             }
 
@@ -51,6 +53,7 @@ void Acorns::ProcessEnemyCollisions(Enemies* enemies) {
         if (acorns.size() > 0) {
             if (glm::length((*squirrelIter)->getPosition() - glm::vec3(0, 0, 0)) < 1.3) {
                 acorns.back()->takeDamage();
+                //(*squirrelIter)->PlayAttackSound();
                 (*squirrelIter)->hittingPile = true; 
             }
 

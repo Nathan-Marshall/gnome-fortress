@@ -13,6 +13,7 @@
 #include "SiegeTurtle.h"
 #include "Squirrel.h"
 #include "Spider.h"
+#include "irrKlang\irrKlang.h"
 
 namespace gnome_fortress {
 namespace game {
@@ -21,7 +22,7 @@ namespace game {
 class Enemies : public model::SceneNode {
 
 public:
-    Enemies(Walls* walls);
+    Enemies(Walls* walls, irrklang::ISoundEngine *soundEngine);
 
     Walls* walls;
 
@@ -36,7 +37,7 @@ protected:
 
 
 private:
-
+    irrklang::ISoundEngine *soundEngine;
 };
 
 

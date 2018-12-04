@@ -8,11 +8,16 @@ namespace game {
 
 SiegeTurtle::SiegeTurtle(
         resource::ResourceManager &resourceManager,
-        renderer::BasicMeshNodeTechnique *technique)
+        renderer::BasicMeshNodeTechnique *technique,
+        irrklang::ISoundEngine *soundEngine)
     : game::Enemy(
         resourceManager.getOrLoadMeshGroup(resources::models::siege_turtle),
         technique
       ) {
+
+    this->soundEngine = soundEngine;
+    attackSoundByte = resourceManager.getOrLoadAudioClip(resources::audioClips::turtle_atk);
+
     setScale(5.5f);
 
     int numWalls = Walls::NumWalls();
