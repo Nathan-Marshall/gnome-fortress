@@ -33,6 +33,8 @@ using namespace irrklang;
 #include "gnome_fortress/game/Player.h"
 #include "gnome_fortress/game/Resources.h"
 #include "gnome_fortress/game/RocketStream.h"
+#include "gnome_fortress/game/RocketGround.h"
+#include "gnome_fortress/game/SporeGround.h"
 #include "gnome_fortress/game/Walls.h"
 #include "gnome_fortress/game/Wall.h"
 #include "gnome_fortress/camera/SceneNodeCamera.h"
@@ -343,6 +345,12 @@ int MainFunction(void){
         GLuint rocketStreamProgram = resource_manager_g.getOrLoadShaderProgram(resources::shaders::rocket_stream);
         auto rocketStreamTechnique = new RocketStreamTechnique(rocketStreamProgram);
 
+        GLuint sporeGroundProgram = resource_manager_g.getOrLoadShaderProgram(resources::shaders::spore_ground);
+        auto sporeGroundTechnique = new SporeGroundTechnique(sporeGroundProgram);
+
+        GLuint rocketGroundProgram = resource_manager_g.getOrLoadShaderProgram(resources::shaders::rocket_ground);
+        auto rocketGroundTechnique = new RocketGroundTechnique(sporeGroundProgram);
+
         SoundEngine = createIrrKlangDevice();
         SoundEngine->setSoundVolume(0.1);
 
@@ -361,7 +369,7 @@ int MainFunction(void){
         player->setPosition(0, 0.7f, 3.0f);
         papaNode->appendChild(player);
 
-        playerProjectiles = new Projectiles();
+        playerProjectiles = new Projectiles(&resource_manager_g, sporeGroundTechnique, rocketGroundTechnique);
         papaNode->appendChild(playerProjectiles);
 
         //Create weapons
@@ -500,6 +508,14 @@ int MainFunction(void){
             rocketStreamTechnique->setProjectionMatrix(active_camera_g->getProjection());
             rocketStreamTechnique->setViewMatrix(active_camera_g->getView());
             rocketStreamTechnique->setTimer(current_time);
+
+            sporeGroundTechnique->setProjectionMatrix(active_camera_g->getProjection());
+            sporeGroundTechnique->setViewMatrix(active_camera_g->getView());
+            sporeGroundTechnique->setTimer(current_time);
+
+            rocketGroundTechnique->setProjectionMatrix(active_camera_g->getProjection());
+            rocketGroundTechnique->setViewMatrix(active_camera_g->getView());
+            rocketGroundTechnique->setTimer(current_time);
 
             // Draw the scene nodes (first pass)
             papaNode->draw(glm::mat4(), 0);
