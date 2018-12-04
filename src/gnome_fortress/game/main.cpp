@@ -351,7 +351,7 @@ model::BasicMeshGroupNode *createRandomTree(renderer::BasicMeshNodeTechnique *te
     });
 
     // scale, rotation
-    float randomScale = 15 + 3.0f * (rand() / (float)RAND_MAX);
+    float randomScale = 14 + 11.5f * (rand() / (float)RAND_MAX);
     tree->setScale(randomScale);
     float randomRotation = 2 * glm::pi<float>() * (rand() / (float)RAND_MAX);
     tree->setRotation(randomRotation, glm::vec3(0, 1, 0));
@@ -551,11 +551,11 @@ int MainFunction(void){
 
         // Randomly create and distribute trees (randomly selected model, rotation, scale, position)
         std::vector<model::BasicMeshGroupNode *> trees;
-        int numTrees = 80;
+        int numTrees = 100;
         for (int i = 0; i < numTrees; i++) {
             trees.push_back(createRandomTree(mtlThreeTermTechnique));
         }
-        distributeTrees(trees, player->XBOUND_POS, player->XBOUND_POS + 15, 2.0f);
+        distributeTrees(trees, player->XBOUND_POS + 10, player->XBOUND_POS + 30, 2.0f);
 
         acorns = new Acorns();
         papaNode->appendChild(acorns);
