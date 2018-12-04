@@ -146,7 +146,7 @@ void Enemies::ProcessWallCollisions() {
                 float distance = glm::length(turtlePos - wallPos);
 
                 //Need to change this back later once nathans stuff is working
-                float bound = (*turtleIt)->GetBoundingRadius();
+                float bound = (*turtleIt)->GetBoundingRadius() * 1.5; //Make the turtle a bit longer since it's not a perfect sphere
                 if (distance < bound && (*turtleIt)->hittingWall == false) {
                     //We have a collision
                     (*turtleIt)->hittingWall = true;
@@ -180,7 +180,7 @@ void Enemies::ProcessWallCollisions() {
 
                 float distance = glm::length(squirrelPos - wallPos);
 
-                float bound = (*squirrelIt)->GetBoundingRadius() / 2;
+                float bound = (*squirrelIt)->GetBoundingRadius() * 1.25;
                 if (distance < bound && (*squirrelIt)->hittingWall == false) {
                     //We have a collision
                     (*squirrelIt)->hittingWall = true;
@@ -217,7 +217,7 @@ void Enemies::ProcessWallCollisions() {
 
                 bool inside = (glm::length(wallPos - glm::vec3(0, 0, 0)) > glm::length(spiderPos - glm::vec3(0, 0, 0)));
 
-                if (widthDistance < (*spiderIt)->GetBoundingRadius() / 6 && heightDiff < 0 && !inside) {
+                if (widthDistance < (*spiderIt)->GetBoundingRadius() / 3 && heightDiff < 0 && !inside) {
                     (*spiderIt)->hittingWall = true;
                 }
                 if (heightDiff > 0 && !inside) {
@@ -241,20 +241,20 @@ void Enemies::ProcessAOECollisions(std::vector<std::pair<SporeGround*, float>> *
     std::vector<std::pair<RocketGround*, float>>::iterator exploIt;
 
     float pRad = Spore::DAMAGE_RAD;
-    float pDmg = Spore::DAMAGE;
+    float pDmg = Spore::POISON_DAMAGE;
 
-    float rRad = Rocket::DAMAGE;
-    float rDmg = Rocket::DAMAGE_RAD;
+    float rRad = Rocket::DAMAGE_RAD;
+    float rDmg = Rocket::EXPLOSION_DAMAGE;
 
     for (turtleIt = turtles.begin(); turtleIt < turtles.end();) {
         glm::vec3 turtPos = (*turtleIt)->getPosition();
         for (poisonIt = poisons->begin(); poisonIt < poisons->end(); poisonIt++) {
-            if (glm::length(turtPos - (*poisonIt).first->getPosition()) < pRad) {
+            if (glm::length(turtPos - (*poisonIt).first->getPosition()) < pRad + (*turtleIt)->GetBoundingRadius()) {
                 (*turtleIt)->DoDamage(pDmg * delta_time);
             }
         }
         for (exploIt = explosions->begin(); exploIt < explosions->end(); exploIt++) {
-            if (glm::length(turtPos - (*exploIt).first->getPosition()) < pRad) {
+            if (glm::length(turtPos - (*exploIt).first->getPosition()) < rRad + (*turtleIt)->GetBoundingRadius()) {
                 (*turtleIt)->DoDamage(rDmg * delta_time);
             }
         }

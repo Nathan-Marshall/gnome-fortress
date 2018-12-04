@@ -34,7 +34,7 @@ namespace gnome_fortress {
 
                         SporeGround *sporeEffect = new SporeGround(res_man->getOrLoadTexture(resources::textures::flame4x4), sporeGroundEffect);
                         appendChild(sporeEffect);
-                        sporeEffect->setPosition(sporePos.x, sporePos.y + 0.1, sporePos.z);
+                        sporeEffect->setPosition(sporePos.x, sporePos.y + 0.3, sporePos.z);
 
                         poisonPositions->push_back(std::make_pair(sporeEffect, Spore::POISON_LIFESPAN));
                     }
@@ -43,7 +43,8 @@ namespace gnome_fortress {
 
                         RocketGround *rocketEffect = new RocketGround(res_man->getOrLoadTexture(resources::textures::flame4x4), rocketGroundEffect);
                         appendChild(rocketEffect);
-                        rocketEffect->setPosition(r->getPosition());
+                        rocketEffect->setPosition(rocketPos.x, rocketPos.y + 0.2, rocketPos.z);
+
 
                         explosPositions->push_back(std::make_pair(rocketEffect, Rocket::EXPLOSION_LIFESPAN));
 

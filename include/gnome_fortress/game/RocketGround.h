@@ -13,6 +13,7 @@ public:
     ~RocketGround();
 
     void onDrawSelf(const glm::mat4 &parent_transform, unsigned int pass) const override;
+    void onUpdateSelf(float delta_time) override;
 
     const model::PointSet *getPointSet() const;
 
@@ -21,13 +22,14 @@ public:
     void setPower(float power);
 
 private:
-    static model::PointSet *CreateConeParticles(int num_particles);
+    static model::PointSet *CreateSphereParticles(int num_particles);
 
     const model::PointSet *pointSet;
     const model::Texture *texture;
     RocketGroundTechnique *technique;
 
     float power;
+    float timer;
 };
 
 }

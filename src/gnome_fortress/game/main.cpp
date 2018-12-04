@@ -349,7 +349,7 @@ int MainFunction(void){
         auto sporeGroundTechnique = new SporeGroundTechnique(sporeGroundProgram);
 
         GLuint rocketGroundProgram = resource_manager_g.getOrLoadShaderProgram(resources::shaders::rocket_ground);
-        auto rocketGroundTechnique = new RocketGroundTechnique(sporeGroundProgram);
+        auto rocketGroundTechnique = new RocketGroundTechnique(rocketGroundProgram);
 
         SoundEngine = createIrrKlangDevice();
         SoundEngine->setSoundVolume(0.1);
@@ -511,11 +511,11 @@ int MainFunction(void){
 
             sporeGroundTechnique->setProjectionMatrix(active_camera_g->getProjection());
             sporeGroundTechnique->setViewMatrix(active_camera_g->getView());
-            sporeGroundTechnique->setTimer(current_time);
+            //sporeGroundTechnique->setTimer(current_time);
 
             rocketGroundTechnique->setProjectionMatrix(active_camera_g->getProjection());
             rocketGroundTechnique->setViewMatrix(active_camera_g->getView());
-            rocketGroundTechnique->setTimer(current_time);
+            //rocketGroundTechnique->setTimer(current_time);
 
             // Draw the scene nodes (first pass)
             papaNode->draw(glm::mat4(), 0);

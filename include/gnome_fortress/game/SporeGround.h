@@ -13,7 +13,7 @@ public:
     ~SporeGround();
 
     void onDrawSelf(const glm::mat4 &parent_transform, unsigned int pass) const override;
-
+    void onUpdateSelf(float delta_time) override;
     const model::PointSet *getPointSet() const;
 
     SporeGroundTechnique *getTechnique() const;
@@ -28,6 +28,8 @@ private:
     SporeGroundTechnique *technique;
 
     float power;
+
+    float timer;
 };
 
 }

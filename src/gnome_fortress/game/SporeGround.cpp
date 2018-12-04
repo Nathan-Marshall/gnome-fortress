@@ -10,7 +10,8 @@ namespace game {
     : pointSet(CreateSphericalParticles(3000)),
       texture(texture),
       technique(technique),
-      power(1.0f) {
+      power(1.0f),
+      timer(0.0){
 }
 
     SporeGround::~SporeGround() {
@@ -20,6 +21,10 @@ namespace game {
 
 void SporeGround::setPower(float p) {
     power = p;
+}
+
+void SporeGround::onUpdateSelf(float delta_time) {
+    timer += delta_time;
 }
 
 void SporeGround::onDrawSelf(const glm::mat4 &parent_transform, unsigned int pass) const {
@@ -54,6 +59,7 @@ void SporeGround::onDrawSelf(const glm::mat4 &parent_transform, unsigned int pas
 
     // update power to use the value of this RocketStream instance
     technique->setPower(power);
+    technique->setTimer(timer);
 
     // draw using technique
     technique->activate();
@@ -73,8 +79,6 @@ SporeGroundTechnique *SporeGround::getTechnique() const {
 }
 
 model::PointSet *SporeGround::CreateSphericalParticles(int num_particles) {
-    // Create a set of points which will be the particles
-
     // Data buffer
     GLfloat *particle = nullptr;
 
@@ -84,29 +88,36 @@ model::PointSet *SporeGround::CreateSphericalParticles(int num_particles) {
     // Allocate memory for buffer
     try {
         particle = new GLfloat[num_particles * particle_att];
-    } catch (std::exception &e) {
+    }
+    catch (std::exception &e) {
         throw e;
     }
 
-    float spreadAngle = 90.0f * glm::pi<float>() / 180.0f;
-    float circleRad = tan(spreadAngle);
-    float distAngle;
-    float circDist;
+    float trad = 0.2; // Defines the starting point of the particles along the normal
+    float maxspray = 0.5; // This is how much we allow the points to deviate from the sphere
+    float u, v, w, theta, phi, spray; // Work variables
 
-    for (int i = 0; i < num_particles; i++) {
-        distAngle = rand() / (float)RAND_MAX * (glm::pi<float>() * 2);
-        circDist = rand() / (float)RAND_MAX * circleRad;
-        circDist *= circDist / circleRad;
+    for (int i = 0; i < num_particles; i++){
+            
+        // Get three random numbers
+        u = ((double) rand() / (RAND_MAX));
+        v = ((double) rand() / (RAND_MAX));
+        w = ((double) rand() / (RAND_MAX));
 
-        glm::vec3 dir = glm::normalize(glm::vec3(circDist * cos(distAngle), 1, circDist * sin(distAngle)));
+        // Use u to define the angle theta along one direction of the sphere
+        theta = u * 2.0*glm::pi<float>();
+        // Use v to define the angle phi along the other direction of the sphere
+        phi = acos(2.0*v - 1.0);
+        // Use w to define how much we can deviate from the surface of the sphere (change of radius)
+        spray = maxspray*pow((float) w, (float) (1.0/3.0)); // Cubic root of w
 
         // Define the normal and point based on theta, phi and the spray
-        glm::vec3 normal = dir / 4.0f;
-        glm::vec3 position(0);
-        glm::vec3 color(i / (float)num_particles, 0.0, 1.0 - (i / (float)num_particles)); // We can use the color for debug, if needed
+        glm::vec3 normal(spray*cos(theta)*sin(phi), spray*sin(theta)*sin(phi), spray*cos(phi));
+        glm::vec3 position(normal.x*trad, normal.y*trad, normal.z*trad);
+        glm::vec3 color(i/(float) num_particles, 0.0, 1.0 - (i/(float) num_particles)); // We can use the color for debug, if needed
 
         // Add vectors to the data buffer
-        for (int k = 0; k < 3; k++) {
+        for (int k = 0; k < 3; k++){
             particle[i*particle_att + k] = position[k];
             particle[i*particle_att + k + 3] = normal[k];
             particle[i*particle_att + k + 6] = color[k];
@@ -120,7 +131,7 @@ model::PointSet *SporeGround::CreateSphericalParticles(int num_particles) {
     glBufferData(GL_ARRAY_BUFFER, num_particles * particle_att * sizeof(GLfloat), particle, GL_STATIC_DRAW);
 
     // Free data buffers
-    delete[] particle;
+    delete [] particle;
 
     // Create resource
     return new model::PointSet("Spore Ground", vbo, num_particles, GL_POINTS);
