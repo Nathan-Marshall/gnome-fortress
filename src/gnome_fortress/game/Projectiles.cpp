@@ -25,17 +25,18 @@ namespace gnome_fortress {
                     (*projecIt)->removeFromParent();
                     projecIt = projectiles.erase(projecIt);
                 }
-                else if ((*projecIt)->getPosition().y < 0) {
+                else if ((*projecIt)->getPosition().y < 0.1) {
                     Spore* s = dynamic_cast<Spore*>((*projecIt));
                     Rocket* r = dynamic_cast<Rocket*>((*projecIt));
 
                     if (s) {
-                        //We have a valid spore
-                        poisonPositions->push_back(s->getPosition());
+                        glm::vec3 sporePos = s->getPosition();
+
+                        poisonPositions->push_back(sporePos);
 
                         SporeGround *sporeEffect = new SporeGround(res_man->getOrLoadTexture(resources::textures::flame4x4), sporeGroundEffect);
                         appendChild(sporeEffect);
-                        sporeEffect->setPosition(s->getPosition());
+                        sporeEffect->setPosition(sporePos.x, sporePos.y + 0.1, sporePos.z);
                     }
                     else if (r) {
                         //We have a valid rocket

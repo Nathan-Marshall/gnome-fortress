@@ -7,7 +7,7 @@ namespace gnome_fortress {
 namespace game {
 
     SporeGround::SporeGround(const model::Texture *texture, SporeGroundTechnique *technique)
-    : pointSet(CreateConeParticles(3000)),
+    : pointSet(CreateSphericalParticles(3000)),
       texture(texture),
       technique(technique),
       power(1.0f) {
@@ -40,7 +40,7 @@ void SporeGround::onDrawSelf(const glm::mat4 &parent_transform, unsigned int pas
 
     // enable blending
     glEnable(GL_BLEND);
-    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBlendEquationSeparate(GL_FUNC_ADD, GL_MAX);
 
     // bind buffers for mesh
@@ -72,8 +72,7 @@ SporeGroundTechnique *SporeGround::getTechnique() const {
     return technique;
 }
 
-model::PointSet *SporeGround::CreateConeParticles(int num_particles) {
-
+model::PointSet *SporeGround::CreateSphericalParticles(int num_particles) {
     // Create a set of points which will be the particles
 
     // Data buffer
@@ -89,21 +88,20 @@ model::PointSet *SporeGround::CreateConeParticles(int num_particles) {
         throw e;
     }
 
-    float r = 0.05;
-    float trad = 0.2; // Defines the starting point of the particles along the normal
-    float u, v, d, theta; // Work variables
+    float spreadAngle = 90.0f * glm::pi<float>() / 180.0f;
+    float circleRad = tan(spreadAngle);
+    float distAngle;
+    float circDist;
 
     for (int i = 0; i < num_particles; i++) {
-        // two random numbers
-        u = ((double)rand() / (RAND_MAX));
-        v = ((double)rand() / (RAND_MAX));
+        distAngle = rand() / (float)RAND_MAX * (glm::pi<float>() * 2);
+        circDist = rand() / (float)RAND_MAX * circleRad;
+        circDist *= circDist / circleRad;
 
-        // distance from the center of the circle
-        d = u * u * r;
-        theta = v * 2 * glm::pi<float>();
+        glm::vec3 dir = glm::normalize(glm::vec3(circDist * cos(distAngle), 1, circDist * sin(distAngle)));
 
         // Define the normal and point based on theta, phi and the spray
-        glm::vec3 normal = glm::normalize(glm::vec3(cos(theta) * d, trad, sin(theta) * d));
+        glm::vec3 normal = dir / 4.0f;
         glm::vec3 position(0);
         glm::vec3 color(i / (float)num_particles, 0.0, 1.0 - (i / (float)num_particles)); // We can use the color for debug, if needed
 

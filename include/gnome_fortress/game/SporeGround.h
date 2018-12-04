@@ -21,7 +21,7 @@ public:
     void setPower(float power);
 
 private:
-    static model::PointSet *CreateConeParticles(int num_particles);
+    static model::PointSet *CreateSphericalParticles(int num_particles);
 
     const model::PointSet *pointSet;
     const model::Texture *texture;

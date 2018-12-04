@@ -19,7 +19,7 @@ Spore::Spore(
 }
 
 const float Spore::DAMAGE = 8.5f;
-const float Spore::DAMAGE_RAD = 3.0f;
+const float Spore::DAMAGE_RAD = 2.0f;
 
 float Spore::GetDamage() {
     return DAMAGE;

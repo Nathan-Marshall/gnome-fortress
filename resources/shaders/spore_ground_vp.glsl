@@ -17,9 +17,9 @@ out vec4 particle_color;
 out float particle_id;
 
 // Simulation parameters (constants)
-float accel = 1.2; // An acceleration applied to the particles coming from some attraction force
-float speed = 1.0; // Control the speed of the motion
-float duration = 1.3;
+float accel = 0.5; // An acceleration applied to the particles coming from some attraction force
+float speed = 0.4; // Control the speed of the motion
+float duration = 5.0;
 
 // Define some useful constants
 const float pi = 3.1415926536;
@@ -27,8 +27,8 @@ const float pi_over_two = 1.5707963268;
 const float two_pi = 2.0*pi;
 
 
-const vec3 color0 = vec3(0.03, 0.03, 0.8);
-const vec3 color1 = vec3(0.8, 0.4, 0.03);
+const vec3 color0 = vec3(0.4, 0.03, 0.8);
+const vec3 color1 = vec3(0.8, 0.05, 0.8);
 const float color1Circtime = 0.7f;
 const vec3 color2 = vec3(0.1, 0.1, 0.1);
 const float color2Circtime = 0.86f;
@@ -66,5 +66,5 @@ void main()
     
     // Define amount of blending depending on the cyclic time
     float alpha = (1.0 - circtime*circtime) * power;
-    particle_color = vec4(getColor(circtime), alpha*0.2);
+    particle_color = vec4(getColor(circtime), alpha*0.4);
 }
