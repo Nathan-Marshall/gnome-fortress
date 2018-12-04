@@ -16,6 +16,8 @@ class Spore : public game::Projectile {
 public:
     const static float DAMAGE;
     const static float DAMAGE_RAD;
+    const static float POISON_LIFESPAN;
+    const static float POISON_DAMAGE;
 
     Spore(
         const model::MeshGroup *bulletMeshGroup,

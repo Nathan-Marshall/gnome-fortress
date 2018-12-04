@@ -20,7 +20,7 @@ public:
 
     std::vector<Acorn*> acorns;
 
-    void ProcessEnemyCollisions(Enemies* turtles);
+    void ProcessEnemyCollisions(Enemies* turtles, float delta_time);
 
 private:
 

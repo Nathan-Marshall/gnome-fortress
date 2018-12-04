@@ -5,8 +5,8 @@ namespace gnome_fortress {
 
 
         Projectiles::Projectiles(resource::ResourceManager *resource_manager, SporeGroundTechnique *sporeGroundTech, RocketGroundTechnique *rocketGroundTech) {
-            poisonPositions = new std::vector<glm::vec3>();
-            explosPositions = new std::vector<glm::vec3>();
+            poisonPositions = new std::vector<std::pair<SporeGround*, float>>();
+            explosPositions = new std::vector<std::pair<RocketGround*, float>>();
 
             this->res_man = resource_manager;
 
@@ -32,19 +32,21 @@ namespace gnome_fortress {
                     if (s) {
                         glm::vec3 sporePos = s->getPosition();
 
-                        poisonPositions->push_back(sporePos);
-
                         SporeGround *sporeEffect = new SporeGround(res_man->getOrLoadTexture(resources::textures::flame4x4), sporeGroundEffect);
                         appendChild(sporeEffect);
                         sporeEffect->setPosition(sporePos.x, sporePos.y + 0.1, sporePos.z);
+
+                        poisonPositions->push_back(std::make_pair(sporeEffect, Spore::POISON_LIFESPAN));
                     }
                     else if (r) {
-                        //We have a valid rocket
-                        explosPositions->push_back(r->getPosition());
+                        glm::vec3 rocketPos = r->getPosition();
 
                         RocketGround *rocketEffect = new RocketGround(res_man->getOrLoadTexture(resources::textures::flame4x4), rocketGroundEffect);
                         appendChild(rocketEffect);
                         rocketEffect->setPosition(r->getPosition());
+
+                        explosPositions->push_back(std::make_pair(rocketEffect, Rocket::EXPLOSION_LIFESPAN));
+
                     }
 
                     (*projecIt)->removeFromParent();
@@ -54,13 +56,44 @@ namespace gnome_fortress {
                     projecIt++;
                 }
             }
+
+            //Subtract the lifespans of all of the current poisons and explosions
+            std::vector<std::pair<SporeGround*, float>>::iterator poisonIt;
+            std::vector<std::pair<RocketGround*, float>>::iterator exploIt;
+
+            for (poisonIt = poisonPositions->begin(); poisonIt < poisonPositions->end();) {
+                (*poisonIt).second = (*poisonIt).second - delta_time;
+
+                if ((*poisonIt).second <= 0) {
+                    //We remove it from the vector
+                    (*poisonIt).first->removeFromParent();
+                    poisonIt = poisonPositions->erase(poisonIt);
+                }
+                else {
+                    poisonIt++;
+                }
+            }
+
+            for (exploIt = explosPositions->begin(); exploIt < explosPositions->end();) {
+                (*exploIt).second = (*exploIt).second - delta_time;
+
+                if ((*exploIt).second <= 0) {
+                    //We remove it from the vector
+                    (*exploIt).first->removeFromParent();
+                    exploIt = explosPositions->erase(exploIt);
+                }
+                else {
+                    exploIt++;
+                }
+            }
+
         }
 
-        std::vector<glm::vec3>* Projectiles::GetPoisons() {
+        std::vector<std::pair<SporeGround*, float>>* Projectiles::GetPoisons() {
             return poisonPositions;
         }
 
-        std::vector<glm::vec3>* Projectiles::GetExplosions() {
+        std::vector<std::pair<RocketGround*, float>>* Projectiles::GetExplosions() {
             return explosPositions;
         }
     }

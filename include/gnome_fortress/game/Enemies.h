@@ -32,9 +32,9 @@ public:
     std::vector<Squirrel*> squirrels;
     std::vector<Spider*> spiders;
 
-    void ProcessCollisions(Projectiles *projectiles);
+    void ProcessCollisions(Projectiles *projectiles, float delta_time);
     void ProcessProjectileCollisions(Projectiles *projectiles);
-    void ProcessAOECollisions(std::vector<glm::vec3>* poisons, std::vector<glm::vec3>* explosions);
+    void ProcessAOECollisions(std::vector<std::pair<SporeGround*, float>>* poisons, std::vector<std::pair<RocketGround*, float>>* explosions, float delta_time);
     void ProcessWallCollisions();
 protected:
 

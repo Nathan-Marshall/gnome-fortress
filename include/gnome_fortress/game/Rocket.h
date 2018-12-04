@@ -16,6 +16,8 @@ class Rocket : public game::Projectile {
 public:
     const static float DAMAGE;
     const static float DAMAGE_RAD;
+    const static float EXPLOSION_LIFESPAN;
+    const static float EXPLOSION_DAMAGE;
 
     Rocket(
         const model::MeshGroup *bulletMeshGroup,

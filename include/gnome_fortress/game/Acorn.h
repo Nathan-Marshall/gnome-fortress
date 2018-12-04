@@ -24,7 +24,7 @@ public:
     void vanishScale();
 
     float getCurrentHealth();
-    void takeDamage();
+    void takeDamage(float delta_time);
 
     const static float MAX_HEALTH;
 

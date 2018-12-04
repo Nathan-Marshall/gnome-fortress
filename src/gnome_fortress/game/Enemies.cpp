@@ -9,13 +9,13 @@ Enemies::Enemies(Walls* walls, irrklang::ISoundEngine *soundEngine) {
     this->soundEngine = soundEngine;
 }
 
-void Enemies::ProcessCollisions(Projectiles *projectiles) {
+void Enemies::ProcessCollisions(Projectiles *projectiles, float delta_time) {
 
     //Process any collisions with player fired projectiles
     ProcessProjectileCollisions(projectiles);
 
     //Process with AOE effects (poison, explosions)
-    ProcessAOECollisions(projectiles->GetPoisons(), projectiles->GetExplosions());
+    ProcessAOECollisions(projectiles->GetPoisons(), projectiles->GetExplosions(), delta_time);
 
     //Process any collisions with the walls
     ProcessWallCollisions();
@@ -232,13 +232,13 @@ void Enemies::ProcessWallCollisions() {
     }
 }
 
-void Enemies::ProcessAOECollisions(std::vector<glm::vec3> *poisons, std::vector<glm::vec3> *explosions) {
+void Enemies::ProcessAOECollisions(std::vector<std::pair<SporeGround*, float>> *poisons, std::vector<std::pair<RocketGround*, float>> *explosions, float delta_time) {
     std::vector<SiegeTurtle*>::iterator turtleIt;
     std::vector<Squirrel*>::iterator squirrelIt;
     std::vector<Spider*>::iterator spiderIt;
 
-    std::vector<glm::vec3>::iterator poisonIt;
-    std::vector<glm::vec3>::iterator exploIt;
+    std::vector<std::pair<SporeGround*, float>>::iterator poisonIt;
+    std::vector<std::pair<RocketGround*, float>>::iterator exploIt;
 
     float pRad = Spore::DAMAGE_RAD;
     float pDmg = Spore::DAMAGE;
@@ -249,13 +249,13 @@ void Enemies::ProcessAOECollisions(std::vector<glm::vec3> *poisons, std::vector<
     for (turtleIt = turtles.begin(); turtleIt < turtles.end();) {
         glm::vec3 turtPos = (*turtleIt)->getPosition();
         for (poisonIt = poisons->begin(); poisonIt < poisons->end(); poisonIt++) {
-            if (glm::length(turtPos - (*poisonIt)) < pRad) {
-                (*turtleIt)->DoDamage(pDmg);
+            if (glm::length(turtPos - (*poisonIt).first->getPosition()) < pRad) {
+                (*turtleIt)->DoDamage(pDmg * delta_time);
             }
         }
         for (exploIt = explosions->begin(); exploIt < explosions->end(); exploIt++) {
-            if (glm::length(turtPos - (*exploIt)) < pRad) {
-                (*turtleIt)->DoDamage(rDmg);
+            if (glm::length(turtPos - (*exploIt).first->getPosition()) < pRad) {
+                (*turtleIt)->DoDamage(rDmg * delta_time);
             }
         }
 
@@ -271,13 +271,13 @@ void Enemies::ProcessAOECollisions(std::vector<glm::vec3> *poisons, std::vector<
     for (squirrelIt = squirrels.begin(); squirrelIt < squirrels.end();) {
         glm::vec3 squirPos = (*squirrelIt)->getPosition();
         for (poisonIt = poisons->begin(); poisonIt < poisons->end(); poisonIt++) {
-            if (glm::length(squirPos - (*poisonIt)) < pRad) {
-                (*squirrelIt)->DoDamage(pDmg);
+            if (glm::length(squirPos - (*poisonIt).first->getPosition()) < pRad) {
+                (*squirrelIt)->DoDamage(pDmg * delta_time);
             }
         }
         for (exploIt = explosions->begin(); exploIt < explosions->end(); exploIt++) {
-            if (glm::length(squirPos - (*exploIt)) < pRad) {
-                (*squirrelIt)->DoDamage(rDmg);
+            if (glm::length(squirPos - (*exploIt).first->getPosition()) < pRad) {
+                (*squirrelIt)->DoDamage(rDmg * delta_time);
             }
         }
 
@@ -293,13 +293,13 @@ void Enemies::ProcessAOECollisions(std::vector<glm::vec3> *poisons, std::vector<
     for (spiderIt = spiders.begin(); spiderIt < spiders.end();) {
         glm::vec3 spiPos = (*spiderIt)->getPosition();
         for (poisonIt = poisons->begin(); poisonIt < poisons->end(); poisonIt++) {
-            if (glm::length(spiPos - (*poisonIt)) < pRad) {
-                (*spiderIt)->DoDamage(pDmg);
+            if (glm::length(spiPos - (*poisonIt).first->getPosition()) < pRad) {
+                (*spiderIt)->DoDamage(pDmg * delta_time);
             }
         }
         for (exploIt = explosions->begin(); exploIt < explosions->end(); exploIt++) {
-            if (glm::length(spiPos - (*exploIt)) < pRad) {
-                (*spiderIt)->DoDamage(rDmg);
+            if (glm::length(spiPos - (*exploIt).first->getPosition()) < pRad) {
+                (*spiderIt)->DoDamage(rDmg * delta_time);
             }
         }
 

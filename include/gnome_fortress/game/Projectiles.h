@@ -30,16 +30,16 @@ namespace gnome_fortress {
 
             std::vector<Projectile*> projectiles;
 
-            std::vector<glm::vec3>* GetPoisons();
-            std::vector<glm::vec3>* GetExplosions();
+            std::vector<std::pair<SporeGround*, float>>* GetPoisons();
+            std::vector<std::pair<RocketGround*, float>>* GetExplosions();
         protected:
 
 
         private:
             resource::ResourceManager *res_man;
 
-            std::vector<glm::vec3>* poisonPositions;
-            std::vector<glm::vec3>* explosPositions;
+            std::vector<std::pair<SporeGround*, float>>* poisonPositions;
+            std::vector<std::pair<RocketGround*, float>>* explosPositions;
 
             SporeGroundTechnique *sporeGroundEffect;
             RocketGroundTechnique *rocketGroundEffect;

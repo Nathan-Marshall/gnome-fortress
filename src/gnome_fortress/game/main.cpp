@@ -485,9 +485,9 @@ int MainFunction(void){
                 spawnTime = glfwGetTime();
             }
 
-            enemies->ProcessCollisions(playerProjectiles);
+            enemies->ProcessCollisions(playerProjectiles, delta_time);
 
-            acorns->ProcessEnemyCollisions(enemies);
+            acorns->ProcessEnemyCollisions(enemies, delta_time);
 
             // Update the scene nodes
             papaNode->update(delta_time);
