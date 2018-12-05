@@ -176,7 +176,7 @@ void Enemies::ProcessWallCollisions() {
                 float distance = glm::length(turtlePos - wallPos);
 
                 //Need to change this back later once nathans stuff is working
-                float bound = (*turtleIt)->GetBoundingRadius() * 1.5; //Make the turtle a bit longer since it's not a perfect sphere
+                float bound = (*turtleIt)->GetBoundingRadius() * 1.25; //Make the turtle a bit longer since it's not a perfect sphere
                 if (distance < bound && (*turtleIt)->hittingWall == false) {
                     //We have a collision
                     (*turtleIt)->hittingWall = true;
