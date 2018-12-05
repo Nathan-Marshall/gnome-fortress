@@ -4,7 +4,8 @@ namespace gnome_fortress {
     namespace game {
 
 
-        Projectiles::Projectiles(resource::ResourceManager *resource_manager, SporeGroundTechnique *sporeGroundTech, RocketGroundTechnique *rocketGroundTech) {
+        Projectiles::Projectiles(resource::ResourceManager *resource_manager, SporeGroundTechnique *sporeGroundTech, 
+        RocketGroundTechnique *rocketGroundTech, RocketStreamTechnique *rocketStreamTech, PurpleRocketStreamTechnique *purpleRocketStreamTech) {
             poisonPositions = new std::vector<std::pair<SporeGround*, float>>();
             explosPositions = new std::vector<std::pair<RocketGround*, float>>();
 
@@ -12,6 +13,8 @@ namespace gnome_fortress {
 
             sporeGroundEffect = sporeGroundTech;
             rocketGroundEffect = rocketGroundTech;
+            rocketStreamEffect = rocketStreamTech;
+            purpleRocketStreamEffect = purpleRocketStreamTech;
         }
 
         void Projectiles::onUpdateSelf(float delta_time) {
@@ -30,24 +33,10 @@ namespace gnome_fortress {
                     Rocket* r = dynamic_cast<Rocket*>((*projecIt));
 
                     if (s) {
-                        glm::vec3 sporePos = s->getPosition();
-
-                        SporeGround *sporeEffect = new SporeGround(res_man->getOrLoadTexture(resources::textures::flame4x4), sporeGroundEffect);
-                        appendChild(sporeEffect);
-                        sporeEffect->setPosition(sporePos.x, sporePos.y + 0.3, sporePos.z);
-
-                        poisonPositions->push_back(std::make_pair(sporeEffect, Spore::POISON_LIFESPAN));
+                        CreatePoison(s);
                     }
                     else if (r) {
-                        glm::vec3 rocketPos = r->getPosition();
-
-                        RocketGround *rocketEffect = new RocketGround(res_man->getOrLoadTexture(resources::textures::flame4x4), rocketGroundEffect);
-                        appendChild(rocketEffect);
-                        rocketEffect->setPosition(rocketPos.x, rocketPos.y + 0.2, rocketPos.z);
-
-
-                        explosPositions->push_back(std::make_pair(rocketEffect, Rocket::EXPLOSION_LIFESPAN));
-
+                        CreateExplosion(r);
                     }
 
                     (*projecIt)->removeFromParent();
@@ -96,6 +85,44 @@ namespace gnome_fortress {
 
         std::vector<std::pair<RocketGround*, float>>* Projectiles::GetExplosions() {
             return explosPositions;
+        }
+
+        void Projectiles::CreatePoison(Spore* spore) {
+            glm::vec3 sporePos = spore->getPosition();
+
+            SporeGround *sporeEffect = new SporeGround(res_man->getOrLoadTexture(resources::textures::flame4x4), sporeGroundEffect);
+            appendChild(sporeEffect);
+            sporeEffect->setPosition(sporePos.x, sporePos.y + 0.3, sporePos.z);
+
+            poisonPositions->push_back(std::make_pair(sporeEffect, Spore::POISON_LIFESPAN));
+        }
+
+        void Projectiles::CreateExplosion(Rocket* rocket) {
+            glm::vec3 rocketPos = rocket->getPosition();
+
+            RocketGround *rocketEffect = new RocketGround(res_man->getOrLoadTexture(resources::textures::flame4x4), rocketGroundEffect);
+            appendChild(rocketEffect);
+            rocketEffect->setPosition(rocketPos.x, rocketPos.y + 0.2, rocketPos.z);
+
+            explosPositions->push_back(std::make_pair(rocketEffect, Rocket::EXPLOSION_LIFESPAN));
+        }
+
+        PurpleRocketStream* Projectiles::CreatePoisonTrail(Spore* spore) {
+            glm::vec3 sporePos = spore->getPosition();
+
+            PurpleRocketStream *poisonEffect = new PurpleRocketStream(res_man->getOrLoadTexture(resources::textures::flame4x4), purpleRocketStreamEffect);
+            poisonEffect->setPower(1.0);
+
+            return poisonEffect;
+        }
+
+        RocketStream* Projectiles::CreateRocketTrail(Rocket* rocket) {
+            glm::vec3 rocketPos = rocket->getPosition();
+
+            RocketStream *rocketEffect = new RocketStream(res_man->getOrLoadTexture(resources::textures::flame4x4), rocketStreamEffect);
+            rocketEffect->setPower(2.0);
+            
+            return rocketEffect;
         }
     }
 }

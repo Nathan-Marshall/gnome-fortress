@@ -14,6 +14,8 @@
 
 #include "SporeGround.h"
 #include "RocketGround.h"
+#include "RocketStream.h"
+#include "PurpleRocketStream.h"
 
 #include "gnome_fortress/resource/ResourceManager.h"
 #include "Resources.h"
@@ -24,7 +26,8 @@ namespace gnome_fortress {
         class Projectiles : public model::SceneNode {
 
         public:
-            Projectiles(resource::ResourceManager *resource_manager, SporeGroundTechnique *sporeGroundTech, RocketGroundTechnique *rocketGroundTech);
+            Projectiles(resource::ResourceManager *resource_manager, SporeGroundTechnique *sporeGroundTech, 
+            RocketGroundTechnique *rocketGroundTech, RocketStreamTechnique *rocketStreamTech, PurpleRocketStreamTechnique *purpleRocketStreamTech);
 
             void onUpdateSelf(float delta_time) override;
 
@@ -32,6 +35,12 @@ namespace gnome_fortress {
 
             std::vector<std::pair<SporeGround*, float>>* GetPoisons();
             std::vector<std::pair<RocketGround*, float>>* GetExplosions();
+
+            void CreatePoison(Spore* spore);
+            PurpleRocketStream* Projectiles::CreatePoisonTrail(Spore* spore);
+
+            void CreateExplosion(Rocket* rocket);
+            RocketStream* Projectiles::CreateRocketTrail(Rocket* rocket);
         protected:
 
 
@@ -43,6 +52,8 @@ namespace gnome_fortress {
 
             SporeGroundTechnique *sporeGroundEffect;
             RocketGroundTechnique *rocketGroundEffect;
+            RocketStreamTechnique *rocketStreamEffect;
+            PurpleRocketStreamTechnique *purpleRocketStreamEffect;
         };
 
 

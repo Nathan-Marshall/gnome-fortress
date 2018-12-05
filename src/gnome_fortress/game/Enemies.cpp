@@ -41,6 +41,16 @@ void Enemies::ProcessProjectileCollisions(Projectiles *projectiles) {
             if (collision) {
                 (*turtleIt)->DoDamage((*projecIt)->GetDamage());
 
+                Spore* s = dynamic_cast<Spore*>((*projecIt));
+                Rocket* r = dynamic_cast<Rocket*>((*projecIt));
+
+                if (s) {
+                    projectiles->CreatePoison(s);
+                }
+                else if (r) {
+                    projectiles->CreateExplosion(r);
+                }
+
                 //Remove the projectile
                 (*projecIt)->removeFromParent();
                 projecIt = projectiles->projectiles.erase(projecIt);
@@ -71,6 +81,16 @@ void Enemies::ProcessProjectileCollisions(Projectiles *projectiles) {
             if (collision) {
                 (*squirrelIt)->DoDamage((*projecIt)->GetDamage());
 
+                Spore* s = dynamic_cast<Spore*>((*projecIt));
+                Rocket* r = dynamic_cast<Rocket*>((*projecIt));
+
+                if (s) {
+                    projectiles->CreatePoison(s);
+                }
+                else if (r) {
+                    projectiles->CreateExplosion(r);
+                }
+
                 //Remove the projectile
                 (*projecIt)->removeFromParent();
                 projecIt = projectiles->projectiles.erase(projecIt);
@@ -100,6 +120,16 @@ void Enemies::ProcessProjectileCollisions(Projectiles *projectiles) {
 
             if (collision) {
                 (*spiderIt)->DoDamage((*projecIt)->GetDamage());
+
+                Spore* s = dynamic_cast<Spore*>((*projecIt));
+                Rocket* r = dynamic_cast<Rocket*>((*projecIt));
+
+                if (s) {
+                    projectiles->CreatePoison(s);
+                }
+                else if (r) {
+                    projectiles->CreateExplosion(r);
+                }
 
                 //Remove the projectile
                 (*projecIt)->removeFromParent();

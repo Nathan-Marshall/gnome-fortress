@@ -31,8 +31,6 @@ protected:
 
     //Creating bullets 
     std::vector<Projectile*> fireBullet(glm::vec3 position) override;
-
-    float GetPoisonRadius();
 };
 
 }
