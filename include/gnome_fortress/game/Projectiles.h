@@ -32,6 +32,9 @@ namespace gnome_fortress {
 
             std::vector<std::pair<SporeGround*, float>>* GetPoisons();
             std::vector<std::pair<RocketGround*, float>>* GetExplosions();
+
+            void CreatePoison(Spore* spore);
+            void CreateExplosion(Rocket* rocket);
         protected:
 
 

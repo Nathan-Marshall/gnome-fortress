@@ -30,24 +30,10 @@ namespace gnome_fortress {
                     Rocket* r = dynamic_cast<Rocket*>((*projecIt));
 
                     if (s) {
-                        glm::vec3 sporePos = s->getPosition();
-
-                        SporeGround *sporeEffect = new SporeGround(res_man->getOrLoadTexture(resources::textures::flame4x4), sporeGroundEffect);
-                        appendChild(sporeEffect);
-                        sporeEffect->setPosition(sporePos.x, sporePos.y + 0.3, sporePos.z);
-
-                        poisonPositions->push_back(std::make_pair(sporeEffect, Spore::POISON_LIFESPAN));
+                        CreatePoison(s);
                     }
                     else if (r) {
-                        glm::vec3 rocketPos = r->getPosition();
-
-                        RocketGround *rocketEffect = new RocketGround(res_man->getOrLoadTexture(resources::textures::flame4x4), rocketGroundEffect);
-                        appendChild(rocketEffect);
-                        rocketEffect->setPosition(rocketPos.x, rocketPos.y + 0.2, rocketPos.z);
-
-
-                        explosPositions->push_back(std::make_pair(rocketEffect, Rocket::EXPLOSION_LIFESPAN));
-
+                        CreateExplosion(r);
                     }
 
                     (*projecIt)->removeFromParent();
@@ -96,6 +82,26 @@ namespace gnome_fortress {
 
         std::vector<std::pair<RocketGround*, float>>* Projectiles::GetExplosions() {
             return explosPositions;
+        }
+
+        void Projectiles::CreatePoison(Spore* spore) {
+            glm::vec3 sporePos = spore->getPosition();
+
+            SporeGround *sporeEffect = new SporeGround(res_man->getOrLoadTexture(resources::textures::flame4x4), sporeGroundEffect);
+            appendChild(sporeEffect);
+            sporeEffect->setPosition(sporePos.x, sporePos.y + 0.3, sporePos.z);
+
+            poisonPositions->push_back(std::make_pair(sporeEffect, Spore::POISON_LIFESPAN));
+        }
+
+        void Projectiles::CreateExplosion(Rocket* rocket) {
+            glm::vec3 rocketPos = rocket->getPosition();
+
+            RocketGround *rocketEffect = new RocketGround(res_man->getOrLoadTexture(resources::textures::flame4x4), rocketGroundEffect);
+            appendChild(rocketEffect);
+            rocketEffect->setPosition(rocketPos.x, rocketPos.y + 0.2, rocketPos.z);
+
+            explosPositions->push_back(std::make_pair(rocketEffect, Rocket::EXPLOSION_LIFESPAN));
         }
     }
 }
