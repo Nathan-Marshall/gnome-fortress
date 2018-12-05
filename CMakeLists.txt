@@ -159,6 +159,31 @@ target_link_libraries(${MAIN_EXECUTABLE} ${GLFW_LIBRARY})
 target_link_libraries(${MAIN_EXECUTABLE} ${SOIL_LIBRARY})
 target_link_libraries(${MAIN_EXECUTABLE} ${IK_LIBRARY})
 
+add_custom_target(irrKlangCopy)
+add_custom_target(irrKlangMP3Copy)
+
+if(${CMAKE_BUILD_TYPE} MATCHES Debug)
+    set(BUILD_DIR Debug)
+elseif(${CMAKE_BUILD_TYPE} MATCHES Release)
+    set(BUILD_DIR Release)
+endif(${CMAKE_BUILD_TYPE} MATCHES Debug)
+
+add_custom_command(
+        TARGET irrKlangCopy PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+                ${LIBRARY_PATH}/lib/irrKlang.dll
+                ${CMAKE_CURRENT_BINARY_DIR}/${BUILD_DIR}/irrKlang.dll)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+add_custom_command(
+        TARGET irrKlangMP3Copy PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+                ${LIBRARY_PATH}/lib/ikpMP3.dll
+                ${CMAKE_CURRENT_BINARY_DIR}/${BUILD_DIR}/ikpMP3.dll)
+
+add_dependencies(${MAIN_EXECUTABLE} irrKlangCopy)
+add_dependencies(${MAIN_EXECUTABLE} irrKlangMP3Copy)
+
 # The rules here are specific to Windows Systems
 if(WIN32)
     # This will use the proper libraries in debug mode in Visual Studio
