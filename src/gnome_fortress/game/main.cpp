@@ -369,7 +369,7 @@ int MainFunction(void){
         player->setPosition(0, 0.7f, 3.0f);
         papaNode->appendChild(player);
 
-        playerProjectiles = new Projectiles(&resource_manager_g, sporeGroundTechnique, rocketGroundTechnique);
+        playerProjectiles = new Projectiles(&resource_manager_g, sporeGroundTechnique, rocketGroundTechnique, rocketStreamTechnique);
         papaNode->appendChild(playerProjectiles);
 
         //Create weapons

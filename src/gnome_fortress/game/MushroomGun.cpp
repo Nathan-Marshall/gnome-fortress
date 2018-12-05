@@ -47,6 +47,8 @@ std::vector<Projectile*> MushroomGun::fireBullet(glm::vec3 position) {
     
     PlayWeaponSound();
 
+    s->appendChild(bullets->CreatePoisonTrail(s));
+
     std::vector<Projectile*> projecs;
     projecs.push_back(s);
 

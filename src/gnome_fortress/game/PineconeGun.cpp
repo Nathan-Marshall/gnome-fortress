@@ -44,12 +44,12 @@ std::vector<Projectile*> PineconeGun::fireBullet(glm::vec3 position) {
     vel.x *= FIRING_VELOCITY;
     vel.y *= FIRING_VELOCITY;
     vel.z *= FIRING_VELOCITY;
-    Projectile *p = new Rocket(bulletMeshGroup, getTechnique(),
+    Rocket *p = new Rocket(bulletMeshGroup, getTechnique(),
         glm::vec3(getGlobalTransform() * glm::vec4(0.03, 0.5, -0.25, 1)), vel);
-    // Projectile *p = new Projectile(bulletMeshGroup, getTechnique(),
-    //     glm::vec3(getGlobalTransform() * glm::vec4(0.03, 0.5, -0.25, 1)), vel);
     
     std::vector<Projectile*> projecs;
+
+    p->appendChild(bullets->CreateRocketTrail(p));
 
     PlayWeaponSound();
 
