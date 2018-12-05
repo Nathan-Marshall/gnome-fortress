@@ -282,6 +282,134 @@ void CreateAcornPile(resource::ResourceManager &resourceManager, renderer::Basic
     acorns->appendChild(acorn12);
 }
 
+void createOuterFences(std::vector<model::BasicMeshGroupNode *> &fences, renderer::BasicMeshNodeTechnique *technique) {
+    int fencesPerSide = 14;
+    float sideLength = 70.0f;
+    float fenceLength = sideLength / fencesPerSide;
+
+    /*
+    for (int side = 0; side < 4; side++) {
+        for (int i = 0; i < fencesPerSide; i++) {
+            model::BasicMeshGroupNode *fence = new model::BasicMeshGroupNode(resource_manager_g.getOrLoadMeshGroup(resources::models::flat_fence), technique);
+
+            // scale, position, rotation
+            fence->setScale(fenceLength * 1.08f);
+            glm::vec3 position = glm::vec3(-sideLength / 2 + i * fenceLength + fenceLength / 2 + 0.08f, 0, sideLength / 2);
+            float rotation = glm::pi<float>() / 2 * side;
+            fence->setOrbit(rotation, glm::vec3(0, 1, 0), glm::vec3(0, 0, 0), position);
+
+            auto meshNode = dynamic_cast<model::BasicMeshNode *>(fence->getChild(0));
+            if (meshNode) {
+                meshNode->setBackCulling(false);
+                meshNode->setAmbientFactor(0.8f);
+            }
+
+            // add to scene
+            papaNode->appendChild(fence);
+
+            // add to array
+            fences.push_back(fence);
+        }
+    }
+    */
+
+    /* Because we are not batching right now, having individual fences segments causes many draw calls which slows down rendering.
+     * To work around this for now, we have created a single model with all fences in fixed positions. */
+
+    model::BasicMeshGroupNode *fence = new model::BasicMeshGroupNode(resource_manager_g.getOrLoadMeshGroup(resources::models::full_flat_fence), technique);
+    fence->setScale(sideLength);
+    auto meshNode = dynamic_cast<model::BasicMeshNode *>(fence->getChild(1));
+    if (meshNode) {
+        meshNode->setBackCulling(false);
+        meshNode->setAmbientFactor(0.8f);
+    }
+    papaNode->appendChild(fence);
+    fences.push_back(fence);
+}
+
+model::BasicMeshGroupNode *createRandomTree(renderer::BasicMeshNodeTechnique *technique) {
+    int treeModelIndex = rand() % 5;
+
+    std::string treeModel = "";
+
+    if (treeModelIndex == 0) {
+        treeModel = resources::models::tree_conifer;
+    } else if (treeModelIndex == 1) {
+        treeModel = resources::models::tree2;
+    } else if (treeModelIndex == 2) {
+        treeModel = resources::models::tree3;
+    } else if (treeModelIndex == 3) {
+        treeModel = resources::models::tree4;
+    } else if (treeModelIndex == 4) {
+        treeModel = resources::models::tree5;
+    }
+
+    model::BasicMeshGroupNode *tree = new model::BasicMeshGroupNode(resource_manager_g.getOrLoadMeshGroup(treeModel), technique);
+    // search for leaf meshes in the mesh group by checking the materials they use
+    tree->forEachChild([](model::SceneNode *child) {
+        auto meshNode = dynamic_cast<model::BasicMeshNode *>(child);
+        if (!meshNode || !meshNode->getMesh() || !meshNode->getMesh()->material) {
+            return;
+        }
+        const std::string &matName = meshNode->getMesh()->material->name;
+        if (matName == "Leaf" || matName == "Leaves" || matName == "Leaves1") {
+            // turn off back face culling and add extra ambient light for leaves
+            meshNode->setBackCulling(false);
+            meshNode->setAmbientFactor(0.7);
+        }
+    });
+
+    // scale, rotation
+    float randomScale = 14 + 11.5f * (rand() / (float)RAND_MAX);
+    tree->setScale(randomScale);
+    float randomRotation = 2 * glm::pi<float>() * (rand() / (float)RAND_MAX);
+    tree->setRotation(randomRotation, glm::vec3(0, 1, 0));
+
+    // add to scene
+    papaNode->appendChild(tree);
+
+    return tree;
+}
+
+void distributeTrees(const std::vector<model::BasicMeshGroupNode *> &trees, float minDist, float maxDist, float collisionRadius) {
+    float collisionRadSq = collisionRadius * collisionRadius;
+    float maxMinDiff = (maxDist - minDist);
+
+    std::vector<glm::vec3> treePositions;
+
+    for each (auto tree in trees) {
+        glm::vec3 pos;
+
+        bool collision = true;
+        while (collision) {
+            // get x and z coordinates from -1 to 1
+            float randX = -1 + 2 * (rand() / (float)RAND_MAX);
+            float randZ = -1 + 2 * (rand() / (float)RAND_MAX);
+
+            // set the position so that it lies on the edge of a square with side length 2 (XZ plane, centered at the origin)
+            pos = glm::vec3(randX, 0 , randZ) * minDist;
+            pos /= glm::sqrt(randX*randX + randZ*randZ);
+
+            // adjust the position so that it lies outside the square with side length (2*minDist) and inside the square with side length (2*maxDist)
+            pos.x += randX * maxMinDiff;
+            pos.z += randZ * maxMinDiff;
+
+            // find a new position if the tree is too close to another tree
+            collision = false;
+            for each (auto &otherPos in treePositions) {
+                glm::vec3 diff = pos - otherPos;
+                if (glm::abs(diff.x * diff.z) < collisionRadSq) {
+                    collision = true;
+                    break;
+                }
+            }
+        }
+
+        tree->setPosition(pos);
+        treePositions.push_back(pos);
+    }
+}
+
 // Callback for when the window is resized
 void ResizeCallback(GLFWwindow* window, int width, int height){
     // Set OpenGL viewport based on framebuffer width and height
@@ -369,6 +497,7 @@ int MainFunction(void){
         model::Skybox *skybox = new model::Skybox(resource_manager_g.getOrLoadSkyboxTexture(resources::textures::noon_grass), skyboxTechnique);
         papaNode->appendChild(skybox);
 
+
         // Create the walls
         walls = new Walls(resource_manager_g, mtlThreeTermTechnique);
         papaNode->appendChild(walls);
@@ -439,9 +568,20 @@ int MainFunction(void){
         player->appendChild(cameraNodeFirst);
 
         model::SceneNode *ground = new model::BasicMeshNode(plane->meshes[0], mtlThreeTermTechnique);
-        ground->setScale(100);
+        ground->setScale(1000);
         ground->setPosition(0, 0, 0);
         papaNode->appendChild(ground);
+
+        std::vector<model::BasicMeshGroupNode *> outerFences;
+        createOuterFences(outerFences, mtlThreeTermTechnique);
+
+        // Randomly create and distribute trees (randomly selected model, rotation, scale, position)
+        std::vector<model::BasicMeshGroupNode *> trees;
+        int numTrees = 100;
+        for (int i = 0; i < numTrees; i++) {
+            trees.push_back(createRandomTree(mtlThreeTermTechnique));
+        }
+        distributeTrees(trees, player->XBOUND_POS + 10, player->XBOUND_POS + 30, 2.0f);
 
         acorns = new Acorns();
         papaNode->appendChild(acorns);
@@ -543,6 +683,12 @@ int MainFunction(void){
             glfwPollEvents();
         }
 
+        for each (auto fence in outerFences) {
+            delete fence;
+        }
+        for each (auto tree in trees) {
+            delete tree;
+        }
         delete mtlThreeTermTechnique;
         delete skyboxTechnique;
         delete rocketStreamTechnique;

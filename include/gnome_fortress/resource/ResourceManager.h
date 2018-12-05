@@ -35,6 +35,7 @@ public:
     //Load the full path of the audio clip
     void loadAudioClip(const std::string &relativePath);
     const char* getOrLoadAudioClip(const std::string &relativePath);
+    void unloadAudioClip(const std::string &relativePath);
 
     void loadTexture(const std::string &relativePath);
     model::Texture *getOrLoadTexture(const std::string &relativePath);
