@@ -34,6 +34,7 @@ using namespace irrklang;
 #include "gnome_fortress/game/Resources.h"
 #include "gnome_fortress/game/RocketStream.h"
 #include "gnome_fortress/game/PurpleRocketStream.h"
+#include "gnome_fortress/game/ShotgunStream.h"
 #include "gnome_fortress/game/RocketGround.h"
 #include "gnome_fortress/game/SporeGround.h"
 #include "gnome_fortress/game/Walls.h"
@@ -349,6 +350,9 @@ int MainFunction(void){
         GLuint purpleRocketStreamProgram = resource_manager_g.getOrLoadShaderProgram(resources::shaders::rocket_stream_purple);
         auto purpleRocketStreamTechnique = new PurpleRocketStreamTechnique(purpleRocketStreamProgram);
 
+        GLuint shotgunStreamProgram = resource_manager_g.getOrLoadShaderProgram(resources::shaders::shotgun_stream);
+        auto shotgunStreamTechnique = new ShotgunStreamTechnique(shotgunStreamProgram);
+
         GLuint sporeGroundProgram = resource_manager_g.getOrLoadShaderProgram(resources::shaders::spore_ground);
         auto sporeGroundTechnique = new SporeGroundTechnique(sporeGroundProgram);
 
@@ -373,7 +377,7 @@ int MainFunction(void){
         player->setPosition(0, 0.7f, 3.0f);
         papaNode->appendChild(player);
 
-        playerProjectiles = new Projectiles(&resource_manager_g, sporeGroundTechnique, rocketGroundTechnique, rocketStreamTechnique, purpleRocketStreamTechnique);
+        playerProjectiles = new Projectiles(&resource_manager_g, sporeGroundTechnique, rocketGroundTechnique, rocketStreamTechnique, purpleRocketStreamTechnique, shotgunStreamTechnique);
         papaNode->appendChild(playerProjectiles);
 
         //Create weapons
@@ -516,6 +520,10 @@ int MainFunction(void){
             purpleRocketStreamTechnique->setProjectionMatrix(active_camera_g->getProjection());
             purpleRocketStreamTechnique->setViewMatrix(active_camera_g->getView());
             purpleRocketStreamTechnique->setTimer(current_time);
+
+            shotgunStreamTechnique->setProjectionMatrix(active_camera_g->getProjection());
+            shotgunStreamTechnique->setViewMatrix(active_camera_g->getView());
+            shotgunStreamTechnique->setTimer(current_time);
 
             sporeGroundTechnique->setProjectionMatrix(active_camera_g->getProjection());
             sporeGroundTechnique->setViewMatrix(active_camera_g->getView());

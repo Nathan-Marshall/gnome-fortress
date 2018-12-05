@@ -5,7 +5,8 @@ namespace gnome_fortress {
 
 
         Projectiles::Projectiles(resource::ResourceManager *resource_manager, SporeGroundTechnique *sporeGroundTech, 
-        RocketGroundTechnique *rocketGroundTech, RocketStreamTechnique *rocketStreamTech, PurpleRocketStreamTechnique *purpleRocketStreamTech) {
+        RocketGroundTechnique *rocketGroundTech, RocketStreamTechnique *rocketStreamTech, 
+        PurpleRocketStreamTechnique *purpleRocketStreamTech, ShotgunStreamTechnique *shotgunStreamTech) {
             poisonPositions = new std::vector<std::pair<SporeGround*, float>>();
             explosPositions = new std::vector<std::pair<RocketGround*, float>>();
 
@@ -15,6 +16,7 @@ namespace gnome_fortress {
             rocketGroundEffect = rocketGroundTech;
             rocketStreamEffect = rocketStreamTech;
             purpleRocketStreamEffect = purpleRocketStreamTech;
+            shotgunStreamEffect = shotgunStreamTech;
         }
 
         void Projectiles::onUpdateSelf(float delta_time) {
@@ -123,6 +125,15 @@ namespace gnome_fortress {
             rocketEffect->setPower(2.0);
             
             return rocketEffect;
+        }
+
+        ShotgunStream* Projectiles::CreateShotgunTrail(Rock* rock) {
+            glm::vec3 rockPos = rock->getPosition();
+
+            ShotgunStream *rockEffect = new ShotgunStream(res_man->getOrLoadTexture(resources::textures::flame4x4), shotgunStreamEffect);
+            rockEffect->setPower(2.0);
+
+            return rockEffect;
         }
     }
 }

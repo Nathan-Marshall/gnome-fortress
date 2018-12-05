@@ -104,7 +104,7 @@ model::PointSet *PurpleRocketStream::CreateConeParticles(int num_particles) {
 
         // Define the normal and point based on theta, phi and the spray
         glm::vec3 normal = glm::normalize(glm::vec3(cos(theta) * d, trad, sin(theta) * d));
-        glm::vec3 position(0.2f * glm::normalize(glm::vec3(cos(theta) * d, trad, sin(theta) * d)));
+        glm::vec3 position(0.2f * normal);
         glm::vec3 color(i / (float)num_particles, 0.0, 1.0 - (i / (float)num_particles)); // We can use the color for debug, if needed
 
         // Add vectors to the data buffer
@@ -125,7 +125,7 @@ model::PointSet *PurpleRocketStream::CreateConeParticles(int num_particles) {
     delete[] particle;
 
     // Create resource
-    return new model::PointSet("Rocket Stream", vbo, num_particles, GL_POINTS);
+    return new model::PointSet("Purple Rocket Stream", vbo, num_particles, GL_POINTS);
 }
 
 }

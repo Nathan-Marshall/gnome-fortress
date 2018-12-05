@@ -27,10 +27,10 @@ const float pi_over_two = 1.5707963268;
 const float two_pi = 2.0*pi;
 
 
-const vec3 color0 = vec3(0.03, 0.03, 0.8);
-const vec3 color1 = vec3(0.8, 0.4, 0.03);
+const vec3 color0 = vec3(0.55, 0.27, 0.07);
+const vec3 color1 = vec3(0.55, 0.27, 0.07);
 const float color1Circtime = 0.7f;
-const vec3 color2 = vec3(0.1, 0.1, 0.1);
+const vec3 color2 = vec3(0.55, 0.27, 0.07);
 const float color2Circtime = 0.86f;
 
 vec3 getColor(float circtime) {

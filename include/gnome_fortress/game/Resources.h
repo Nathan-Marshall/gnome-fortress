@@ -35,6 +35,7 @@ namespace shaders {
 
     const std::string rocket_stream = shaders::dirname + "rocket_stream";
     const std::string rocket_stream_purple = shaders::dirname + "rocket_stream_purple";
+    const std::string shotgun_stream = shaders::dirname + "shotgun_stream";
     const std::string spore_ground = shaders::dirname + "spore_ground";
     const std::string rocket_ground = shaders::dirname + "rocket_ground";
     const std::string skybox = shaders::dirname + "skybox";
