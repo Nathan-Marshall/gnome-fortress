@@ -636,6 +636,7 @@ int MainFunction(void){
             enemies->ProcessCollisions(playerProjectiles, delta_time);
 
             player->ProcessCollisions(walls);
+            playerProjectiles->ProcessCollisions(walls);
 
             acorns->ProcessEnemyCollisions(enemies, delta_time);
 
