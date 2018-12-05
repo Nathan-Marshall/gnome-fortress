@@ -172,7 +172,22 @@ namespace game {
 
         CheckBounds(velocity * dt);
 
-        translate(velocity * dt);
+        if (hittingWallInside) {
+            velocity = glm::normalize(getPosition() - glm::vec3(0, 0, 0));
+            translate(velocity * -1.0f * dt);
+            velocity = glm::vec3(0, 0, 0);
+            hittingWallInside = false;
+        }
+        else if (hittingWallOutside) {
+            velocity = glm::normalize(getPosition() - glm::vec3(0, 0, 0));
+            translate(velocity * 1.0f * dt);
+            velocity = glm::vec3(0, 0, 0);
+            hittingWallOutside = false;
+        }
+        else {
+            translate(velocity * dt);
+        }
+        
     }
 
     void Player::CheckBounds(glm::vec3 translationAmount) {
@@ -207,6 +222,48 @@ namespace game {
         }
 
         velocity -= glm::vec3(diffX, diffY, diffZ);
+    }
+
+    void Player::ProcessCollisions(Walls* walls) {
+        //Process player collisions with the walls
+        std::vector<std::vector<Wall*>>::iterator wallIt;
+        std::vector<std::pair<glm::vec3, int>>::iterator holeIt;
+
+        bool atHole = false;
+
+        for (wallIt = walls->walls.begin(); wallIt < walls->walls.end(); wallIt++) {
+            glm::vec3 playerPos = getPosition();
+
+            if ((*wallIt)[0]) {
+                glm::vec3 wallPos = (*wallIt)[0]->getPosition();
+
+                float wallDist = glm::length(wallPos - glm::vec3(0, 0, 0));
+
+                float dist = glm::length(playerPos - glm::vec3(0, 0, 0)) - wallDist;
+                float ringDist = abs(dist);
+                
+                if (ringDist < Walls::WALL_WIDTH / 4 && playerPos.y < Walls::WALL_HEIGHT / 3) {
+                    //Check to see if we are at a wall hole position
+                    for (holeIt = walls->wallHoles.begin(); holeIt < walls->wallHoles.end(); holeIt++) {
+                        float distToPlayer = glm::length(playerPos - (*holeIt).first);
+
+                        if (distToPlayer < (*wallIt)[0]->GetLength() / 2) {
+                            atHole = true;
+                        }
+                    }
+                    if (!atHole) {
+                        //We have a collision
+                        if (dist > 0) {
+                            hittingWallOutside = true;
+                        }
+                        else {
+                            hittingWallInside = true;
+                        }
+                    }
+                }
+            }
+        }
+        
     }
 }
 }

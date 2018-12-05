@@ -635,11 +635,12 @@ int MainFunction(void){
 
             enemies->ProcessCollisions(playerProjectiles, delta_time);
 
+            player->ProcessCollisions(walls);
+
             acorns->ProcessEnemyCollisions(enemies, delta_time);
 
             // Update the scene nodes
             papaNode->update(delta_time);
-
 
             // Clear background
             glClearColor(viewport_background_color_g[0], 

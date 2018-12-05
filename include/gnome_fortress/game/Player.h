@@ -9,6 +9,7 @@
 #include "gnome_fortress/game/RocketStream.h"
 #include "gnome_fortress/model/BasicMeshGroupNode.h"
 #include "gnome_fortress/resource/ResourceManager.h"
+#include "Walls.h"
 
 
 namespace gnome_fortress{
@@ -62,6 +63,8 @@ public:
     void setWeaponIndex(int index);
     const int getWeaponIndex();
 
+    void ProcessCollisions(Walls* walls);
+
 protected:
     void onUpdateSelf(float dt) override;
 
@@ -75,6 +78,9 @@ private:
     bool right;
     bool up;
     bool down;
+
+    bool hittingWallInside;
+    bool hittingWallOutside;
 
     glm::vec3 velocity;
 
