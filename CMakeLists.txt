@@ -27,6 +27,8 @@ set(HDRS
     include/gnome_fortress/game/RocketStream.h
     include/gnome_fortress/game/PurpleRocketStreamTechnique.h
     include/gnome_fortress/game/PurpleRocketStream.h
+    include/gnome_fortress/game/ShotgunStream.h
+    include/gnome_fortress/game/ShotgunStreamTechnique.h
     include/gnome_fortress/game/RocketStreamTechnique.h
     include/gnome_fortress/game/SporeGround.h
     include/gnome_fortress/game/SporeGroundTechnique.h
@@ -87,6 +89,8 @@ set(SRCS
     src/gnome_fortress/game/RocketStreamTechnique.cpp
     src/gnome_fortress/game/PurpleRocketStream.cpp
     src/gnome_fortress/game/PurpleRocketStreamTechnique.cpp
+    src/gnome_fortress/game/ShotgunStream.cpp
+    src/gnome_fortress/game/ShotgunStreamTechnique.cpp
     src/gnome_fortress/game/SporeGround.cpp
     src/gnome_fortress/game/SporeGroundTechnique.cpp
     src/gnome_fortress/game/RocketGround.cpp
