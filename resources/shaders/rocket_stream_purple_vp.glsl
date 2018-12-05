@@ -66,5 +66,5 @@ void main()
     
     // Define amount of blending depending on the cyclic time
     float alpha = (1.0 - circtime*circtime) * power;
-    particle_color = vec4(getColor(circtime), alpha*0.2);
+    particle_color = vec4(getColor(circtime), alpha*0.8);
 }

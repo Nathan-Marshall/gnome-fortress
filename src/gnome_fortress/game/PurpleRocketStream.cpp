@@ -7,7 +7,7 @@ namespace gnome_fortress {
 namespace game {
 
 PurpleRocketStream::PurpleRocketStream(const model::Texture *texture, PurpleRocketStreamTechnique *technique)
-    : pointSet(CreateConeParticles(3000)),
+    : pointSet(CreateConeParticles(50)),
       texture(texture),
       technique(technique),
       power(1.0f) {
@@ -40,7 +40,7 @@ void PurpleRocketStream::onDrawSelf(const glm::mat4 &parent_transform, unsigned 
 
     // enable blending
     glEnable(GL_BLEND);
-    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBlendEquationSeparate(GL_FUNC_ADD, GL_MAX);
 
     // bind buffers for mesh
@@ -89,8 +89,8 @@ model::PointSet *PurpleRocketStream::CreateConeParticles(int num_particles) {
         throw e;
     }
 
-    float r = 0.05;
-    float trad = 0.2; // Defines the starting point of the particles along the normal
+    float r = 3.0;
+    float trad = 2.0; // Defines the starting point of the particles along the normal
     float u, v, d, theta; // Work variables
 
     for (int i = 0; i < num_particles; i++) {
@@ -104,7 +104,7 @@ model::PointSet *PurpleRocketStream::CreateConeParticles(int num_particles) {
 
         // Define the normal and point based on theta, phi and the spray
         glm::vec3 normal = glm::normalize(glm::vec3(cos(theta) * d, trad, sin(theta) * d));
-        glm::vec3 position(0);
+        glm::vec3 position(0.2f * glm::normalize(glm::vec3(cos(theta) * d, trad, sin(theta) * d)));
         glm::vec3 color(i / (float)num_particles, 0.0, 1.0 - (i / (float)num_particles)); // We can use the color for debug, if needed
 
         // Add vectors to the data buffer
