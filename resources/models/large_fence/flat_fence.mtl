@@ -1,0 +1,36 @@
+# Blender MTL File: 'None'
+# Material Count: 3
+
+newmtl F_M1_Post.001
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.300000 0.300000 0.300000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F_M1_Old_Post_Base_Color.png
+
+newmtl F_M1_Support.001
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.300000 0.300000 0.300000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd F_M1_Old_Support_Base_Color.png
+
+newmtl FenceFlatRender
+Ns 94.117647
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd fence_render.png
+map_d fence_render_alpha.png

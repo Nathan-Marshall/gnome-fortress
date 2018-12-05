@@ -7,24 +7,32 @@ namespace renderer {
 
 BasicMeshNodeTechnique::BasicMeshNodeTechnique(GLuint program)
     : BasicProjectionTechnique(program),
+      ambient_factor(0),
       diffuse_color(0, 0, 0),
       specular_color(0, 0, 0),
       specular_exponent(0),
+      alpha(1),
       diffuse_map_index(0),
       diffuse_map_on(0),
       gloss_map_index(1),
       gloss_map_on(0),
+      alpha_map_index(2),
+      alpha_map_on(0),
       env_map(nullptr),
-      env_map_index(2),
+      env_map_index(3),
       env_map_factor(0) {
 
+    addUniform(Uniform(program, "ambient_factor", GL_FLOAT, 1, 1, 1), &ambient_factor);
     addUniform(Uniform(program, "diffuse_color", GL_FLOAT, 1, 3, 1), glm::value_ptr(diffuse_color));
     addUniform(Uniform(program, "specular_color", GL_FLOAT, 1, 3, 1), glm::value_ptr(specular_color));
     addUniform(Uniform(program, "specular_exponent", GL_FLOAT, 1, 1, 1), &specular_exponent);
+    addUniform(Uniform(program, "alpha", GL_FLOAT, 1, 1, 1), &alpha);
     addUniform(Uniform(program, "diffuse_map", GL_INT, 1, 1, 1), &diffuse_map_index);
     addUniform(Uniform(program, "diffuse_map_on", GL_INT, 1, 1, 1), &diffuse_map_on);
     addUniform(Uniform(program, "gloss_map", GL_INT, 1, 1, 1), &gloss_map_index);
     addUniform(Uniform(program, "gloss_map_on", GL_INT, 1, 1, 1), &gloss_map_on);
+    addUniform(Uniform(program, "alpha_map", GL_INT, 1, 1, 1), &alpha_map_index);
+    addUniform(Uniform(program, "alpha_map_on", GL_INT, 1, 1, 1), &alpha_map_on);
     addUniform(Uniform(program, "env_map", GL_INT, 1, 1, 1), &env_map_index);
     addUniform(Uniform(program, "env_map_factor", GL_FLOAT, 1, 1, 1), &env_map_factor);
 
@@ -32,6 +40,10 @@ BasicMeshNodeTechnique::BasicMeshNodeTechnique(GLuint program)
     addVertexAttribute(renderer::VertexAttribute(program, "normal", 3, GL_FLOAT, GL_FALSE));
     addVertexAttribute(renderer::VertexAttribute(program, "color", 3, GL_FLOAT, GL_FALSE));
     addVertexAttribute(renderer::VertexAttribute(program, "uv", 2, GL_FLOAT, GL_FALSE));
+}
+
+void BasicMeshNodeTechnique::setAmbientFactor(float factor) {
+    ambient_factor = factor;
 }
 
 void BasicMeshNodeTechnique::setDiffuseColor(const glm::vec3 &color) {
@@ -46,6 +58,10 @@ void BasicMeshNodeTechnique::setSpecularExponent(GLfloat exponent) {
     specular_exponent = exponent;
 }
 
+void BasicMeshNodeTechnique::setAlpha(GLfloat a) {
+    alpha = a;
+}
+
 void BasicMeshNodeTechnique::bindDiffuseTexture(const model::Texture *texture) {
     glActiveTexture(GL_TEXTURE0); // activate the first texture
     diffuse_map_on = texture == nullptr ? 0 : 1;
@@ -58,6 +74,12 @@ void BasicMeshNodeTechnique::bindGlossTexture(const model::Texture *texture) {
     bindTexture(texture);
 }
 
+void BasicMeshNodeTechnique::bindAlphaTexture(const model::Texture *texture) {
+    glActiveTexture(GL_TEXTURE2); // activate the second texture
+    alpha_map_on = texture == nullptr ? 0 : 1;
+    bindTexture(texture);
+}
+
 void BasicMeshNodeTechnique::setEnvMapFactor(float factor) {
     env_map_factor = factor;
 }
@@ -67,7 +89,7 @@ void BasicMeshNodeTechnique::setEnvMap(const model::Texture *texture) {
 }
 
 void BasicMeshNodeTechnique::bindEnvMap() {
-    glActiveTexture(GL_TEXTURE2); // activate the third texture
+    glActiveTexture(GL_TEXTURE3); // activate the third texture
     bindCubeMap(env_map);
 }
 

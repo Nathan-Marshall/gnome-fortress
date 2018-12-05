@@ -10,14 +10,22 @@ BasicMeshNode::BasicMeshNode(
         const Mesh *mesh,
         renderer::BasicMeshNodeTechnique *technique)
     : mesh(mesh),
+      backCulling(true),
+      blendingEnabled(false),
+      ambient_factor(0.3),
       env_map_factor(0),
       technique(technique) {
 
 }
 
 void BasicMeshNode::onDrawSelf(const glm::mat4 &parent_transform, unsigned int pass) const {
-    // only draw during the first pass (no blending)
-    if (pass != 0) {
+    // if not blending, only draw during the first pass
+    if (!blendingEnabled && pass != 0) {
+        return;
+    }
+
+    // if blending, only draw during the second pass
+    if (blendingEnabled && pass != 1) {
         return;
     }
 
@@ -28,26 +36,38 @@ void BasicMeshNode::onDrawSelf(const glm::mat4 &parent_transform, unsigned int p
         glDepthMask(GL_TRUE);
 
         // Set culling of back faces
-        glCullFace(GL_BACK);
-        glEnable(GL_CULL_FACE);
+        if (backCulling) {
+            glCullFace(GL_BACK);
+            glEnable(GL_CULL_FACE);
+        } else {
+            glDisable(GL_CULL_FACE);
+        }
 
-        // disable blending
-        glDisable(GL_BLEND);
+        if (blendingEnabled) {
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glBlendEquation(GL_FUNC_ADD);
+        } else {
+            glDisable(GL_BLEND);
+        }
 
         // bind buffers for mesh
         glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
         
         // set uniforms and bind textures
+        technique->setAmbientFactor(ambient_factor);
         technique->setDiffuseColor(mesh->material->Kd);
         technique->setSpecularColor(mesh->material->Ks);
         technique->setSpecularExponent(mesh->material->Ns);
+        technique->setAlpha(mesh->material->d);
         technique->bindDiffuseTexture(mesh->material->map_Kd);
         technique->bindGlossTexture(mesh->material->map_Ks);
+        technique->bindAlphaTexture(mesh->material->map_d);
 
         // if env_map_factor is higher than 0, then bind the texture for environment mapping
         technique->setEnvMapFactor(env_map_factor);
-        if (env_map_factor) {
+        if (env_map_factor > 0) {
             technique->bindEnvMap();
         }
 
@@ -67,6 +87,18 @@ const Mesh *BasicMeshNode::getMesh() const {
 
 renderer::BasicMeshNodeTechnique *BasicMeshNode::getTechnique() const {
     return technique;
+}
+
+void BasicMeshNode::setBackCulling(bool culling) {
+    backCulling = culling;
+}
+
+void BasicMeshNode::setBlendingEnabled(bool enabled) {
+    blendingEnabled = enabled;
+}
+
+void BasicMeshNode::setAmbientFactor(float factor) {
+    ambient_factor = factor;
 }
 
 void BasicMeshNode::setEnvMapFactor(float factor) {

@@ -49,7 +49,7 @@ namespace game {
 
     const float Player::XBOUND_POS = 35.0f;
     const float Player::XBOUND_NEG = -35.0f;
-    const float Player::YBOUND_POS = 50.0f;
+    const float Player::YBOUND_POS = 20.0f;
     const float Player::YBOUND_NEG = 0.0f;
     const float Player::ZBOUND_POS = 35.0f;
     const float Player::ZBOUND_NEG = -35.0f;

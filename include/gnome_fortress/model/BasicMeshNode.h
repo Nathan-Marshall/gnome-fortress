@@ -19,10 +19,19 @@ public:
 
     renderer::BasicMeshNodeTechnique *getTechnique() const;
 
+    void setBackCulling(bool culling);
+    void setBlendingEnabled(bool enabled);
+    /* Note that ambient factor values do not come from an MTL file because it is typically more of a global property
+     * and if we change it, we don't want to have to do so in every MTL file. The reason it is a property at all is that
+     * certain objects in the scene are exceptions that we want more ambiently lit (like tree leaves).*/
+    void setAmbientFactor(float factor);
     void setEnvMapFactor(float factor);
 
 private:
     const model::Mesh *mesh;
+    bool backCulling;
+    bool blendingEnabled;
+    float ambient_factor;
     float env_map_factor;
     renderer::BasicMeshNodeTechnique *technique;
 };

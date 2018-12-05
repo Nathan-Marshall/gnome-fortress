@@ -1,0 +1,8 @@
+Conifer tree for games,.
+I also used:
+Ngplant for the building the general shape,(i heavily edited it afterwards),
+Cgtextures (the bark diffuse texture template).
+
+I will appreciate if you credit me
+
+Veleran    2010
