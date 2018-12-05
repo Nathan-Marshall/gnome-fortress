@@ -183,6 +183,21 @@ namespace gnome_fortress {
                                 projecIt++;
                             }
                         }
+                        else if (glm::length(projecPos - glm::vec3(0, 0, 0)) < 2.0 && projecPos.y < 1.5) {
+                            Spore* s = dynamic_cast<Spore*>((*projecIt));
+                            Rocket* r = dynamic_cast<Rocket*>((*projecIt));
+
+                            if (s) {
+                                CreatePoison(s);
+                            }
+                            else if (r) {
+                                CreateExplosion(r);
+                            }
+
+                            //We have a collision, so remove the projectile
+                            (*projecIt)->removeFromParent();
+                            projecIt = projectiles.erase(projecIt);
+                        }
                         else {
                             projecIt++;
                         }

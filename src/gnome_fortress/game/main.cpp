@@ -497,7 +497,6 @@ int MainFunction(void){
         model::Skybox *skybox = new model::Skybox(resource_manager_g.getOrLoadSkyboxTexture(resources::textures::noon_grass), skyboxTechnique);
         papaNode->appendChild(skybox);
 
-
         // Create the walls
         walls = new Walls(resource_manager_g, mtlThreeTermTechnique);
         papaNode->appendChild(walls);

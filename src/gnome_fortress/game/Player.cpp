@@ -302,6 +302,12 @@ namespace game {
                 hittingEnemy = true;
             }
         }
+
+        
+        //Final check to see if the player would collide with the acorns
+        if (glm::length(getPosition() - glm::vec3(0, 0, 0)) < 2.0 && getPosition().y < 2.0) {
+            hittingWallOutside = true;
+        }
     }
 }
 }
