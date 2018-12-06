@@ -38,8 +38,8 @@ float Acorn::getCurrentHealth() {
     return currentHealth;
 }
 
-void Acorn::takeDamage() {
-    currentHealth -= 3.0f;
+void Acorn::takeDamage(float delta_time) {
+    currentHealth -= 12.0f * delta_time;
     setScale((currentHealth / MAX_HEALTH) * scale);
 }
 

@@ -19,9 +19,16 @@ Rocket::Rocket(
 }
 
 const float Rocket::DAMAGE = 20.0f;
+const float Rocket::DAMAGE_RAD = 4.0f;
+const float Rocket::EXPLOSION_DAMAGE = 50.0f;
+const float Rocket::EXPLOSION_LIFESPAN = 0.5f;
 
 float Rocket::GetDamage() {
     return DAMAGE;
+}
+
+float Rocket::GetDamageRad() {
+    return DAMAGE_RAD;
 }
 
 void Rocket::onUpdateSelf(float dt) {

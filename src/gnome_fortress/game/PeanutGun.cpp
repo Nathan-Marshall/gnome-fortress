@@ -64,8 +64,10 @@ std::vector<Projectile*> PeanutGun::fireBullet(glm::vec3 position) {
 
         vel *= FIRING_VELOCITY;
 
-        Projectile *p = new Rock(bulletMeshGroup, getTechnique(),
+        Rock *p = new Rock(bulletMeshGroup, getTechnique(),
             glm::vec3(getGlobalTransform() * glm::vec4(0.03, 0.5, -0.25, 1)), vel);
+
+        p->appendChild(bullets->CreateShotgunTrail(p));
 
         projecs.push_back(p);
     }

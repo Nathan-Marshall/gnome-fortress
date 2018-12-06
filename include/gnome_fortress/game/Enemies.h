@@ -14,6 +14,8 @@
 #include "Squirrel.h"
 #include "Spider.h"
 #include "irrKlang\irrKlang.h"
+#include "Spore.h"
+#include "Rocket.h"
 
 namespace gnome_fortress {
 namespace game {
@@ -30,8 +32,9 @@ public:
     std::vector<Squirrel*> squirrels;
     std::vector<Spider*> spiders;
 
-    void ProcessCollisions(Projectiles *projectiles);
+    void ProcessCollisions(Projectiles *projectiles, float delta_time);
     void ProcessProjectileCollisions(Projectiles *projectiles);
+    void ProcessAOECollisions(std::vector<std::pair<SporeGround*, float>>* poisons, std::vector<std::pair<RocketGround*, float>>* explosions, float delta_time);
     void ProcessWallCollisions();
 protected:
 
