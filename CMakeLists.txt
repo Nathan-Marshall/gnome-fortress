@@ -14,26 +14,26 @@ set(HDRS
     include/gnome_fortress/game/Enemies.h
     include/gnome_fortress/game/Enemy.h
     include/gnome_fortress/game/MushroomGun.h
-    include/gnome_fortress/game/SiegeTurtle.h
-    include/gnome_fortress/game/Squirrel.h
-    include/gnome_fortress/game/Spider.h
     include/gnome_fortress/game/PeanutGun.h
     include/gnome_fortress/game/PineconeGun.h
     include/gnome_fortress/game/Projectile.h
     include/gnome_fortress/game/Projectiles.h
+    include/gnome_fortress/game/PurpleRocketStreamTechnique.h
+    include/gnome_fortress/game/PurpleRocketStream.h
     include/gnome_fortress/game/Resources.h
     include/gnome_fortress/game/Rock.h
     include/gnome_fortress/game/Rocket.h
     include/gnome_fortress/game/RocketStream.h
-    include/gnome_fortress/game/PurpleRocketStreamTechnique.h
-    include/gnome_fortress/game/PurpleRocketStream.h
-    include/gnome_fortress/game/ShotgunStream.h
-    include/gnome_fortress/game/ShotgunStreamTechnique.h
     include/gnome_fortress/game/RocketStreamTechnique.h
-    include/gnome_fortress/game/SporeGround.h
-    include/gnome_fortress/game/SporeGroundTechnique.h
     include/gnome_fortress/game/RocketGround.h
     include/gnome_fortress/game/RocketGroundTechnique.h
+    include/gnome_fortress/game/SiegeTurtle.h
+    include/gnome_fortress/game/Squirrel.h
+    include/gnome_fortress/game/Spider.h
+    include/gnome_fortress/game/ShotgunStream.h
+    include/gnome_fortress/game/ShotgunStreamTechnique.h
+    include/gnome_fortress/game/SporeGround.h
+    include/gnome_fortress/game/SporeGroundTechnique.h
     include/gnome_fortress/game/Spore.h
     include/gnome_fortress/game/Weapon.h
     include/gnome_fortress/game/Wall.h
@@ -71,32 +71,33 @@ set(SRCS
     src/gnome_fortress/camera/SceneNodeCamera.cpp
 
     src/gnome_fortress/game/Player.cpp
+
     src/gnome_fortress/game/Acorn.cpp
     src/gnome_fortress/game/Acorns.cpp
     src/gnome_fortress/game/Enemies.cpp
     src/gnome_fortress/game/Enemy.cpp
+    src/gnome_fortress/game/main.cpp
     src/gnome_fortress/game/MushroomGun.cpp
-    src/gnome_fortress/game/SiegeTurtle.cpp
-    src/gnome_fortress/game/Squirrel.cpp
-    src/gnome_fortress/game/Spider.cpp
     src/gnome_fortress/game/PeanutGun.cpp
     src/gnome_fortress/game/PineconeGun.cpp
     src/gnome_fortress/game/Projectile.cpp
     src/gnome_fortress/game/Projectiles.cpp
+    src/gnome_fortress/game/PurpleRocketStream.cpp
+    src/gnome_fortress/game/PurpleRocketStreamTechnique.cpp
     src/gnome_fortress/game/Rock.cpp
     src/gnome_fortress/game/Rocket.cpp
     src/gnome_fortress/game/RocketStream.cpp
     src/gnome_fortress/game/RocketStreamTechnique.cpp
-    src/gnome_fortress/game/PurpleRocketStream.cpp
-    src/gnome_fortress/game/PurpleRocketStreamTechnique.cpp
+    src/gnome_fortress/game/RocketGround.cpp
+    src/gnome_fortress/game/RocketGroundTechnique.cpp
+    src/gnome_fortress/game/SiegeTurtle.cpp
+    src/gnome_fortress/game/Squirrel.cpp
+    src/gnome_fortress/game/Spider.cpp
     src/gnome_fortress/game/ShotgunStream.cpp
     src/gnome_fortress/game/ShotgunStreamTechnique.cpp
     src/gnome_fortress/game/SporeGround.cpp
     src/gnome_fortress/game/SporeGroundTechnique.cpp
-    src/gnome_fortress/game/RocketGround.cpp
-    src/gnome_fortress/game/RocketGroundTechnique.cpp
     src/gnome_fortress/game/Spore.cpp
-    src/gnome_fortress/game/main.cpp
     src/gnome_fortress/game/Weapon.cpp
     src/gnome_fortress/game/Wall.cpp
     src/gnome_fortress/game/Walls.cpp
