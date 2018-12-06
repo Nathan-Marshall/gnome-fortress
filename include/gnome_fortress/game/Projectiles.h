@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "Projectile.h"
+#include "Walls.h"
 #include "Spore.h"
 #include "Rocket.h"
 #include "Rock.h"
@@ -45,6 +46,8 @@ namespace gnome_fortress {
             RocketStream* Projectiles::CreateRocketTrail(Rocket* rocket);
 
             ShotgunStream* Projectiles::CreateShotgunTrail(Rock* rock);
+
+            void ProcessCollisions(Walls* walls);
         protected:
 
 

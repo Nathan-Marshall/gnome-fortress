@@ -74,7 +74,7 @@ void Enemies::ProcessProjectileCollisions(Projectiles *projectiles) {
         for (projecIt = projectiles->projectiles.begin(); projecIt < projectiles->projectiles.end();) {
             collision = false;
 
-            if (glm::length((*projecIt)->getPosition() - (*squirrelIt)->getPosition()) <= (*squirrelIt)->GetBoundingRadius()) {
+            if (glm::length((*projecIt)->getPosition() - (*squirrelIt)->getPosition()) <= (*squirrelIt)->GetBoundingRadius() * 1.25) {
                 collision = true;
             }
 
@@ -114,7 +114,7 @@ void Enemies::ProcessProjectileCollisions(Projectiles *projectiles) {
         for (projecIt = projectiles->projectiles.begin(); projecIt < projectiles->projectiles.end();) {
             collision = false;
 
-            if (glm::length((*projecIt)->getPosition() - (*spiderIt)->getPosition()) <= (*spiderIt)->GetBoundingRadius()) {
+            if (glm::length((*projecIt)->getPosition() - (*spiderIt)->getPosition()) <= (*spiderIt)->GetBoundingRadius() * 1.25) {
                 collision = true;
             }
 

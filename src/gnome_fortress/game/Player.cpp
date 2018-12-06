@@ -172,7 +172,27 @@ namespace game {
 
         CheckBounds(velocity * dt);
 
-        translate(velocity * dt);
+        if (hittingWallInside) {
+            velocity = glm::normalize(getPosition() - glm::vec3(0, 0, 0));
+            translate(velocity * -1.0f * dt);
+            velocity = glm::vec3(0, 0, 0);
+            hittingWallInside = false;
+        }
+        else if (hittingWallOutside) {
+            velocity = glm::normalize(getPosition() - glm::vec3(0, 0, 0));
+            translate(velocity * 1.0f * dt);
+            velocity = glm::vec3(0, 0, 0);
+            hittingWallOutside = false;
+        }
+        else if (hittingEnemy) {
+            translate(velocity * -1.0f * dt);
+            velocity *= -0.5;
+            hittingEnemy = false;
+        }
+        else {
+            translate(velocity * dt);
+        }
+        
     }
 
     void Player::CheckBounds(glm::vec3 translationAmount) {
@@ -207,6 +227,87 @@ namespace game {
         }
 
         velocity -= glm::vec3(diffX, diffY, diffZ);
+    }
+
+    void Player::ProcessCollisions(Walls* walls, Enemies* enemies) {
+        //Process player collisions with the walls
+        std::vector<std::vector<Wall*>>::iterator wallIt;
+        std::vector<std::pair<glm::vec3, int>>::iterator holeIt;
+
+        bool atHole = false;
+
+        for (wallIt = walls->walls.begin(); wallIt < walls->walls.end(); wallIt++) {
+            glm::vec3 playerPos = getPosition();
+
+            if ((*wallIt)[0]) {
+                glm::vec3 wallPos = (*wallIt)[0]->getPosition();
+
+                float wallDist = glm::length(wallPos - glm::vec3(0, 0, 0));
+
+                float dist = glm::length(playerPos - glm::vec3(0, 0, 0)) - wallDist;
+                float ringDist = abs(dist);
+
+                if (ringDist < Walls::WALL_WIDTH / 4 && playerPos.y < Walls::WALL_HEIGHT / 3) {
+                    //Check to see if we are at a wall hole position
+                    for (holeIt = walls->wallHoles.begin(); holeIt < walls->wallHoles.end(); holeIt++) {
+                        float distToPlayer = glm::length(playerPos - (*holeIt).first);
+
+                        if (distToPlayer < (*wallIt)[0]->GetLength() / 1.5) {
+                            atHole = true;
+                        }
+                    }
+                    if (!atHole) {
+                        //We have a collision
+                        if (dist > 0) {
+                            hittingWallOutside = true;
+                        }
+                        else {
+                            hittingWallInside = true;
+                        }
+                    }
+                }
+            }
+        }
+
+
+        //Process player collisions with enemies
+        std::vector<SiegeTurtle*>::iterator turtleIt;
+        std::vector<Squirrel*>::iterator squirrelIt;
+        std::vector<Spider*>::iterator spiderIt;
+
+        for (turtleIt = enemies->turtles.begin(); turtleIt < enemies->turtles.end(); turtleIt++) {
+            glm::vec3 playerPos = getPosition();
+            glm::vec3 turtlePos = (*turtleIt)->getPosition();
+
+            if (glm::length(playerPos - turtlePos) < (*turtleIt)->GetBoundingRadius()) {
+                //We have a collision
+                hittingEnemy = true;
+            }
+        }
+        for (squirrelIt = enemies->squirrels.begin(); squirrelIt < enemies->squirrels.end(); squirrelIt++) {
+            glm::vec3 playerPos = getPosition();
+            glm::vec3 squirrelPos = (*squirrelIt)->getPosition();
+
+            if (glm::length(playerPos - squirrelPos) < (*squirrelIt)->GetBoundingRadius()) {
+                //We have a collision
+                hittingEnemy = true;
+            }
+        }
+        for (spiderIt = enemies->spiders.begin(); spiderIt < enemies->spiders.end(); spiderIt++) {
+            glm::vec3 playerPos = getPosition();
+            glm::vec3 spiderPos = (*spiderIt)->getPosition();
+
+            if (glm::length(playerPos - spiderPos) < (*spiderIt)->GetBoundingRadius()) {
+                //We have a collision
+                hittingEnemy = true;
+            }
+        }
+
+        
+        //Final check to see if the player would collide with the acorns
+        if (glm::length(getPosition() - glm::vec3(0, 0, 0)) < 2.0 && getPosition().y < 2.0) {
+            hittingWallOutside = true;
+        }
     }
 }
 }

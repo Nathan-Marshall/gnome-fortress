@@ -497,7 +497,6 @@ int MainFunction(void){
         model::Skybox *skybox = new model::Skybox(resource_manager_g.getOrLoadSkyboxTexture(resources::textures::noon_grass), skyboxTechnique);
         papaNode->appendChild(skybox);
 
-
         // Create the walls
         walls = new Walls(resource_manager_g, mtlThreeTermTechnique);
         papaNode->appendChild(walls);
@@ -635,11 +634,13 @@ int MainFunction(void){
 
             enemies->ProcessCollisions(playerProjectiles, delta_time);
 
+            player->ProcessCollisions(walls, enemies);
+            playerProjectiles->ProcessCollisions(walls);
+
             acorns->ProcessEnemyCollisions(enemies, delta_time);
 
             // Update the scene nodes
             papaNode->update(delta_time);
-
 
             // Clear background
             glClearColor(viewport_background_color_g[0], 

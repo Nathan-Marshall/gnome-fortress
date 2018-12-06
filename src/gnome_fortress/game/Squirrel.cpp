@@ -94,19 +94,19 @@ void Squirrel::onUpdateSelf(float dt) {
         //Move towards the hole
         else if (shortestDist != 1000 && currentRing > 0) {
             if (orbitDeg > 0.1) {
-                orbit(glm::angleAxis((sign * 10 * dt) * glm::pi<float>() / 180.0f, glm::vec3(0, 1, 0)), glm::vec3(0, 0.5, 0));
+                orbit(glm::angleAxis((sign * 10 * dt) * glm::pi<float>() / 180.0f, glm::vec3(0, 1, 0)), glm::vec3(0, 0.25, 0));
                 orbitDeg -= 10 * dt;
             }
             else {
                 glm::vec3 vel = glm::normalize(moveVec) * moveSpeed;
-                translate(glm::vec3(-vel.x, -vel.y, -vel.z) * dt);
+                translate(glm::vec3(-vel.x, 0.0, -vel.z) * dt);
             }
             
         }
 
         //Move to the origin if we are in the middle section
         else {
-            glm::vec3 moveDir = glm::normalize(getPosition() - glm::vec3(0, 0.5, 0));
+            glm::vec3 moveDir = glm::normalize(getPosition() - glm::vec3(0, 0.25, 0));
             glm::vec3 vel = moveDir * moveSpeed;
             translate(glm::vec3(-vel.x, -vel.y, -vel.z) * dt);
         }
@@ -114,8 +114,8 @@ void Squirrel::onUpdateSelf(float dt) {
     else {
 
         //move back a bit, and reset the flag
-        glm::vec3 moveDir = glm::normalize(getPosition() - glm::vec3(0, 0.5, 0));
-        translate(glm::vec3(moveDir.x, moveDir.y, moveDir.z) * 1.0f);
+        glm::vec3 moveDir = glm::normalize(getPosition());
+        translate(glm::vec3(moveDir.x, 0.0, moveDir.z) * 1.0f);
         hittingWall = false;
     }
 }

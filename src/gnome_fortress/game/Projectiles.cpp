@@ -135,5 +135,75 @@ namespace gnome_fortress {
 
             return rockEffect;
         }
+
+        void Projectiles::ProcessCollisions(Walls* walls) {
+            std::vector<std::vector<Wall*>>::iterator wallIt;
+            std::vector<Projectile*>::iterator projecIt;
+            std::vector<std::pair<glm::vec3, int>>::iterator holeIt;
+
+            bool atHole = false;
+
+            for (wallIt = walls->walls.begin(); wallIt < walls->walls.end(); wallIt++) {
+                if ((*wallIt)[0]) {
+                    for (projecIt = projectiles.begin(); projecIt < projectiles.end();) {
+                        glm::vec3 projecPos = (*projecIt)->getPosition();
+
+                        glm::vec3 wallPos = (*wallIt)[0]->getPosition();
+
+                        float wallDist = glm::length(wallPos - glm::vec3(0, 0, 0));
+
+                        float dist = glm::length(projecPos - glm::vec3(0, 0, 0)) - wallDist;
+                        float ringDist = abs(dist);
+
+                        if (ringDist < Walls::WALL_WIDTH / 4 && projecPos.y < Walls::WALL_HEIGHT / 3.5) {
+                            //Check to see if we are at a wall hole position
+                            for (holeIt = walls->wallHoles.begin(); holeIt < walls->wallHoles.end(); holeIt++) {
+                                float distToProjec = glm::length(projecPos - (*holeIt).first);
+
+                                if (distToProjec < (*wallIt)[0]->GetLength() / 2) {
+                                    atHole = true;
+                                }
+                            }
+                            if (!atHole) {
+                                Spore* s = dynamic_cast<Spore*>((*projecIt));
+                                Rocket* r = dynamic_cast<Rocket*>((*projecIt));
+
+                                if (s) {
+                                    CreatePoison(s);
+                                }
+                                else if (r) {
+                                    CreateExplosion(r);
+                                }
+
+                                //We have a collision, so remove the projectile
+                                (*projecIt)->removeFromParent();
+                                projecIt = projectiles.erase(projecIt);
+                            }
+                            else {
+                                projecIt++;
+                            }
+                        }
+                        else if (glm::length(projecPos - glm::vec3(0, 0, 0)) < 2.0 && projecPos.y < 1.5) {
+                            Spore* s = dynamic_cast<Spore*>((*projecIt));
+                            Rocket* r = dynamic_cast<Rocket*>((*projecIt));
+
+                            if (s) {
+                                CreatePoison(s);
+                            }
+                            else if (r) {
+                                CreateExplosion(r);
+                            }
+
+                            //We have a collision, so remove the projectile
+                            (*projecIt)->removeFromParent();
+                            projecIt = projectiles.erase(projecIt);
+                        }
+                        else {
+                            projecIt++;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

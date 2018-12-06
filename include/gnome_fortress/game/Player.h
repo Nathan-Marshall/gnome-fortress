@@ -10,6 +10,9 @@
 #include "gnome_fortress/model/BasicMeshGroupNode.h"
 #include "gnome_fortress/resource/ResourceManager.h"
 
+#include "Walls.h"
+#include "Enemies.h"
+
 
 namespace gnome_fortress{
 namespace game{
@@ -62,6 +65,8 @@ public:
     void setWeaponIndex(int index);
     const int getWeaponIndex();
 
+    void ProcessCollisions(Walls* walls, Enemies* enemies);
+
 protected:
     void onUpdateSelf(float dt) override;
 
@@ -75,6 +80,10 @@ private:
     bool right;
     bool up;
     bool down;
+
+    bool hittingWallInside;
+    bool hittingWallOutside;
+    bool hittingEnemy;
 
     glm::vec3 velocity;
 
