@@ -78,8 +78,10 @@ model::MeshGroup *MeshGroupLoader::LoadMeshGroup(const std::string &filename, re
     return meshGroup;
 }
 
+//Delete the meshground from the loaded resources
 void MeshGroupLoader::UnloadMeshGroup(model::MeshGroup *meshGroup) {
     for (auto mesh : meshGroup->meshes) {
+        //Delete buffers associated with this mesh group
         glDeleteBuffers(1, &mesh->vbo);
         glDeleteBuffers(1, &mesh->ebo);
         delete mesh;
@@ -90,6 +92,7 @@ void MeshGroupLoader::UnloadMeshGroup(model::MeshGroup *meshGroup) {
     delete meshGroup;
 }
 
+//Get a relative path from a given absolute path 
 std::string MeshGroupLoader::GetRelativePathFromAbsolutePath(const std::string &filename, resource::ResourceManager &resourceManager) {
     std::string dir = resourceManager.getResourcesDirectory();
     if (filename.substr(0, dir.size()) == dir) {

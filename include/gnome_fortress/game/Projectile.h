@@ -15,6 +15,7 @@ namespace game {
 class Projectile : public model::BasicMeshGroupNode {
 public: 
 
+    //Damage value for this projectile
     const static float DAMAGE;
 
     Projectile(
@@ -25,16 +26,20 @@ public:
 
     ~Projectile();
 
+    //Get the velocity of the projectils
     glm::vec3 getVelocity();
 
+    //Update method
     void onUpdateSelf(float delta_time) override;
 
+    //Get the damage, lifespan, and threshold values for the projectile
     virtual float GetDamage();
     double GetLifespan();
     double GetDeathThreshold();
 
 
 protected:
+    //Lifespance, threshold, and velocity values
     double lifespan;
     double threshold;
     glm::vec3 velocity;

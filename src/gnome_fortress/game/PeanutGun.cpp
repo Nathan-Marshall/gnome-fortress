@@ -45,6 +45,7 @@ void PeanutGun::onUpdateSelf(float delta_time) {
 const float PeanutGun::FIRING_VELOCITY = 45.0f;
 
 std::vector<Projectile*> PeanutGun::fireBullet(glm::vec3 position) {
+    //Create a cone distribution for our shotgun projectiles
     float spreadAngle = 10.0f * glm::pi<float>() / 180.0f;
     float circleRad = tan(spreadAngle);
 
@@ -53,6 +54,7 @@ std::vector<Projectile*> PeanutGun::fireBullet(glm::vec3 position) {
 
     std::vector<Projectile*> projecs;
 
+    //Create the shotgun bullets based on a cone distribution
     for (int i = 0; i < 8; i++) {
         distAngle = rand() / (float)RAND_MAX * (glm::pi<float>() * 2);
         circDist = rand() / (float)RAND_MAX * circleRad;
@@ -72,6 +74,7 @@ std::vector<Projectile*> PeanutGun::fireBullet(glm::vec3 position) {
         projecs.push_back(p);
     }
 
+    //Play the shotgun weapon sound
     PlayWeaponSound();
 
     return projecs;

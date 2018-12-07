@@ -19,11 +19,13 @@ SceneNode::SceneNode()
       visible(true) {    
 }
 
+//Update self and all children whenever a scene node is updated
 void SceneNode::update(float delta_time) {
     onUpdateSelf(delta_time);
     onUpdateChildren(delta_time);
 }
 
+//Draw self and all children when a scene node is updated
 void SceneNode::draw(const glm::mat4 &parent_transform, unsigned int pass/* = 0*/) const {
     onDrawSelf(parent_transform, pass);
     onDrawChildren(parent_transform, pass);
@@ -318,7 +320,7 @@ bool SceneNode::isVisibile() const {
     return visible;
 }
 
-void SceneNode::setVisibile(bool v) {
+void SceneNode::setVisible(bool v) {
     visible = v;
 }
 
@@ -331,7 +333,7 @@ void SceneNode::applyTransform() const {
 
     // SRT transform
     glTranslatef(position.x, position.y, position.z);
-    glRotatef(glm::degrees(angle), axis.x, axis.y, axis.z);
+    glRotatef(angle, axis.x, axis.y, axis.z);
     glScalef(scale_vec.x, scale_vec.y, scale_vec.z);
 }
 

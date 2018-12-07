@@ -12,6 +12,7 @@ public:
     Skybox(const Texture *texture, renderer::SkyboxTechnique *technique);
     ~Skybox();
 
+    //Draw method for the skybox
     void onDrawSelf(const glm::mat4 &parent_transform, unsigned int pass) const override;
 
     const model::Mesh *getMesh() const;
@@ -19,8 +20,10 @@ public:
     renderer::SkyboxTechnique *getTechnique() const;
 
 private:
+    //Generate a mesh for the skybox
     static model::Mesh *GenerateMesh();
 
+    //The mesh, texture, and technique used for rendering the skybox
     const model::Mesh *mesh;
     const Texture *texture;
     renderer::SkyboxTechnique *technique;

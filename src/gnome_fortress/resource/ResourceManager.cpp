@@ -16,6 +16,7 @@ ResourceManager::ResourceManager(const std::string &inResourcesDirectory)
         resourcesDirectory.append("/");
     }
 }
+
 ResourceManager::~ResourceManager() {
     unloadAll();
 }
@@ -23,6 +24,12 @@ ResourceManager::~ResourceManager() {
 std::string ResourceManager::getResourcesDirectory() const {
     return resourcesDirectory;
 }
+
+/*Methods used for loading and unloading resources of various types.
+  getOrLoad can be used to use already loaded resources, or load them 
+  if they haven't been loaded already. All resources get unloaded
+  automatically upon destruction.*/
+
 
 void ResourceManager::loadMeshGroup(const std::string &relativePath) {
     std::string fullPath = resourcesDirectory + relativePath;
@@ -94,6 +101,7 @@ void ResourceManager::unloadTexture(const std::string &relativePath) {
     textures.erase(relativePath);
 }
 
+//Unload all currently loaded resources
 void ResourceManager::unloadAll() {
     while (!meshGroups.empty()) {
         unloadMeshGroup(meshGroups.begin()->first);

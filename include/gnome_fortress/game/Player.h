@@ -42,11 +42,13 @@ public:
     const static float ACCELERATION;
     const static float DECAY;
     
+    //Booleans to track which buttons are being pressed
     bool IsForwardPressed() const;
     bool IsBackPressed() const;
     bool IsLeftPressed() const;
     bool IsRightPressed() const;
 
+    //Set which buttons are being pressed
     void SetForwardPressed(bool isPressed);
     void SetBackPressed(bool isPressed);
     void SetLeftPressed(bool isPressed);
@@ -54,26 +56,31 @@ public:
     void SetUpPressed(bool isPressed);
     void SetDownPressed(bool isPressed);
 
+    //Selecting and getting the player weapon
     void setCurrentWeapon(Weapon *weapon);
     Weapon *getCurrentWeapon() const;
 
     model::SceneNode *getArm() const;
     model::SceneNode *getWeaponContainer() const;
 
+    //Methods for changing weapons
     void incrementWeaponIndex();
     void decrementWeaponIndex();
     void setWeaponIndex(int index);
     const int getWeaponIndex();
 
+    //Process player collisions
     void ProcessCollisions(Walls* walls, Enemies* enemies);
 
 protected:
     void onUpdateSelf(float dt) override;
 
 private:
+    //Rocket streams to be used for our jetpack
     RocketStream *rocketStream1;
     RocketStream *rocketStream2;
 
+    //Movement booleans
     bool forward;
     bool backward;
     bool left;
@@ -81,18 +88,21 @@ private:
     bool up;
     bool down;
 
+    //Collision booleans
     bool hittingWallInside;
     bool hittingWallOutside;
     bool hittingEnemy;
 
     glm::vec3 velocity;
 
+    //Player and weapon nodes
     model::BasicMeshGroupNode *playerModel;
     SceneNode *weaponContainer;
     Weapon *currentWeapon;
 
     int weaponIndex;
 
+    //Check that the player respects the scene boundaries
     void CheckBounds(glm::vec3 translationAmount);
 };
 }

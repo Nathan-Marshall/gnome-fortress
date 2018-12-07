@@ -17,12 +17,16 @@ Rock::Rock(
     threshold = 0.5;
 }
 
+//Damage value for the rock (shotgun projectile)
 const float Rock::DAMAGE = 4.0f;
 
+//Get the damage that a rock will do
 float Rock::GetDamage() {
     return DAMAGE;
 }
 
+
+//Update method for the rocks
 void Rock::onUpdateSelf(float dt) {
     lifespan += dt;
 

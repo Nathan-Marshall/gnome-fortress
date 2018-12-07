@@ -25,7 +25,10 @@ public:
         glm::vec3 pointOfOrigin,
         glm::vec3 velocity);
 
+    //Get the damage for a spore
     float GetDamage() override;
+
+    //Get the damage radius for a poison cloud created by the spore
     static float GetDamageRad();
 
     void onUpdateSelf(float delta_time) override;

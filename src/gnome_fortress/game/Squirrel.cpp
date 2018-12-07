@@ -15,11 +15,14 @@ Squirrel::Squirrel(
         technique
       ) {
 
+    //Set references to the main sound engine and the attack sound clip
     this->soundEngine = soundEngine;
     attackSoundByte = resourceManager.getOrLoadAudioClip(resources::audioClips::squirrel_atk);
 
+    //Set the reference to the walls which the squirrel will use for pathfinding
     this->walls = walls;
 
+    //Initialize the physical properties of the squirrels
     setScale(2.0f);
 
     int numWalls = Walls::NumWalls();
@@ -37,8 +40,28 @@ Squirrel::Squirrel(
     hittingPile = false;
 }
 
+//Squirrel update metthod
 void Squirrel::onUpdateSelf(float dt) {
+    //Update the timer used for animation loops
+    timer += dt;
 
+    float speed = 2.0f;
+    float amp = 0.02f;
+
+    //Feet animation
+    getChild(0)->setPosition(glm::vec3(0, amp * sin(timer * speed), amp * cos((timer * speed) + glm::pi<float>())));
+    getChild(0)->setOrbit(glm::angleAxis(glm::pi<float>() / 6 * sin(timer * speed), glm::vec3(1, 0, 0)), glm::vec3(0, 0.1, 0), getChild(0)->getPosition());
+
+    getChild(1)->setPosition(glm::vec3(0, amp * sin((timer * speed) + glm::pi<float>()), amp * cos((timer * speed) + glm::pi<float>())));
+    getChild(1)->setOrbit(glm::angleAxis(glm::pi<float>() / 6 * sin(timer * speed + glm::pi<float>()), glm::vec3(1, 0, 0)), glm::vec3(0, 0.1, 0), getChild(1)->getPosition());
+
+    
+    //Tail animation
+    getChild(2)->setPosition(glm::vec3(0, amp * sin(timer * speed), amp * cos((timer * speed) + glm::pi<float>())));
+    getChild(2)->setOrbit(glm::angleAxis(glm::pi<float>() / 8 * sin(timer * speed), glm::vec3(1, 0, 0)), glm::vec3(0, 0.1, 0), getChild(2)->getPosition());
+
+
+    //Squirrel movement
     if (hittingPile){ 
         //Do nothing anymore 
     }

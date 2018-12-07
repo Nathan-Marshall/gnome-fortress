@@ -4,11 +4,16 @@ namespace gnome_fortress {
 namespace game {
 
 
-Enemies::Enemies(Walls* walls, irrklang::ISoundEngine *soundEngine) {
-    this->walls = walls;
-    this->soundEngine = soundEngine;
+Enemies::Enemies(Walls* walls, const IncreaseScoreHandler &increaseScoreHandler, irrklang::ISoundEngine *soundEngine)
+    : walls(walls),
+      turtles(),
+      squirrels(),
+      spiders(),
+      increaseScoreHandler(increaseScoreHandler),
+      soundEngine(soundEngine) {
 }
 
+//Process enemy collisions witth projectiles (and their AOE damage areas) and walls
 void Enemies::ProcessCollisions(Projectiles *projectiles, float delta_time) {
 
     //Process any collisions with player fired projectiles
@@ -21,23 +26,28 @@ void Enemies::ProcessCollisions(Projectiles *projectiles, float delta_time) {
     ProcessWallCollisions();
 }
 
+//Process collisions between enemies and projectiles fired by the player
 void Enemies::ProcessProjectileCollisions(Projectiles *projectiles) {
     bool collision = false;
 
+    //Create iterators to loop through all 3 types of enemies
     std::vector<SiegeTurtle*>::iterator turtleIt;
     std::vector<Squirrel*>::iterator squirrelIt;
     std::vector<Spider*>::iterator spiderIt;
 
     std::vector<Projectile*>::iterator projecIt;
 
+    //Check collisions with turtles
     for (turtleIt = turtles.begin(); turtleIt < turtles.end();) {
         for (projecIt = projectiles->projectiles.begin(); projecIt < projectiles->projectiles.end();) {
             collision = false;
 
+            //There is a collision if the distance between the projectile and the enemy is less than the bounding radius (projectile radius is negligible)
             if (glm::length((*projecIt)->getPosition() - (*turtleIt)->getPosition()) <= (*turtleIt)->GetBoundingRadius()) {
                 collision = true;
             }
 
+            //Remove the projectile, do damage to the enemy, and create a new damage effect area if the projectile is a spore or rocket
             if (collision) {
                 (*turtleIt)->DoDamage((*projecIt)->GetDamage());
 
@@ -64,6 +74,9 @@ void Enemies::ProcessProjectileCollisions(Projectiles *projectiles) {
         if ((*turtleIt)->GetHealth() <= 0.0f) {
             (*turtleIt)->removeFromParent();
             turtleIt = turtles.erase(turtleIt);
+            if (increaseScoreHandler) {
+                increaseScoreHandler(100);
+            }
         }
         else {
             turtleIt++;
@@ -74,10 +87,12 @@ void Enemies::ProcessProjectileCollisions(Projectiles *projectiles) {
         for (projecIt = projectiles->projectiles.begin(); projecIt < projectiles->projectiles.end();) {
             collision = false;
 
+            //There is a collision if the distance between the projectile and the enemy is less than the bounding radius (projectile radius is negligible)
             if (glm::length((*projecIt)->getPosition() - (*squirrelIt)->getPosition()) <= (*squirrelIt)->GetBoundingRadius() * 1.25) {
                 collision = true;
             }
 
+            //Remove the projectile, do damage to the enemy, and create a new damage effect area if the projectile is a spore or rocket
             if (collision) {
                 (*squirrelIt)->DoDamage((*projecIt)->GetDamage());
 
@@ -104,6 +119,9 @@ void Enemies::ProcessProjectileCollisions(Projectiles *projectiles) {
         if ((*squirrelIt)->GetHealth() <= 0.0f) {
             (*squirrelIt)->removeFromParent();
             squirrelIt = squirrels.erase(squirrelIt);
+            if (increaseScoreHandler) {
+                increaseScoreHandler(100);
+            }
         }
         else {
             squirrelIt++;
@@ -114,10 +132,12 @@ void Enemies::ProcessProjectileCollisions(Projectiles *projectiles) {
         for (projecIt = projectiles->projectiles.begin(); projecIt < projectiles->projectiles.end();) {
             collision = false;
 
+            //There is a collision if the distance between the projectile and the enemy is less than the bounding radius (projectile radius is negligible)
             if (glm::length((*projecIt)->getPosition() - (*spiderIt)->getPosition()) <= (*spiderIt)->GetBoundingRadius() * 1.25) {
                 collision = true;
             }
 
+            //Remove the projectile, do damage to the enemy, and create a new damage effect area if the projectile is a spore or rocket
             if (collision) {
                 (*spiderIt)->DoDamage((*projecIt)->GetDamage());
 
@@ -144,6 +164,9 @@ void Enemies::ProcessProjectileCollisions(Projectiles *projectiles) {
         if ((*spiderIt)->GetHealth() <= 0.0f) {
             (*spiderIt)->removeFromParent();
             spiderIt = spiders.erase(spiderIt);
+            if (increaseScoreHandler) {
+                increaseScoreHandler(100);
+            }
         }
         else {
             spiderIt++;
@@ -151,6 +174,7 @@ void Enemies::ProcessProjectileCollisions(Projectiles *projectiles) {
     }
 }
 
+//Process collisions between enemies and walls
 void Enemies::ProcessWallCollisions() {
     bool collision = false;
 
@@ -163,6 +187,7 @@ void Enemies::ProcessWallCollisions() {
     std::vector<std::vector<Wall*>>::iterator wallIt;
     std::vector<Wall*>::iterator innerWallIt;
 
+    //We want to keep track of which ring we are in
     int ringCount = 0;
 
     for (turtleIt = turtles.begin(); turtleIt < turtles.end(); turtleIt++) {
@@ -175,10 +200,9 @@ void Enemies::ProcessWallCollisions() {
 
                 float distance = glm::length(turtlePos - wallPos);
 
-                //Need to change this back later once nathans stuff is working
-                float bound = (*turtleIt)->GetBoundingRadius() * 1.25; //Make the turtle a bit longer since it's not a perfect sphere
+                float bound = (*turtleIt)->GetBoundingRadius() * 1.25;
                 if (distance < bound && (*turtleIt)->hittingWall == false) {
-                    //We have a collision
+                    //We have a collision, do damage and play attack sound
                     (*turtleIt)->hittingWall = true;
                     (*innerWallIt)->DoDamage((*turtleIt)->damageOnHit);
 
@@ -212,7 +236,7 @@ void Enemies::ProcessWallCollisions() {
 
                 float bound = (*squirrelIt)->GetBoundingRadius();
                 if (distance < bound && (*squirrelIt)->hittingWall == false) {
-                    //We have a collision
+                    //We have a collision, do damage and play attack sound
                     (*squirrelIt)->hittingWall = true;
                     (*innerWallIt)->DoDamage((*squirrelIt)->damageOnHit);
 
@@ -246,7 +270,9 @@ void Enemies::ProcessWallCollisions() {
                 float heightDiff = ((*spiderIt)->getPosition().y) - Walls::WALL_HEIGHT / 3;
 
                 bool inside = (glm::length(wallPos - glm::vec3(0, 0, 0)) > glm::length(spiderPos - glm::vec3(0, 0, 0)));
-
+                
+                //Spiders won'tt damage walls, instead we modify spider booleans to inform the spider of where it currently is
+                //and the spider will make use of this in its state machine
                 if (widthDistance < (*spiderIt)->GetBoundingRadius() / 3 && heightDiff < 0 && !inside) {
                     (*spiderIt)->hittingWall = true;
                 }
@@ -262,6 +288,7 @@ void Enemies::ProcessWallCollisions() {
     }
 }
 
+//Process collisions between enemies and damaging area of effect attacks from the player
 void Enemies::ProcessAOECollisions(std::vector<std::pair<SporeGround*, float>> *poisons, std::vector<std::pair<RocketGround*, float>> *explosions, float delta_time) {
     std::vector<SiegeTurtle*>::iterator turtleIt;
     std::vector<Squirrel*>::iterator squirrelIt;
@@ -270,12 +297,14 @@ void Enemies::ProcessAOECollisions(std::vector<std::pair<SporeGround*, float>> *
     std::vector<std::pair<SporeGround*, float>>::iterator poisonIt;
     std::vector<std::pair<RocketGround*, float>>::iterator exploIt;
 
+    //Get the damage and radius for our poison and explosions
     float pRad = Spore::DAMAGE_RAD;
     float pDmg = Spore::POISON_DAMAGE;
 
     float rRad = Rocket::DAMAGE_RAD;
     float rDmg = Rocket::EXPLOSION_DAMAGE;
 
+    //Check if we are intersecting with any of the AOE positions with turtles
     for (turtleIt = turtles.begin(); turtleIt < turtles.end();) {
         glm::vec3 turtPos = (*turtleIt)->getPosition();
         for (poisonIt = poisons->begin(); poisonIt < poisons->end(); poisonIt++) {
@@ -293,11 +322,15 @@ void Enemies::ProcessAOECollisions(std::vector<std::pair<SporeGround*, float>> *
         if ((*turtleIt)->GetHealth() <= 0.0f) {
             (*turtleIt)->removeFromParent();
             turtleIt = turtles.erase(turtleIt);
+            if (increaseScoreHandler) {
+                increaseScoreHandler(100);
+            }
         }
         else {
             turtleIt++;
         }
     }
+    //Check if we are intersecting with any of the AOE positions with squirrels
     for (squirrelIt = squirrels.begin(); squirrelIt < squirrels.end();) {
         glm::vec3 squirPos = (*squirrelIt)->getPosition();
         for (poisonIt = poisons->begin(); poisonIt < poisons->end(); poisonIt++) {
@@ -315,11 +348,15 @@ void Enemies::ProcessAOECollisions(std::vector<std::pair<SporeGround*, float>> *
         if ((*squirrelIt)->GetHealth() <= 0.0f) {
             (*squirrelIt)->removeFromParent();
             squirrelIt = squirrels.erase(squirrelIt);
+            if (increaseScoreHandler) {
+                increaseScoreHandler(100);
+            }
         }
         else {
             squirrelIt++;
         }
     }
+    //Check if we are intersecting with any of the AOE positions with spiders
     for (spiderIt = spiders.begin(); spiderIt < spiders.end();) {
         glm::vec3 spiPos = (*spiderIt)->getPosition();
         for (poisonIt = poisons->begin(); poisonIt < poisons->end(); poisonIt++) {
@@ -337,6 +374,9 @@ void Enemies::ProcessAOECollisions(std::vector<std::pair<SporeGround*, float>> *
         if ((*spiderIt)->GetHealth() <= 0.0f) {
             (*spiderIt)->removeFromParent();
             spiderIt = spiders.erase(spiderIt);
+            if (increaseScoreHandler) {
+                increaseScoreHandler(100);
+            }
         }
         else {
             spiderIt++;

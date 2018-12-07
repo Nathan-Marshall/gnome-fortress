@@ -9,12 +9,14 @@ namespace game {
             renderer::BasicMeshNodeTechnique *technique,
             RocketStreamTechnique *rocketStreamTechnique)
         : model::SceneNode(),
+          //Create rocket streams for the jetpack
           rocketStream1(
               new RocketStream(resourceManager.getOrLoadTexture(resources::textures::flame4x4), rocketStreamTechnique)
           ),
           rocketStream2(
               new RocketStream(resourceManager.getOrLoadTexture(resources::textures::flame4x4), rocketStreamTechnique)
           ),
+          //Initialize our movement variables
           forward(false),
           backward(false),
           left(false),
@@ -30,6 +32,7 @@ namespace game {
           currentWeapon(nullptr),
           weaponIndex(0)  {
 
+        //Create the player model with its jetpack
         appendChild(playerModel);
         appendChild(rocketStream1);
         rocketStream1->setPosition(-0.1, 0.44, 0.1);
@@ -38,6 +41,7 @@ namespace game {
         rocketStream2->setPosition(0.1, 0.44, 0.1);
         rocketStream2->setRotation(glm::pi<float>(), glm::vec3(1, 0, 0));
 
+        //Appen the weapon to the arm so that it appears in the players hand and not the player origin
         getArm()->appendChild(weaponContainer);
         weaponContainer->setPosition(0.14f, 0.48f, -0.15f);
     }
@@ -47,6 +51,7 @@ namespace game {
         delete weaponContainer;
     }
 
+    //Set the scene boundaries for the player
     const float Player::XBOUND_POS = 35.0f;
     const float Player::XBOUND_NEG = -35.0f;
     const float Player::YBOUND_POS = 20.0f;
@@ -54,6 +59,7 @@ namespace game {
     const float Player::ZBOUND_POS = 35.0f;
     const float Player::ZBOUND_NEG = -35.0f;
 
+    //Set the player acceleration and decay factors
     const float Player::ACCELERATION = 7.0f;
     const float Player::DECAY = 0.20f;
 
@@ -89,6 +95,7 @@ namespace game {
         down = isPressed;
     }
 
+    //Select the players weapon
     void Player::setCurrentWeapon(Weapon *newWeapon) {
         if (!currentWeapon) {
             weaponContainer->appendChild(newWeapon);
@@ -128,10 +135,12 @@ namespace game {
         return weaponIndex;
     }
 
+    //Update method for the player
     void Player::onUpdateSelf(float dt) {
 
         glm::vec3 acceleration;
 
+        //Modify our velocity depending on our current movement direction
         if (forward) {
             acceleration = getRotation() * glm::vec3(0, 0, 1);
             velocity -= (acceleration * ACCELERATION) * dt;
@@ -156,7 +165,8 @@ namespace game {
             acceleration = getRotation() * glm::vec3(0, 1, 0);
             velocity -= (acceleration * ACCELERATION) * dt;
         }
-
+        
+        //Modify the jetpack power (how long and powerful the trail is) depending on whether we are moving up or down (or neither)
         if (up && !down) {
             rocketStream1->setPower(1.0f);
             rocketStream2->setPower(1.0f);
@@ -168,33 +178,41 @@ namespace game {
             rocketStream2->setPower(0.4f);
         }
 
+        //Add in our decay factor
         velocity *= glm::pow(DECAY, dt);
 
+        //Check to make sure that we are within the scene bounds
+        //This will modify the velocity to push us back if our velocity would move us out of bounds
         CheckBounds(velocity * dt);
 
+        //If we are hitting a fence from the inside, translate towards the origin, and then set the velocity to 0 to stop the player from moving through fences
         if (hittingWallInside) {
             velocity = glm::normalize(getPosition() - glm::vec3(0, 0, 0));
             translate(velocity * -1.0f * dt);
             velocity = glm::vec3(0, 0, 0);
             hittingWallInside = false;
         }
+        //Same as above, except we translate away from the origin
         else if (hittingWallOutside) {
             velocity = glm::normalize(getPosition() - glm::vec3(0, 0, 0));
             translate(velocity * 1.0f * dt);
             velocity = glm::vec3(0, 0, 0);
             hittingWallOutside = false;
         }
+        //If we are hitting an enemy, move backwards and dampen our velocity
         else if (hittingEnemy) {
             translate(velocity * -1.0f * dt);
             velocity *= -0.5;
             hittingEnemy = false;
         }
+        //If we have no movement conflicts as described above, we move freely with our given velocity
         else {
             translate(velocity * dt);
         }
         
     }
 
+    //Check the player scene bounds and modify velocity accordingly
     void Player::CheckBounds(glm::vec3 translationAmount) {
         glm::vec3 currentPos = getPosition();
         glm::vec3 futurePos = currentPos += translationAmount;
@@ -207,6 +225,7 @@ namespace game {
         float diffY = 0;
         float diffZ = 0;
 
+        //Adjust the player velocity based on where their velocity would currently take them
         if (futurePos.x + halfX > XBOUND_POS) {
             diffX = futurePos.x + halfX - XBOUND_POS;
         }
@@ -229,6 +248,7 @@ namespace game {
         velocity -= glm::vec3(diffX, diffY, diffZ);
     }
 
+    //Process player collisions with walls and enemies
     void Player::ProcessCollisions(Walls* walls, Enemies* enemies) {
         //Process player collisions with the walls
         std::vector<std::vector<Wall*>>::iterator wallIt;
@@ -236,10 +256,11 @@ namespace game {
 
         bool atHole = false;
 
+        //Check each wall 'ring' to see if we would collide with it
         for (wallIt = walls->walls.begin(); wallIt < walls->walls.end(); wallIt++) {
             glm::vec3 playerPos = getPosition();
 
-            if ((*wallIt)[0]) {
+            if ((*wallIt).size() > 0) {
                 glm::vec3 wallPos = (*wallIt)[0]->getPosition();
 
                 float wallDist = glm::length(wallPos - glm::vec3(0, 0, 0));
@@ -247,6 +268,7 @@ namespace game {
                 float dist = glm::length(playerPos - glm::vec3(0, 0, 0)) - wallDist;
                 float ringDist = abs(dist);
 
+                //If we would collide with this wall 'ring', we need to check if we are at a hole since that wouldn't count as a collision
                 if (ringDist < Walls::WALL_WIDTH / 4 && playerPos.y < Walls::WALL_HEIGHT / 3) {
                     //Check to see if we are at a wall hole position
                     for (holeIt = walls->wallHoles.begin(); holeIt < walls->wallHoles.end(); holeIt++) {
@@ -279,6 +301,7 @@ namespace game {
             glm::vec3 playerPos = getPosition();
             glm::vec3 turtlePos = (*turtleIt)->getPosition();
 
+            //If the player is in the turtle bounding radius 
             if (glm::length(playerPos - turtlePos) < (*turtleIt)->GetBoundingRadius()) {
                 //We have a collision
                 hittingEnemy = true;
@@ -288,6 +311,7 @@ namespace game {
             glm::vec3 playerPos = getPosition();
             glm::vec3 squirrelPos = (*squirrelIt)->getPosition();
 
+            //If the player is in the squirrel bounding radius 
             if (glm::length(playerPos - squirrelPos) < (*squirrelIt)->GetBoundingRadius()) {
                 //We have a collision
                 hittingEnemy = true;
@@ -297,6 +321,7 @@ namespace game {
             glm::vec3 playerPos = getPosition();
             glm::vec3 spiderPos = (*spiderIt)->getPosition();
 
+            //If the player is in the spider bounding radius 
             if (glm::length(playerPos - spiderPos) < (*spiderIt)->GetBoundingRadius()) {
                 //We have a collision
                 hittingEnemy = true;

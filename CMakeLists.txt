@@ -10,6 +10,7 @@ set(HDRS
     
     include/gnome_fortress/game/Player.h
     include/gnome_fortress/game/Acorn.h
+    include/gnome_fortress/game/AcornMeter.h
     include/gnome_fortress/game/Acorns.h
     include/gnome_fortress/game/Enemies.h
     include/gnome_fortress/game/Enemy.h
@@ -35,6 +36,7 @@ set(HDRS
     include/gnome_fortress/game/SporeGround.h
     include/gnome_fortress/game/SporeGroundTechnique.h
     include/gnome_fortress/game/Spore.h
+    include/gnome_fortress/game/TextNode.h
     include/gnome_fortress/game/Weapon.h
     include/gnome_fortress/game/Wall.h
     include/gnome_fortress/game/Walls.h
@@ -50,8 +52,10 @@ set(HDRS
     include/gnome_fortress/model/Texture.h
     
     include/gnome_fortress/renderer/BasicMeshNodeTechnique.h
+    include/gnome_fortress/renderer/Basic2DTechnique.h
     include/gnome_fortress/renderer/BasicProjectionTechnique.h
     include/gnome_fortress/renderer/SkyboxTechnique.h
+    include/gnome_fortress/renderer/SpriteTechnique.h
     include/gnome_fortress/renderer/Technique.h
     include/gnome_fortress/renderer/Uniform.h
     include/gnome_fortress/renderer/VertexAttribute.h
@@ -61,6 +65,9 @@ set(HDRS
     include/gnome_fortress/resource/ResourceManager.h
     include/gnome_fortress/resource/ShaderProgramLoader.h
     include/gnome_fortress/resource/TextureLoader.h
+    
+    include/gnome_fortress/ui/SpriteNode.h
+    include/gnome_fortress/ui/UINode.h
 
     include/objl/OBJ_Loader.h
 )
@@ -70,9 +77,8 @@ set(SRCS
     src/gnome_fortress/camera/Camera.cpp
     src/gnome_fortress/camera/SceneNodeCamera.cpp
 
-    src/gnome_fortress/game/Player.cpp
-
     src/gnome_fortress/game/Acorn.cpp
+    src/gnome_fortress/game/AcornMeter.cpp
     src/gnome_fortress/game/Acorns.cpp
     src/gnome_fortress/game/Enemies.cpp
     src/gnome_fortress/game/Enemy.cpp
@@ -80,6 +86,7 @@ set(SRCS
     src/gnome_fortress/game/MushroomGun.cpp
     src/gnome_fortress/game/PeanutGun.cpp
     src/gnome_fortress/game/PineconeGun.cpp
+    src/gnome_fortress/game/Player.cpp
     src/gnome_fortress/game/Projectile.cpp
     src/gnome_fortress/game/Projectiles.cpp
     src/gnome_fortress/game/PurpleRocketStream.cpp
@@ -98,6 +105,7 @@ set(SRCS
     src/gnome_fortress/game/SporeGround.cpp
     src/gnome_fortress/game/SporeGroundTechnique.cpp
     src/gnome_fortress/game/Spore.cpp
+    src/gnome_fortress/game/TextNode.cpp
     src/gnome_fortress/game/Weapon.cpp
     src/gnome_fortress/game/Wall.cpp
     src/gnome_fortress/game/Walls.cpp
@@ -113,8 +121,10 @@ set(SRCS
     src/gnome_fortress/model/Texture.cpp
     
     src/gnome_fortress/renderer/BasicMeshNodeTechnique.cpp
+    src/gnome_fortress/renderer/Basic2DTechnique.cpp
     src/gnome_fortress/renderer/BasicProjectionTechnique.cpp
     src/gnome_fortress/renderer/SkyboxTechnique.cpp
+    src/gnome_fortress/renderer/SpriteTechnique.cpp
     src/gnome_fortress/renderer/Technique.cpp
     src/gnome_fortress/renderer/Uniform.cpp
     src/gnome_fortress/renderer/VertexAttribute.cpp
@@ -124,6 +134,9 @@ set(SRCS
     src/gnome_fortress/resource/ResourceManager.cpp
     src/gnome_fortress/resource/ShaderProgramLoader.cpp
     src/gnome_fortress/resource/TextureLoader.cpp
+    
+    src/gnome_fortress/ui/SpriteNode.cpp
+    src/gnome_fortress/ui/UINode.cpp
 )
 
 # The following config header will be evaluated and added to "bin"
@@ -143,7 +156,10 @@ target_link_libraries(${MAIN_EXECUTABLE} ${OPENGL_gl_LIBRARY})
 
 # Other libraries needed
 set(LIBRARY_PATH "" CACHE PATH "Folder with GLEW, GLFW, GLM, and SOIL libraries")
+set(IRRKLANG_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include/irrKlang)
+
 include_directories(${LIBRARY_PATH}/include)
+include_directories(${IRRKLANG_PATH}/include)
 if(NOT WIN32)
     find_library(GLEW_LIBRARY GLEW)
     find_library(GLFW_LIBRARY glfw)
@@ -153,7 +169,7 @@ elseif(WIN32)
     find_library(GLEW_LIBRARY glew32s HINTS ${LIBRARY_PATH}/lib)
     find_library(GLFW_LIBRARY glfw3 HINTS ${LIBRARY_PATH}/lib)
     find_library(SOIL_LIBRARY SOIL HINTS ${LIBRARY_PATH}/lib)
-    find_library(IK_LIBRARY irrKlang HINTS ${LIBRARY_PATH}/lib)
+    find_library(IK_LIBRARY irrKlang HINTS ${IRRKLANG_PATH}/lib)
 endif(NOT WIN32)
 target_link_libraries(${MAIN_EXECUTABLE} ${GLEW_LIBRARY})
 target_link_libraries(${MAIN_EXECUTABLE} ${GLFW_LIBRARY})
@@ -172,14 +188,14 @@ endif(${CMAKE_BUILD_TYPE} MATCHES Debug)
 add_custom_command(
         TARGET irrKlangCopy PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy
-                ${LIBRARY_PATH}/lib/irrKlang.dll
+                ${IRRKLANG_PATH}/lib/irrKlang.dll
                 ${CMAKE_CURRENT_BINARY_DIR}/${BUILD_DIR}/irrKlang.dll)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_custom_command(
         TARGET irrKlangMP3Copy PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy
-                ${LIBRARY_PATH}/lib/ikpMP3.dll
+                ${IRRKLANG_PATH}/lib/ikpMP3.dll
                 ${CMAKE_CURRENT_BINARY_DIR}/${BUILD_DIR}/ikpMP3.dll)
 
 add_dependencies(${MAIN_EXECUTABLE} irrKlangCopy)

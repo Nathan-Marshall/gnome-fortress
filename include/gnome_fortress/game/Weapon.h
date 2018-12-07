@@ -8,7 +8,7 @@
 
 #include "gnome_fortress/game/Player.h"
 #include "gnome_fortress/game/Projectiles.h"
-#include "irrKlang\irrKlang.h"
+#include <irrKlang.h>
 
 namespace gnome_fortress {
 namespace game {
@@ -34,6 +34,7 @@ public:
     //Creating bullets 
     virtual std::vector<Projectile*> fireBullet(glm::vec3 position);
 
+    //Play the sound for the weapon when the user fires it
     void PlayWeaponSound();
 
 protected:
