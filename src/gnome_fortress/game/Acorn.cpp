@@ -10,11 +10,13 @@ Acorn::Acorn(
     renderer::BasicMeshNodeTechnique *technique)
     : model::BasicMeshGroupNode(resourceManager.getOrLoadMeshGroup(game::resources::models::acorn),
         technique),
+    //Physical properties of the acorns
     scale(0.7f),
     currentHealth(50){
 
     setScale(scale);
 
+    //Random orientation of the acorn
     float random = ((float)rand()) / (float)RAND_MAX;
     float diff = 1.8f - 0.3f; //acceptable range of angles
     float s = 0.3f + (random * diff);
@@ -34,12 +36,14 @@ void Acorn::vanishScale() {
     scale = 0;
 }
 
+//Get the current acorn health
 float Acorn::getCurrentHealth() {
     return currentHealth;
 }
 
-void Acorn::takeDamage() {
-    currentHealth -= 3.0f;
+//Take damage from outside sources
+void Acorn::takeDamage(float delta_time) {
+    currentHealth -= 12.0f * delta_time;
     setScale((currentHealth / MAX_HEALTH) * scale);
 }
 

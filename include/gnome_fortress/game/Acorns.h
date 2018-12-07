@@ -24,7 +24,8 @@ public:
 
     std::vector<Acorn*> acorns;
 
-    void ProcessEnemyCollisions(Enemies* turtles);
+    //Process collisions between the acorns and the enemies
+    void ProcessEnemyCollisions(Enemies* turtles, float delta_time);
 
     float getRemainingAcornCount() const;
 

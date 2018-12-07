@@ -7,6 +7,7 @@ namespace game {
 
 namespace resources {
 
+//Filepath values for all of our model resources
 namespace models {
     const std::string dirname = "models/";
 
@@ -39,15 +40,21 @@ namespace models {
     const std::string tree5 = models::dirname + "trees/Low_Poly_Tree_Obj/Low_Poly_Tree_3.obj";
 }
 
+//Filepath values for all of our shaders
 namespace shaders {
     const std::string dirname = "shaders/";
 
     const std::string rocket_stream = shaders::dirname + "rocket_stream";
+    const std::string rocket_stream_purple = shaders::dirname + "rocket_stream_purple";
+    const std::string rocket_ground = shaders::dirname + "rocket_ground";
+    const std::string shotgun_stream = shaders::dirname + "shotgun_stream";
+    const std::string spore_ground = shaders::dirname + "spore_ground";
     const std::string skybox = shaders::dirname + "skybox";
     const std::string ui_sprite = shaders::dirname + "ui_sprite";
     const std::string textured_material = shaders::dirname + "textured_material";
 }
 
+//Filepath values for all of our textures
 namespace textures {
     const std::string dirname = "textures/";
 
@@ -58,6 +65,7 @@ namespace textures {
     const std::string ui_font = textures::dirname + "ui/font.png";
 }
 
+//Filepath values for all of our audio clips
 namespace audioClips {
     const std::string dirname = "audio/";
 

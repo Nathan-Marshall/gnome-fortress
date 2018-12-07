@@ -14,6 +14,7 @@ PineconeGun::PineconeGun(
         technique,
         player
     ) {
+    //References to the main sound engine and the pinecone gun sound effect
     this->soundEngine = soundEngine;
     fireSoundByte = resourceManager.getOrLoadAudioClip(resources::audioClips::rocket);
 
@@ -21,9 +22,11 @@ PineconeGun::PineconeGun(
     bullets = vector;
 }
 
+//Pinecone gun update method
 void PineconeGun::onUpdateSelf(float delta_time) {
     cooldown -= delta_time;
 
+    //Fire projectiles if the weapon is not on cooldown
     if (pressed && cooldown < 0) {
         setCooldown(1.4f);
         
@@ -37,20 +40,23 @@ void PineconeGun::onUpdateSelf(float delta_time) {
     }
 }
 
+//Set the firing velocity for the pinecone gun
 const float PineconeGun::FIRING_VELOCITY = 5.0f;
 
+//Fire a rocket from the pinecone gun
 std::vector<Projectile*> PineconeGun::fireBullet(glm::vec3 position) {
     glm::vec3 vel = glm::normalize(glm::vec3(getGlobalTransform() * glm::vec4(0, 0, -1, 0)));
-    vel.x *= FIRING_VELOCITY;
-    vel.y *= FIRING_VELOCITY;
-    vel.z *= FIRING_VELOCITY;
-    Projectile *p = new Rocket(bulletMeshGroup, getTechnique(),
+    vel *= FIRING_VELOCITY;
+
+    //Create a new rocket
+    Rocket *p = new Rocket(bulletMeshGroup, getTechnique(),
         glm::vec3(getGlobalTransform() * glm::vec4(0.03, 0.5, -0.25, 1)), vel);
-    // Projectile *p = new Projectile(bulletMeshGroup, getTechnique(),
-    //     glm::vec3(getGlobalTransform() * glm::vec4(0.03, 0.5, -0.25, 1)), vel);
     
     std::vector<Projectile*> projecs;
 
+    p->appendChild(bullets->CreateRocketTrail(p));
+
+    //Play the rocket sound effect
     PlayWeaponSound();
 
     projecs.push_back(p);

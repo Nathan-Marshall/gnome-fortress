@@ -2,7 +2,7 @@
  *
  * A program that demonstrates the use of hierarchical transformations
  *
- * Copyright (c) 2018 Nathan Marshall <NathanMarshall@cmail.carleton.ca>,
+ * Copyright (c) 2018 Nathan Marshall <NathanMarshall@cmail.carleton.ca>, Mitchell Blanchard <MiitchellBlanchard@cmail.carleton.ca>, Megan Perera <MeganPerera@cmail.carleton.ca>,
  * Oliver van Kaick <Oliver.vanKaick@carleton.ca>, David Mould <mould@scs.carleton.ca>
  *
  */
@@ -22,7 +22,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
 
-#include <irrKlang\irrKlang.h>
+#include <irrKlang.h>
 using namespace irrklang;
 
 #include "gnome_fortress/game/AcornMeter.h"
@@ -34,6 +34,10 @@ using namespace irrklang;
 #include "gnome_fortress/game/Player.h"
 #include "gnome_fortress/game/Resources.h"
 #include "gnome_fortress/game/RocketStream.h"
+#include "gnome_fortress/game/PurpleRocketStream.h"
+#include "gnome_fortress/game/ShotgunStream.h"
+#include "gnome_fortress/game/RocketGround.h"
+#include "gnome_fortress/game/SporeGround.h"
 #include "gnome_fortress/game/TextNode.h"
 #include "gnome_fortress/game/Walls.h"
 #include "gnome_fortress/game/Wall.h"
@@ -125,6 +129,7 @@ void CursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
     scene_camera_third_g.getNode()->orbit(y_angle * 0.0005, glm::vec3(1.0, 0, 0), glm::vec3(0, 0, 0));
 }
 
+//Capture mouse button presses
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 {
     // Fire gun when player left clicks
@@ -136,7 +141,9 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
     }
 }
 
+//Capture mouse scroll events to change weapons
 void SetScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
+    //If scrolling up
     if (yoffset > 0) {
         if (player->getWeaponIndex() < 2) {
             player->incrementWeaponIndex();
@@ -147,6 +154,7 @@ void SetScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
         player->getCurrentWeapon()->setPressed(false);
         player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
     }
+    //If scrolling down
     if (yoffset < 0) {
         if (player->getWeaponIndex() > 0) {
             player->decrementWeaponIndex();
@@ -161,11 +169,6 @@ void SetScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
 
 // Callback for when a key is pressed
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods){
-    // Quit the program when pressing 'q'
-    if (key == GLFW_KEY_Q && action == GLFW_PRESS){
-        glfwSetWindowShouldClose(window, true);
-    }
-
     // Toggle the camera (first/third person) when pressing 'c'
     if (key == GLFW_KEY_C && action == GLFW_PRESS) {
         if (active_camera_g == &scene_camera_first_g) {
@@ -205,16 +208,16 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 
     // Move the player up when pressing 'left shift'
     if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS) {
-        player->SetUpPressed(true);
+        player->SetDownPressed(true);
     } else if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE) {
-        player->SetUpPressed(false);
+        player->SetDownPressed(false);
     }
 
     // Move the player down when pressing 'space'
     if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
-        player->SetDownPressed(true);
+        player->SetUpPressed(true);
     } else if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE) {
-        player->SetDownPressed(false);
+        player->SetUpPressed(false);
     }
 
     // Exit the program when pressing 'esc'
@@ -268,6 +271,7 @@ void createOuterFences(std::vector<model::BasicMeshGroupNode *> &fences, rendere
     fences.push_back(fence);
 }
 
+//Create a random tree around the edge of the scene
 model::BasicMeshGroupNode *createRandomTree(renderer::BasicMeshNodeTechnique *technique) {
     int treeModelIndex = rand() % 5;
 
@@ -312,6 +316,7 @@ model::BasicMeshGroupNode *createRandomTree(renderer::BasicMeshNodeTechnique *te
     return tree;
 }
 
+//Distribute the trees around the outside of the scene
 void distributeTrees(const std::vector<model::BasicMeshGroupNode *> &trees, float minDist, float maxDist, float collisionRadius) {
     float collisionRadSq = collisionRadius * collisionRadius;
     float maxMinDiff = (maxDist - minDist);
@@ -430,26 +435,43 @@ int MainFunction(void){
         GLuint rocketStreamProgram = resource_manager_g.getOrLoadShaderProgram(resources::shaders::rocket_stream);
         auto rocketStreamTechnique = new RocketStreamTechnique(rocketStreamProgram);
 
+        GLuint purpleRocketStreamProgram = resource_manager_g.getOrLoadShaderProgram(resources::shaders::rocket_stream_purple);
+        auto purpleRocketStreamTechnique = new PurpleRocketStreamTechnique(purpleRocketStreamProgram);
+
+        GLuint shotgunStreamProgram = resource_manager_g.getOrLoadShaderProgram(resources::shaders::shotgun_stream);
+        auto shotgunStreamTechnique = new ShotgunStreamTechnique(shotgunStreamProgram);
+
+        GLuint sporeGroundProgram = resource_manager_g.getOrLoadShaderProgram(resources::shaders::spore_ground);
+        auto sporeGroundTechnique = new SporeGroundTechnique(sporeGroundProgram);
+
+        GLuint rocketGroundProgram = resource_manager_g.getOrLoadShaderProgram(resources::shaders::rocket_ground);
+        auto rocketGroundTechnique = new RocketGroundTechnique(rocketGroundProgram);
+
+        //Create the game's main sound engine
         SoundEngine = createIrrKlangDevice();
         SoundEngine->setSoundVolume(0.1);
 
+        //Play the background track
         irrklang::ISound *backgroundTrack = SoundEngine->play2D(resource_manager_g.getOrLoadAudioClip(resources::audioClips::bit_builders), GL_TRUE);
 
+        //Create the root scene node for the game
         papaNode = new model::SceneNode();
 
+        //Create our skybox and append it to the root node
         model::Skybox *skybox = new model::Skybox(resource_manager_g.getOrLoadSkyboxTexture(resources::textures::noon_grass), skyboxTechnique);
         papaNode->appendChild(skybox);
 
-
-        // Create the walls
+        // Create the walls and append to the root node
         walls = new Walls(resource_manager_g, mtlThreeTermTechnique);
         papaNode->appendChild(walls);
 
+        //Create our player, set initial position, and append to the root node
         player = new game::Player(resource_manager_g, mtlThreeTermTechnique, rocketStreamTechnique);
         player->setPosition(0, 0.7f, 3.0f);
         papaNode->appendChild(player);
 
-        playerProjectiles = new Projectiles();
+        //Create the player projectiles collection node and append to the root node
+        playerProjectiles = new Projectiles(&resource_manager_g, sporeGroundTechnique, rocketGroundTechnique, rocketStreamTechnique, purpleRocketStreamTechnique, shotgunStreamTechnique);
         papaNode->appendChild(playerProjectiles);
 
         //Create weapons
@@ -475,6 +497,7 @@ int MainFunction(void){
         SiegeTurtle* turt1 = new SiegeTurtle(resource_manager_g, mtlThreeTermTechnique, SoundEngine);
         SiegeTurtle* turt2 = new SiegeTurtle(resource_manager_g, mtlThreeTermTechnique, SoundEngine);
 
+        //Add the turtles to our enemies
         enemies->turtles.push_back(turt1);
         enemies->appendChild(turt1);
 
@@ -485,6 +508,7 @@ int MainFunction(void){
         Spider* spi1 = new Spider(resource_manager_g, mtlThreeTermTechnique, SoundEngine);
         Spider* spi2 = new Spider(resource_manager_g, mtlThreeTermTechnique, SoundEngine);
 
+        //Add the spiders to our enemies
         enemies->spiders.push_back(spi1);
         enemies->appendChild(spi1);
 
@@ -495,6 +519,7 @@ int MainFunction(void){
         Squirrel* squir1 = new Squirrel(resource_manager_g, mtlThreeTermTechnique, enemies->walls, SoundEngine);
         Squirrel* squir2 = new Squirrel(resource_manager_g, mtlThreeTermTechnique, enemies->walls, SoundEngine);
 
+        //Add the squirrels to our enemies
         enemies->squirrels.push_back(squir1);
         enemies->appendChild(squir1);
 
@@ -509,25 +534,29 @@ int MainFunction(void){
         model::SceneNode *cameraNodeFirst = scene_camera_first_g.getNode();
         cameraNodeFirst->setPosition(0.1, 0.4, -1);
         
+        //Append our cameras to the root node
         player->appendChild(cameraNodeThird);
         player->appendChild(cameraNodeFirst);
 
+        //Create the plane and attach to the root node
         model::SceneNode *ground = new model::BasicMeshNode(plane->meshes[0], mtlThreeTermTechnique);
         ground->setScale(1000);
         ground->setPosition(0, 0, 0);
         papaNode->appendChild(ground);
 
+        //Create the outer fences
         std::vector<model::BasicMeshGroupNode *> outerFences;
         createOuterFences(outerFences, mtlThreeTermTechnique);
 
         // Randomly create and distribute trees (randomly selected model, rotation, scale, position)
         std::vector<model::BasicMeshGroupNode *> trees;
-        int numTrees = 100;
+        int numTrees = 70;
         for (int i = 0; i < numTrees; i++) {
             trees.push_back(createRandomTree(mtlThreeTermTechnique));
         }
         distributeTrees(trees, player->XBOUND_POS + 10, player->XBOUND_POS + 30, 2.0f);
 
+        //Create our acorns collection structure and append to the root node
         acorns = new Acorns(resource_manager_g, mtlThreeTermTechnique);
         papaNode->appendChild(acorns);
 
@@ -559,6 +588,9 @@ int MainFunction(void){
         double startTime = glfwGetTime();
 
         double prev_time = glfwGetTime();
+
+        double difficultyTime = 5.0;
+
         // Run the main loop
         while (!glfwWindowShouldClose(window)){
             // calculate delta time
@@ -566,13 +598,15 @@ int MainFunction(void){
             double delta_time = current_time - prev_time;
             prev_time = glfwGetTime();
 
+            //Get the player position, look at and up vectors
             glm::vec3 playerPos = player->getPosition();
             glm::vec3 lookAt = scene_camera_third_g.getNode()->getRotation() * glm::vec3(0, 0, -1);
             glm::vec3 upVec = scene_camera_third_g.getNode()->getRotation() * glm::vec3(0, 1, 0);
 
+            //Update the listener position of the player every frame
             SoundEngine->setListenerPosition(irrklang::vec3df(playerPos.x, playerPos.y, playerPos.z), irrklang::vec3df(lookAt.x, lookAt.y, lookAt.z));
 
-            if (current_time - spawnTime > 5.0 && current_time - startTime > 10.0) {
+            if (current_time - spawnTime > difficultyTime && current_time - startTime > 10.0) {
                 int randEnemy = (rand() % 6) + 1;
 
                 if (randEnemy == 1) {
@@ -598,11 +632,23 @@ int MainFunction(void){
                 }
 
                 spawnTime = glfwGetTime();
+                
+                if (difficultyTime > 1.2) {
+                    difficultyTime -= 0.1;
+                }
             }
 
-            enemies->ProcessCollisions(playerProjectiles);
+            //Process collisions with enemies
+            enemies->ProcessCollisions(playerProjectiles, delta_time);
 
-            acorns->ProcessEnemyCollisions(enemies);
+            //Process player collisions
+            player->ProcessCollisions(walls, enemies);
+
+            //Process projectile collisions
+            playerProjectiles->ProcessCollisions(walls);
+
+            //Process acorn collisions
+            acorns->ProcessEnemyCollisions(enemies, delta_time);
 
             scoreText->setText(std::to_string(score));
 
@@ -617,6 +663,7 @@ int MainFunction(void){
                             viewport_background_color_g[2], 0.0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+            //Set the projection and view matrices for the techniques
             mtlThreeTermTechnique->setProjectionMatrix(active_camera_g->getProjection());
             mtlThreeTermTechnique->setViewMatrix(active_camera_g->getView());
 
@@ -626,6 +673,20 @@ int MainFunction(void){
             rocketStreamTechnique->setProjectionMatrix(active_camera_g->getProjection());
             rocketStreamTechnique->setViewMatrix(active_camera_g->getView());
             rocketStreamTechnique->setTimer(current_time);
+
+            purpleRocketStreamTechnique->setProjectionMatrix(active_camera_g->getProjection());
+            purpleRocketStreamTechnique->setViewMatrix(active_camera_g->getView());
+            purpleRocketStreamTechnique->setTimer(current_time);
+
+            shotgunStreamTechnique->setProjectionMatrix(active_camera_g->getProjection());
+            shotgunStreamTechnique->setViewMatrix(active_camera_g->getView());
+            shotgunStreamTechnique->setTimer(current_time);
+
+            sporeGroundTechnique->setProjectionMatrix(active_camera_g->getProjection());
+            sporeGroundTechnique->setViewMatrix(active_camera_g->getView());
+
+            rocketGroundTechnique->setProjectionMatrix(active_camera_g->getProjection());
+            rocketGroundTechnique->setViewMatrix(active_camera_g->getView());
 
             // Draw the scene nodes (first pass)
             papaNode->draw(glm::mat4(), 0);

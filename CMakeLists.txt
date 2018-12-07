@@ -15,18 +15,26 @@ set(HDRS
     include/gnome_fortress/game/Enemies.h
     include/gnome_fortress/game/Enemy.h
     include/gnome_fortress/game/MushroomGun.h
-    include/gnome_fortress/game/SiegeTurtle.h
-    include/gnome_fortress/game/Squirrel.h
-    include/gnome_fortress/game/Spider.h
     include/gnome_fortress/game/PeanutGun.h
     include/gnome_fortress/game/PineconeGun.h
     include/gnome_fortress/game/Projectile.h
     include/gnome_fortress/game/Projectiles.h
+    include/gnome_fortress/game/PurpleRocketStreamTechnique.h
+    include/gnome_fortress/game/PurpleRocketStream.h
     include/gnome_fortress/game/Resources.h
     include/gnome_fortress/game/Rock.h
     include/gnome_fortress/game/Rocket.h
     include/gnome_fortress/game/RocketStream.h
     include/gnome_fortress/game/RocketStreamTechnique.h
+    include/gnome_fortress/game/RocketGround.h
+    include/gnome_fortress/game/RocketGroundTechnique.h
+    include/gnome_fortress/game/SiegeTurtle.h
+    include/gnome_fortress/game/Squirrel.h
+    include/gnome_fortress/game/Spider.h
+    include/gnome_fortress/game/ShotgunStream.h
+    include/gnome_fortress/game/ShotgunStreamTechnique.h
+    include/gnome_fortress/game/SporeGround.h
+    include/gnome_fortress/game/SporeGroundTechnique.h
     include/gnome_fortress/game/Spore.h
     include/gnome_fortress/game/TextNode.h
     include/gnome_fortress/game/Weapon.h
@@ -69,27 +77,35 @@ set(SRCS
     src/gnome_fortress/camera/Camera.cpp
     src/gnome_fortress/camera/SceneNodeCamera.cpp
 
-    src/gnome_fortress/game/Player.cpp
     src/gnome_fortress/game/Acorn.cpp
     src/gnome_fortress/game/AcornMeter.cpp
     src/gnome_fortress/game/Acorns.cpp
     src/gnome_fortress/game/Enemies.cpp
     src/gnome_fortress/game/Enemy.cpp
+    src/gnome_fortress/game/main.cpp
     src/gnome_fortress/game/MushroomGun.cpp
-    src/gnome_fortress/game/SiegeTurtle.cpp
-    src/gnome_fortress/game/Squirrel.cpp
-    src/gnome_fortress/game/Spider.cpp
     src/gnome_fortress/game/PeanutGun.cpp
     src/gnome_fortress/game/PineconeGun.cpp
+    src/gnome_fortress/game/Player.cpp
     src/gnome_fortress/game/Projectile.cpp
     src/gnome_fortress/game/Projectiles.cpp
+    src/gnome_fortress/game/PurpleRocketStream.cpp
+    src/gnome_fortress/game/PurpleRocketStreamTechnique.cpp
     src/gnome_fortress/game/Rock.cpp
     src/gnome_fortress/game/Rocket.cpp
     src/gnome_fortress/game/RocketStream.cpp
     src/gnome_fortress/game/RocketStreamTechnique.cpp
+    src/gnome_fortress/game/RocketGround.cpp
+    src/gnome_fortress/game/RocketGroundTechnique.cpp
+    src/gnome_fortress/game/SiegeTurtle.cpp
+    src/gnome_fortress/game/Squirrel.cpp
+    src/gnome_fortress/game/Spider.cpp
+    src/gnome_fortress/game/ShotgunStream.cpp
+    src/gnome_fortress/game/ShotgunStreamTechnique.cpp
+    src/gnome_fortress/game/SporeGround.cpp
+    src/gnome_fortress/game/SporeGroundTechnique.cpp
     src/gnome_fortress/game/Spore.cpp
     src/gnome_fortress/game/TextNode.cpp
-    src/gnome_fortress/game/main.cpp
     src/gnome_fortress/game/Weapon.cpp
     src/gnome_fortress/game/Wall.cpp
     src/gnome_fortress/game/Walls.cpp
@@ -140,7 +156,10 @@ target_link_libraries(${MAIN_EXECUTABLE} ${OPENGL_gl_LIBRARY})
 
 # Other libraries needed
 set(LIBRARY_PATH "" CACHE PATH "Folder with GLEW, GLFW, GLM, and SOIL libraries")
+set(IRRKLANG_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include/irrKlang)
+
 include_directories(${LIBRARY_PATH}/include)
+include_directories(${IRRKLANG_PATH}/include)
 if(NOT WIN32)
     find_library(GLEW_LIBRARY GLEW)
     find_library(GLFW_LIBRARY glfw)
@@ -150,12 +169,37 @@ elseif(WIN32)
     find_library(GLEW_LIBRARY glew32s HINTS ${LIBRARY_PATH}/lib)
     find_library(GLFW_LIBRARY glfw3 HINTS ${LIBRARY_PATH}/lib)
     find_library(SOIL_LIBRARY SOIL HINTS ${LIBRARY_PATH}/lib)
-    find_library(IK_LIBRARY irrKlang HINTS ${LIBRARY_PATH}/lib)
+    find_library(IK_LIBRARY irrKlang HINTS ${IRRKLANG_PATH}/lib)
 endif(NOT WIN32)
 target_link_libraries(${MAIN_EXECUTABLE} ${GLEW_LIBRARY})
 target_link_libraries(${MAIN_EXECUTABLE} ${GLFW_LIBRARY})
 target_link_libraries(${MAIN_EXECUTABLE} ${SOIL_LIBRARY})
 target_link_libraries(${MAIN_EXECUTABLE} ${IK_LIBRARY})
+
+add_custom_target(irrKlangCopy)
+add_custom_target(irrKlangMP3Copy)
+
+if(${CMAKE_BUILD_TYPE} MATCHES Debug)
+    set(BUILD_DIR Debug)
+elseif(${CMAKE_BUILD_TYPE} MATCHES Release)
+    set(BUILD_DIR Release)
+endif(${CMAKE_BUILD_TYPE} MATCHES Debug)
+
+add_custom_command(
+        TARGET irrKlangCopy PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+                ${IRRKLANG_PATH}/lib/irrKlang.dll
+                ${CMAKE_CURRENT_BINARY_DIR}/${BUILD_DIR}/irrKlang.dll)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+add_custom_command(
+        TARGET irrKlangMP3Copy PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+                ${IRRKLANG_PATH}/lib/ikpMP3.dll
+                ${CMAKE_CURRENT_BINARY_DIR}/${BUILD_DIR}/ikpMP3.dll)
+
+add_dependencies(${MAIN_EXECUTABLE} irrKlangCopy)
+add_dependencies(${MAIN_EXECUTABLE} irrKlangMP3Copy)
 
 # The rules here are specific to Windows Systems
 if(WIN32)

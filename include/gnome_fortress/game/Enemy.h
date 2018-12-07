@@ -7,7 +7,7 @@
 #include <glm/gtc/constants.hpp>
 
 #include "gnome_fortress/model/BasicMeshGroupNode.h"
-#include "irrKlang\irrKlang.h"
+#include <irrKlang.h>
 
 namespace gnome_fortress {
 namespace game {
@@ -19,12 +19,15 @@ public:
     Enemy(const model::MeshGroup *meshGroup,
         renderer::BasicMeshNodeTechnique *technique);
 
+    //Get radius, health, and attack sounds for the enemy
     float GetBoundingRadius();
     float GetHealth();
     const char* GetAttackSound();
 
+    //Take damage from projectiles
     void DoDamage(float damage);
 
+    //Play this enemiy's attack sound
     void PlayAttackSound();
 protected:
     void onUpdateSelf(float dt) override;
@@ -36,8 +39,10 @@ protected:
     const char* attackSoundByte;
     irrklang::ISoundEngine *soundEngine;
 
-private:
+    float timer;
 
+private:
+    
 };
 
 

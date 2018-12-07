@@ -33,18 +33,20 @@ Acorns::~Acorns(){
     }
 }
 
-void Acorns::ProcessEnemyCollisions(Enemies* enemies) {
+//Process enemies colliding with the acorns
+void Acorns::ProcessEnemyCollisions(Enemies* enemies, float delta_time) {
 
+    //Iterator for each enemy type
     std::vector<SiegeTurtle*>::iterator turtleIter;
     std::vector<Spider*>::iterator spiderIter;
     std::vector<Squirrel*>::iterator squirrelIter;
 
+    //Process collisions with the acorns for each enemy type
     for (turtleIter = enemies->turtles.begin(); turtleIter < enemies->turtles.end();) {
     
         if (acorns.size() > 0) {
             if (glm::length((*turtleIter)->getPosition() - glm::vec3(0, 0, 0)) < 4.0) {
-                acorns.back()->takeDamage();
-                //(*turtleIter)->PlayAttackSound();
+                acorns.back()->takeDamage(delta_time);
                 (*turtleIter)->hittingPile = true;
             }
             
@@ -60,8 +62,7 @@ void Acorns::ProcessEnemyCollisions(Enemies* enemies) {
     for (spiderIter = enemies->spiders.begin(); spiderIter < enemies->spiders.end();) {
         if (acorns.size() > 0) {
             if (glm::length((*spiderIter)->getPosition() - glm::vec3(0, 0, 0)) < 1.3) {
-                acorns.back()->takeDamage();
-                //(*spiderIter)->PlayAttackSound();
+                acorns.back()->takeDamage(delta_time);
                 (*spiderIter)->hittingPile = true; 
             }
 
@@ -77,8 +78,7 @@ void Acorns::ProcessEnemyCollisions(Enemies* enemies) {
     for (squirrelIter = enemies->squirrels.begin(); squirrelIter < enemies->squirrels.end();) {
         if (acorns.size() > 0) {
             if (glm::length((*squirrelIter)->getPosition() - glm::vec3(0, 0, 0)) < 1.3) {
-                acorns.back()->takeDamage();
-                //(*squirrelIter)->PlayAttackSound();
+                acorns.back()->takeDamage(delta_time);
                 (*squirrelIter)->hittingPile = true; 
             }
 
@@ -99,6 +99,5 @@ float Acorns::getRemainingAcornCount() const {
     }
     return acorns.size() - 1 + acorns.back()->getCurrentHealth() / Acorn::MAX_HEALTH;
 }
-
-} //namespace game
-} //namespace gnome_fortress 
+}
+} 

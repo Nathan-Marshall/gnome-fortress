@@ -15,11 +15,14 @@ Squirrel::Squirrel(
         technique
       ) {
 
+    //Set references to the main sound engine and the attack sound clip
     this->soundEngine = soundEngine;
     attackSoundByte = resourceManager.getOrLoadAudioClip(resources::audioClips::squirrel_atk);
 
+    //Set the reference to the walls which the squirrel will use for pathfinding
     this->walls = walls;
 
+    //Initialize the physical properties of the squirrels
     setScale(2.0f);
 
     int numWalls = Walls::NumWalls();
@@ -28,7 +31,7 @@ Squirrel::Squirrel(
     rotate(glm::angleAxis((glm::pi<float>() / 2) + angle, glm::vec3(0, 1, 0)));
 
     health = 10.0f;
-    boundingRadius = (sqrt(3) * 2) / 2;
+    boundingRadius = (sqrt(3) / 1.5);
     hittingWall = false;
     damageOnHit = 10.0f;
     moveSpeed = 2.0f;
@@ -37,8 +40,28 @@ Squirrel::Squirrel(
     hittingPile = false;
 }
 
+//Squirrel update metthod
 void Squirrel::onUpdateSelf(float dt) {
+    //Update the timer used for animation loops
+    timer += dt;
 
+    float speed = 2.0f;
+    float amp = 0.02f;
+
+    //Feet animation
+    getChild(0)->setPosition(glm::vec3(0, amp * sin(timer * speed), amp * cos((timer * speed) + glm::pi<float>())));
+    getChild(0)->setOrbit(glm::angleAxis(glm::pi<float>() / 6 * sin(timer * speed), glm::vec3(1, 0, 0)), glm::vec3(0, 0.1, 0), getChild(0)->getPosition());
+
+    getChild(1)->setPosition(glm::vec3(0, amp * sin((timer * speed) + glm::pi<float>()), amp * cos((timer * speed) + glm::pi<float>())));
+    getChild(1)->setOrbit(glm::angleAxis(glm::pi<float>() / 6 * sin(timer * speed + glm::pi<float>()), glm::vec3(1, 0, 0)), glm::vec3(0, 0.1, 0), getChild(1)->getPosition());
+
+    
+    //Tail animation
+    getChild(2)->setPosition(glm::vec3(0, amp * sin(timer * speed), amp * cos((timer * speed) + glm::pi<float>())));
+    getChild(2)->setOrbit(glm::angleAxis(glm::pi<float>() / 8 * sin(timer * speed), glm::vec3(1, 0, 0)), glm::vec3(0, 0.1, 0), getChild(2)->getPosition());
+
+
+    //Squirrel movement
     if (hittingPile){ 
         //Do nothing anymore 
     }
@@ -94,19 +117,19 @@ void Squirrel::onUpdateSelf(float dt) {
         //Move towards the hole
         else if (shortestDist != 1000 && currentRing > 0) {
             if (orbitDeg > 0.1) {
-                orbit(glm::angleAxis((sign * 10 * dt) * glm::pi<float>() / 180.0f, glm::vec3(0, 1, 0)), glm::vec3(0, 0.5, 0));
+                orbit(glm::angleAxis((sign * 10 * dt) * glm::pi<float>() / 180.0f, glm::vec3(0, 1, 0)), glm::vec3(0, 0.25, 0));
                 orbitDeg -= 10 * dt;
             }
             else {
                 glm::vec3 vel = glm::normalize(moveVec) * moveSpeed;
-                translate(glm::vec3(-vel.x, -vel.y, -vel.z) * dt);
+                translate(glm::vec3(-vel.x, 0.0, -vel.z) * dt);
             }
             
         }
 
         //Move to the origin if we are in the middle section
         else {
-            glm::vec3 moveDir = glm::normalize(getPosition() - glm::vec3(0, 0.5, 0));
+            glm::vec3 moveDir = glm::normalize(getPosition() - glm::vec3(0, 0.25, 0));
             glm::vec3 vel = moveDir * moveSpeed;
             translate(glm::vec3(-vel.x, -vel.y, -vel.z) * dt);
         }
@@ -114,8 +137,8 @@ void Squirrel::onUpdateSelf(float dt) {
     else {
 
         //move back a bit, and reset the flag
-        glm::vec3 moveDir = glm::normalize(getPosition() - glm::vec3(0, 0.5, 0));
-        translate(glm::vec3(moveDir.x, moveDir.y, moveDir.z) * 1.0f);
+        glm::vec3 moveDir = glm::normalize(getPosition());
+        translate(glm::vec3(moveDir.x, 0.0, moveDir.z) * 1.0f);
         hittingWall = false;
     }
 }
