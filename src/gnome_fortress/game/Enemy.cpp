@@ -40,7 +40,7 @@ void Enemy::DoDamage(float damage) {
     health -= damage;
 
     //Will make the enemy red momentarily
-    tintAlpha = 1;
+    tintAlpha = 0.4f;
 }
 
 //Get the current health of the enemy

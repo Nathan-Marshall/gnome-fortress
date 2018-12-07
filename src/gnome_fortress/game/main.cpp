@@ -528,7 +528,7 @@ int MainFunction(void){
 
         //Create the third person camera
         model::SceneNode *cameraNodeThird = scene_camera_third_g.getNode();
-        cameraNodeThird->setPosition(0, 1, 4);
+        cameraNodeThird->setPosition(0, 1.2f, 3);
 
         //Create the first person camera
         model::SceneNode *cameraNodeFirst = scene_camera_first_g.getNode();
@@ -550,8 +550,7 @@ int MainFunction(void){
 
         // Randomly create and distribute trees (randomly selected model, rotation, scale, position)
         std::vector<model::BasicMeshGroupNode *> trees;
-        //int numTrees = 70; DECREASED FOR MEGAN'S POOR PC
-        int numTrees = 1;
+        int numTrees = 100;
         for (int i = 0; i < numTrees; i++) {
             trees.push_back(createRandomTree(mtlThreeTermTechnique));
         }
