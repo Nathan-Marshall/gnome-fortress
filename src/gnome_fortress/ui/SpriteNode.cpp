@@ -9,15 +9,23 @@ namespace ui {
 
 // === PUBLIC ===
 
-SpriteNode::SpriteNode(const model::Texture *texture, GLuint vbo, renderer::SpriteTechnique *technique)
+SpriteNode::SpriteNode(const model::Texture *texture, renderer::SpriteTechnique *technique)
     : UINode(),
+      uv_min(0, 0),
+      uv_max(1, 1),
       mainTexture(texture),
-      screenQuadVBO(vbo),
       technique(technique) {
 }
 
 void SpriteNode::setMainTexture(const model::Texture *texture) {
     mainTexture = texture;
+}
+
+void SpriteNode::setUVMin(const glm::vec2 &uv) {
+    uv_min = uv;
+}
+void SpriteNode::setUVMax(const glm::vec2 &uv) {
+    uv_max = uv;
 }
 
 renderer::SpriteTechnique *SpriteNode::getTechnique() const {
@@ -37,10 +45,12 @@ void SpriteNode::onDrawSelf(const glm::mat3 &parent_transform, unsigned int pass
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBlendEquation(GL_FUNC_ADD);
 
-    // bind buffers for mesh
-    glBindBuffer(GL_ARRAY_BUFFER, screenQuadVBO);
+    // bind vbo
+    technique->bindScreenQuadVBO();
 
     // set uniforms and bind textures
+    technique->setUVMin(uv_min);
+    technique->setUVMax(uv_max);
     technique->bindMainTexture(mainTexture);
 
     // update model matrix

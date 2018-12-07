@@ -16,9 +16,12 @@ namespace ui {
 
 class SpriteNode : public UINode {
 public:
-    SpriteNode(const model::Texture *texture, GLuint vbo, renderer::SpriteTechnique *technique);
+    SpriteNode(const model::Texture *texture, renderer::SpriteTechnique *technique);
 
     void setMainTexture(const model::Texture *texture);
+
+    void setUVMin(const glm::vec2 &uv);
+    void setUVMax(const glm::vec2 &uv);
 
     renderer::SpriteTechnique *getTechnique() const;
 
@@ -28,8 +31,9 @@ protected:
     virtual void onDrawSelf(const glm::mat3 &parent_transform, unsigned int pass) const;
 
 private:
+    glm::vec2 uv_min;
+    glm::vec2 uv_max;
     const model::Texture *mainTexture;
-    GLuint screenQuadVBO;
     renderer::SpriteTechnique *technique;
 };
 

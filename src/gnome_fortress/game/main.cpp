@@ -34,6 +34,7 @@ using namespace irrklang;
 #include "gnome_fortress/game/Player.h"
 #include "gnome_fortress/game/Resources.h"
 #include "gnome_fortress/game/RocketStream.h"
+#include "gnome_fortress/game/TextNode.h"
 #include "gnome_fortress/game/Walls.h"
 #include "gnome_fortress/game/Wall.h"
 #include "gnome_fortress/camera/SceneNodeCamera.h"
@@ -84,6 +85,8 @@ game::Enemies* enemies;
 game::Projectiles* playerProjectiles;
 
 game::Acorns *acorns;
+
+int score = 0;
 
 //A vector for swapping through weapons 
 std::vector<Weapon*> weapons;
@@ -403,14 +406,14 @@ int MainFunction(void){
         // set up screen quad vbo for UI
         glGenBuffers(1, &screenQuadVBO);
         glBindBuffer(GL_ARRAY_BUFFER, screenQuadVBO);
-        // POSITION (2), TEXTURE COORDINATES (2)
+        // POSITION (2)
         GLfloat screenQuadData [] = {
-            -1, -1, 0, 0,
-             1, -1, 1, 0,
-             1,  1, 1, 1,
-            -1,  1, 0, 1,
+            -1, -1,
+             1, -1,
+             1,  1,
+            -1,  1,
         };
-        glBufferData(GL_ARRAY_BUFFER, 4 * 4 * sizeof(GLfloat), &screenQuadData, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(GLfloat), &screenQuadData, GL_STATIC_DRAW);
 
 
         // Create geometry of the cube and cylinder
@@ -463,7 +466,9 @@ int MainFunction(void){
         weapons.push_back(pineconeGun);
 
         //Create the enemies
-        Enemies* enemies = new Enemies(walls, SoundEngine);
+        Enemies* enemies = new Enemies(walls, [](int change) {
+            score += change;
+        }, SoundEngine);
         papaNode->appendChild(enemies);
 
         //Spawn some turtles
@@ -528,17 +533,24 @@ int MainFunction(void){
 
         // set up 2D UI shaders and techniques
         GLuint spriteShader = resource_manager_g.getOrLoadShaderProgram(resources::shaders::ui_sprite);
-        auto spriteTechnique = new renderer::SpriteTechnique(spriteShader);
+        auto spriteTechnique = new renderer::SpriteTechnique(spriteShader, screenQuadVBO);
 
         // create UI
         uiNode = new ui::UINode();
 
         // create UI acorns
-        AcornMeter *acornMeter = new AcornMeter(acorns, resource_manager_g, screenQuadVBO, spriteTechnique);
+        AcornMeter *acornMeter = new AcornMeter(acorns, resource_manager_g, spriteTechnique);
         uiNode->appendChild(acornMeter);
 
+        // create UI score text
+        TextNode *scoreText = new TextNode(resource_manager_g, spriteTechnique);
+        scoreText->setPosition(0.99f, 0.925f);
+        scoreText->setScale(0.05f);
+        scoreText->setAlignment(TextNode::Alignment::RIGHT);
+        uiNode->appendChild(scoreText);
+
         // create crosshair
-        ui::SpriteNode *crosshair = new ui::SpriteNode(resource_manager_g.getOrLoadTexture(resources::textures::ui_crosshair), screenQuadVBO, spriteTechnique);
+        ui::SpriteNode *crosshair = new ui::SpriteNode(resource_manager_g.getOrLoadTexture(resources::textures::ui_crosshair), spriteTechnique);
         crosshair->setScale(0.08f, 0.1f);
         uiNode->appendChild(crosshair);
 
@@ -591,6 +603,8 @@ int MainFunction(void){
             enemies->ProcessCollisions(playerProjectiles);
 
             acorns->ProcessEnemyCollisions(enemies);
+
+            scoreText->setText(std::to_string(score));
 
             // Update the scene
             papaNode->update(delta_time);
@@ -655,6 +669,7 @@ int MainFunction(void){
         delete uiNode;
         delete acornMeter;
         delete crosshair;
+        delete scoreText;
 
         glDeleteBuffers(1, &screenQuadVBO);
 

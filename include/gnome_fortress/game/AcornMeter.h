@@ -16,7 +16,7 @@ namespace game {
 class AcornMeter : public ui::UINode {
 
 public:
-    AcornMeter(const Acorns *acorns, resource::ResourceManager &resourceManager, GLuint vbo, renderer::SpriteTechnique *technique);
+    AcornMeter(const Acorns *acorns, resource::ResourceManager &resourceManager, renderer::SpriteTechnique *technique);
 
     ~AcornMeter();
 

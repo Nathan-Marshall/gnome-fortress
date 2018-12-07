@@ -10,14 +10,22 @@ namespace renderer {
 
 class SpriteTechnique : public Basic2DTechnique {
 public:
-    SpriteTechnique(GLuint program);
+    SpriteTechnique(GLuint program, GLuint screenQuadVBO);
+
+    void bindScreenQuadVBO();
 
     void bindMainTexture(const model::Texture *texture);
+
+    void setUVMin(const glm::vec2 &uv);
+    void setUVMax(const glm::vec2 &uv);
 
 protected:
     void bindTexture(const model::Texture *texture);
 
 private:
+    GLuint screenQuadVBO;
+    glm::vec2 uv_min;
+    glm::vec2 uv_max;
     GLint main_texture_index;
 };
 

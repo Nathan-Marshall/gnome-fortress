@@ -55,6 +55,7 @@ namespace textures {
     const std::string flame4x4 = textures::dirname + "particles/flame4x4.png";
     const std::string ui_acorn = textures::dirname + "ui/acorn_icon.png";
     const std::string ui_crosshair = textures::dirname + "ui/crosshair.png";
+    const std::string ui_font = textures::dirname + "ui/font.png";
 }
 
 namespace audioClips {
