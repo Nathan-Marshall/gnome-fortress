@@ -42,8 +42,10 @@ set(HDRS
     include/gnome_fortress/model/Texture.h
     
     include/gnome_fortress/renderer/BasicMeshNodeTechnique.h
+    include/gnome_fortress/renderer/Basic2DTechnique.h
     include/gnome_fortress/renderer/BasicProjectionTechnique.h
     include/gnome_fortress/renderer/SkyboxTechnique.h
+    include/gnome_fortress/renderer/SpriteTechnique.h
     include/gnome_fortress/renderer/Technique.h
     include/gnome_fortress/renderer/Uniform.h
     include/gnome_fortress/renderer/VertexAttribute.h
@@ -53,6 +55,9 @@ set(HDRS
     include/gnome_fortress/resource/ResourceManager.h
     include/gnome_fortress/resource/ShaderProgramLoader.h
     include/gnome_fortress/resource/TextureLoader.h
+    
+    include/gnome_fortress/ui/SpriteNode.h
+    include/gnome_fortress/ui/UINode.h
 
     include/objl/OBJ_Loader.h
 )
@@ -96,8 +101,10 @@ set(SRCS
     src/gnome_fortress/model/Texture.cpp
     
     src/gnome_fortress/renderer/BasicMeshNodeTechnique.cpp
+    src/gnome_fortress/renderer/Basic2DTechnique.cpp
     src/gnome_fortress/renderer/BasicProjectionTechnique.cpp
     src/gnome_fortress/renderer/SkyboxTechnique.cpp
+    src/gnome_fortress/renderer/SpriteTechnique.cpp
     src/gnome_fortress/renderer/Technique.cpp
     src/gnome_fortress/renderer/Uniform.cpp
     src/gnome_fortress/renderer/VertexAttribute.cpp
@@ -107,6 +114,9 @@ set(SRCS
     src/gnome_fortress/resource/ResourceManager.cpp
     src/gnome_fortress/resource/ShaderProgramLoader.cpp
     src/gnome_fortress/resource/TextureLoader.cpp
+    
+    src/gnome_fortress/ui/SpriteNode.cpp
+    src/gnome_fortress/ui/UINode.cpp
 )
 
 # The following config header will be evaluated and added to "bin"

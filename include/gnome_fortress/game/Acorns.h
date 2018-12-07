@@ -16,7 +16,11 @@ namespace game {
 class Acorns : public model::SceneNode {
 
 public:
-    Acorns();
+    Acorns(resource::ResourceManager &resourceManager, renderer::BasicMeshNodeTechnique *technique);
+
+    ~Acorns();
+
+    const static int NUM_ACORNS = 12;
 
     std::vector<Acorn*> acorns;
 

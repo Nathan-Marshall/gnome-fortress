@@ -39,6 +39,7 @@ using namespace irrklang;
 #include "gnome_fortress/model/Mesh.h"
 #include "gnome_fortress/model/Skybox.h"
 #include "gnome_fortress/resource/ResourceManager.h"
+#include "gnome_fortress/ui/SpriteNode.h"
 
 #include "resources_config.h"
 
@@ -50,6 +51,7 @@ const std::string window_title_g = "Gnome Fortress";
 const unsigned int window_width_g = 800;
 const unsigned int window_height_g = 600;
 const glm::vec3 viewport_background_color_g(0.5, 0.5, 0.5);
+GLuint screenQuadVBO;
 
 // Globals that define the OpenGL camera view and projection
 camera::Camera debug_camera_g(
@@ -68,6 +70,8 @@ ISoundEngine *SoundEngine;
 
 //The root scene node
 model::SceneNode *papaNode;
+//The root ui node
+ui::UINode *uiNode;
 
 //References to the player, weapons, walls, and enemies
 game::Player *player;
@@ -79,6 +83,7 @@ game::Enemies* enemies;
 game::Projectiles* playerProjectiles;
 
 game::Acorns *acorns;
+std::vector <ui::SpriteNode *> acornIcons;
 
 //A vector for swapping through weapons 
 std::vector<Weapon*> weapons;
@@ -213,69 +218,6 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     if (key == GLFW_KEY_ESCAPE) {
         exit(0);
     }
-}
-
-void CreateAcornPile(resource::ResourceManager &resourceManager, renderer::BasicMeshNodeTechnique *technique) {
-    //Acorns to be added to pile) 
-    Acorn* acorn1 = new Acorn(resource_manager_g, technique);
-    acorn1->setPosition(0, 0.3, 0);
-    acorns->acorns.push_back(acorn1);
-    acorns->appendChild(acorn1);
-
-    Acorn* acorn2 = new Acorn(resource_manager_g, technique);
-    acorn2->setPosition(.45, 0.3, 0.45); //.25, 0.3, .25
-    acorns->acorns.push_back(acorn2);
-    acorns->appendChild(acorn2);
-
-    Acorn* acorn3 = new Acorn(resource_manager_g, technique);
-    acorn3->setPosition(-.40, 0.3, 0.55);
-    acorns->acorns.push_back(acorn3);
-    acorns->appendChild(acorn3);
-
-    Acorn* acorn4 = new Acorn(resource_manager_g, technique);
-    acorn4->setPosition(-.40, 0.3, -0.55);
-    acorns->acorns.push_back(acorn4);
-    acorns->appendChild(acorn4);
-
-    Acorn* acorn5 = new Acorn(resource_manager_g, technique);
-    acorn5->setPosition(.43, 0.3, -0.63);
-    acorns->acorns.push_back(acorn5);
-    acorns->appendChild(acorn5);
-
-    Acorn* acorn6 = new Acorn(resource_manager_g, technique);
-    acorn6->setPosition(.87, 0.3, -0.10); //.45, .3, -.12
-    acorns->acorns.push_back(acorn6);
-    acorns->appendChild(acorn6);
-
-    Acorn* acorn7 = new Acorn(resource_manager_g, technique);
-    acorn7->setPosition(-.87, 0.3, 0);
-    acorns->acorns.push_back(acorn7);
-    acorns->appendChild(acorn7);
-
-    Acorn* acorn8 = new Acorn(resource_manager_g, technique);
-    acorn8->setPosition(-.48, 0.75, -0.025);
-    acorns->acorns.push_back(acorn8);
-    acorns->appendChild(acorn8);
-
-    Acorn* acorn9 = new Acorn(resource_manager_g, technique);
-    acorn9->setPosition(.48, 0.75, -0.025);
-    acorns->acorns.push_back(acorn9);
-    acorns->appendChild(acorn9);
-
-    Acorn* acorn10 = new Acorn(resource_manager_g, technique);
-    acorn10->setPosition(0, 0.75, 0.45);
-    acorns->acorns.push_back(acorn10);
-    acorns->appendChild(acorn10);
-
-    Acorn* acorn11 = new Acorn(resource_manager_g, technique);
-    acorn11->setPosition(0.1, 0.75, -0.55);
-    acorns->acorns.push_back(acorn11);
-    acorns->appendChild(acorn11);
-
-    Acorn* acorn12 = new Acorn(resource_manager_g, technique);
-    acorn12->setPosition(0, 1.15, 0);
-    acorns->acorns.push_back(acorn12);
-    acorns->appendChild(acorn12);
 }
 
 void createOuterFences(std::vector<model::BasicMeshGroupNode *> &fences, renderer::BasicMeshNodeTechnique *technique) {
@@ -457,6 +399,20 @@ int MainFunction(void){
         glfwSetFramebufferSizeCallback(window, ResizeCallback);
         glfwSetScrollCallback(window, SetScrollCallback);
 
+
+        // set up screen quad vbo for UI
+        glGenBuffers(1, &screenQuadVBO);
+        glBindBuffer(GL_ARRAY_BUFFER, screenQuadVBO);
+        // POSITION (2), TEXTURE COORDINATES (2)
+        GLfloat screenQuadData [] = {
+            -1, -1, 0, 0,
+             1, -1, 1, 0,
+             1,  1, 1, 1,
+            -1,  1, 0, 1,
+        };
+        glBufferData(GL_ARRAY_BUFFER, 4 * 4 * sizeof(GLfloat), &screenQuadData, GL_STATIC_DRAW);
+
+
         // Create geometry of the cube and cylinder
         model::MeshGroup *plane = resource_manager_g.getOrLoadMeshGroup(resources::models::ground);
 
@@ -567,10 +523,25 @@ int MainFunction(void){
         }
         distributeTrees(trees, player->XBOUND_POS + 10, player->XBOUND_POS + 30, 2.0f);
 
-        acorns = new Acorns();
+        acorns = new Acorns(resource_manager_g, mtlThreeTermTechnique);
         papaNode->appendChild(acorns);
 
-        CreateAcornPile(resource_manager_g, mtlThreeTermTechnique);
+        // set up 2D UI shaders and techniques
+        GLuint spriteShader = resource_manager_g.getOrLoadShaderProgram(resources::shaders::ui_sprite);
+        auto spriteTechnqiue = new renderer::SpriteTechnique(spriteShader);
+
+        // create UI
+        uiNode = new ui::UINode();
+
+        // create UI acorns
+        for (int i = 0; i < Acorns::NUM_ACORNS; i++) {
+            ui::SpriteNode *acorn = new ui::SpriteNode(resource_manager_g.getOrLoadTexture(resources::textures::ui_acorn), screenQuadVBO, spriteTechnqiue);
+            acornIcons.push_back(acorn);
+            acorn->setScale(0.05f);
+            acorn->setPosition(-1 + acorn->getScale().x + 0.01f + (acorn->getScale().x + 0.01f) * i, 1 - acorn->getScale().y - 0.01f);
+            uiNode->appendChild(acorn);
+        }
+
 
         double spawnTime = glfwGetTime();
         double startTime = glfwGetTime();
@@ -646,6 +617,9 @@ int MainFunction(void){
             // Second pass (usually for blending)
             papaNode->draw(glm::mat4(), 1);
 
+            // Render UI / HUD
+            uiNode->draw(glm::mat3(), 0);
+
             // Push buffer drawn in the background onto the display
             glfwSwapBuffers(window);
 
@@ -670,6 +644,11 @@ int MainFunction(void){
         delete pineconeGun;
         delete walls;
         delete acorns;
+        delete papaNode;
+        delete uiNode;
+        for each (auto icon in acornIcons) {
+            delete icon;
+        }
 
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;

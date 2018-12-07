@@ -4,8 +4,33 @@
 namespace gnome_fortress {
 namespace game {
 
-Acorns::Acorns() {
-    //Nothing right now 
+Acorns::Acorns(resource::ResourceManager &resourceManager, renderer::BasicMeshNodeTechnique *technique)
+    : acorns(NUM_ACORNS) {
+
+    // Add acorns to the pile
+    for (int i = 0; i < NUM_ACORNS; i++) {
+        acorns[i] = new Acorn(resourceManager, technique);
+        appendChild(acorns[i]);
+    }
+
+    acorns[0]->setPosition(0, 0.3, 0);
+    acorns[1]->setPosition(.45, 0.3, 0.45);
+    acorns[2]->setPosition(-.40, 0.3, 0.55);
+    acorns[3]->setPosition(-.40, 0.3, -0.55);
+    acorns[4]->setPosition(.43, 0.3, -0.63);
+    acorns[5]->setPosition(.87, 0.3, -0.10);
+    acorns[6]->setPosition(-.87, 0.3, 0);
+    acorns[7]->setPosition(-.48, 0.75, -0.025);
+    acorns[8]->setPosition(.48, 0.75, -0.025);
+    acorns[9]->setPosition(0, 0.75, 0.45);
+    acorns[10]->setPosition(0.1, 0.75, -0.55);
+    acorns[11]->setPosition(0, 1.15, 0);
+}
+
+Acorns::~Acorns(){
+    for each (auto acorn in acorns) {
+        delete acorn;
+    }
 }
 
 void Acorns::ProcessEnemyCollisions(Enemies* enemies) {

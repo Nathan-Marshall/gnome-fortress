@@ -44,6 +44,7 @@ namespace shaders {
 
     const std::string rocket_stream = shaders::dirname + "rocket_stream";
     const std::string skybox = shaders::dirname + "skybox";
+    const std::string ui_sprite = shaders::dirname + "ui_sprite";
     const std::string textured_material = shaders::dirname + "textured_material";
 }
 
@@ -52,6 +53,7 @@ namespace textures {
 
     const std::string noon_grass = textures::dirname + "skyboxes/noon_grass/noon_grass.png";
     const std::string flame4x4 = textures::dirname + "particles/flame4x4.png";
+    const std::string ui_acorn = textures::dirname + "ui/acorn_icon.png";
 }
 
 namespace audioClips {
