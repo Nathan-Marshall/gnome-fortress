@@ -25,6 +25,7 @@ uniform vec3 diffuse_color = vec3(1, 1, 1);
 uniform vec3 specular_color = vec3(0, 0, 0);
 uniform float specular_exponent = 100.0;
 uniform float alpha = 1.0;
+uniform vec4 tint = vec4(0,0,0,0);
 
 uniform sampler2D diffuse_map;
 uniform int diffuse_map_on = 0;
@@ -109,6 +110,8 @@ void main()
 
     vec3 final_color = blinn_phong_color * (1 - env_map_factor) + env_map_result * env_map_factor;
     
+    final_color = final_color * (1 - tint[3]) + vec3(tint) * tint[3];
+
     // Assign light to the fragment
     gl_FragColor = vec4(final_color, final_alpha);
 }

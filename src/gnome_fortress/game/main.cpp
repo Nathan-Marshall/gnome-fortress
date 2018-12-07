@@ -550,7 +550,8 @@ int MainFunction(void){
 
         // Randomly create and distribute trees (randomly selected model, rotation, scale, position)
         std::vector<model::BasicMeshGroupNode *> trees;
-        int numTrees = 70;
+        //int numTrees = 70; DECREASED FOR MEGAN'S POOR PC
+        int numTrees = 1;
         for (int i = 0; i < numTrees; i++) {
             trees.push_back(createRandomTree(mtlThreeTermTechnique));
         }

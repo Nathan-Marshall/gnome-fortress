@@ -18,6 +18,8 @@ public:
     void setSpecularExponent(GLfloat exponent);
     void setAlpha(GLfloat alpha);
 
+    void setTint(const glm::vec4 &color);
+
     void bindDiffuseTexture(const model::Texture *texture);
     void bindGlossTexture(const model::Texture *texture);
     void bindAlphaTexture(const model::Texture *texture);
@@ -36,6 +38,8 @@ private:
     glm::vec3 specular_color;
     GLfloat specular_exponent;
     GLfloat alpha;
+
+    glm::vec4 tint;
 
     GLint diffuse_map_index;
     GLint diffuse_map_on;

@@ -31,6 +31,8 @@ public:
     void setAmbientFactor(float factor);
     void setEnvMapFactor(float factor);
 
+    void setTint(glm::vec4 color);
+
 private:
     //The mesh to be drawn for this node
     const model::Mesh *mesh;
@@ -41,6 +43,9 @@ private:
 
     float ambient_factor;
     float env_map_factor;
+
+    glm::vec4 tint;
+
     renderer::BasicMeshNodeTechnique *technique;
 };
 

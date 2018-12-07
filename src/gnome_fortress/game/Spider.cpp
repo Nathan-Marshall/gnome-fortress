@@ -87,6 +87,8 @@ void Spider::onUpdateSelf(float dt) {
             hittingWall = false;
         }
     }
+
+    Enemy::onUpdateSelf(dt);
 }
 
 
