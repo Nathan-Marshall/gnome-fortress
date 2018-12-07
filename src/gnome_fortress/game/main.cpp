@@ -537,10 +537,16 @@ int MainFunction(void){
         for (int i = 0; i < Acorns::NUM_ACORNS; i++) {
             ui::SpriteNode *acorn = new ui::SpriteNode(resource_manager_g.getOrLoadTexture(resources::textures::ui_acorn), screenQuadVBO, spriteTechnqiue);
             acornIcons.push_back(acorn);
-            acorn->setScale(0.05f);
+            acorn->setScale(0.04f, 0.05f);
             acorn->setPosition(-1 + acorn->getScale().x + 0.01f + (acorn->getScale().x + 0.01f) * i, 1 - acorn->getScale().y - 0.01f);
             uiNode->appendChild(acorn);
         }
+
+        // create crosshair
+        ui::SpriteNode *crosshair = new ui::SpriteNode(resource_manager_g.getOrLoadTexture(resources::textures::ui_crosshair), screenQuadVBO, spriteTechnqiue);
+        acornIcons.push_back(crosshair);
+        crosshair->setScale(0.08f, 0.1f);
+        uiNode->appendChild(crosshair);
 
 
         double spawnTime = glfwGetTime();
@@ -627,15 +633,20 @@ int MainFunction(void){
             glfwPollEvents();
         }
 
+        // delete techniques
+        delete mtlThreeTermTechnique;
+        delete skyboxTechnique;
+        delete rocketStreamTechnique;
+        delete spriteTechnqiue;
+
+        // delete scene nodes
+        delete papaNode;
         for each (auto fence in outerFences) {
             delete fence;
         }
         for each (auto tree in trees) {
             delete tree;
         }
-        delete mtlThreeTermTechnique;
-        delete skyboxTechnique;
-        delete rocketStreamTechnique;
         delete skybox;
         delete player;
         delete enemies;
@@ -644,11 +655,15 @@ int MainFunction(void){
         delete pineconeGun;
         delete walls;
         delete acorns;
-        delete papaNode;
+
+        // delete UI nodes
         delete uiNode;
         for each (auto icon in acornIcons) {
             delete icon;
         }
+        delete crosshair;
+
+        glDeleteBuffers(1, &screenQuadVBO);
 
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
