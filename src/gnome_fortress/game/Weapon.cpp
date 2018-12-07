@@ -1,7 +1,7 @@
 #include "gnome_fortress/game/Weapon.h"
 #include <iostream>
 
-//These should be set based on the kind of gun created 
+//Firing rate and velocity, will be replaced with weapon-specific values
 int FIRING_RATE = 5;
 double FIRING_VELOCITY = 5.0;
 
@@ -37,6 +37,7 @@ namespace game {
         cooldown = cd;
     }
 
+    //Fire a bullet from a generic weapon
     std::vector<Projectile*> Weapon::fireBullet(glm::vec3 position) {
         glm::vec3 vel = glm::normalize(glm::vec3(getGlobalTransform() * glm::vec4(0, 0, -1, 0)));
         vel.x *= 5.0; //FIRING_VELOCITY;
@@ -51,6 +52,7 @@ namespace game {
         return projecs;
     }
 
+    //Play the sound attached to this weapon firing
     void Weapon::PlayWeaponSound() {
         irrklang::ISound *effect = soundEngine->play2D(fireSoundByte, GL_FALSE, GL_TRUE);
         if (effect) {

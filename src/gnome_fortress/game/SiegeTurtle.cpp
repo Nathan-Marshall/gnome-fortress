@@ -15,9 +15,11 @@ SiegeTurtle::SiegeTurtle(
         technique
       ) {
 
+    //Set references to the sound engine, our attack sound
     this->soundEngine = soundEngine;
     attackSoundByte = resourceManager.getOrLoadAudioClip(resources::audioClips::turtle_atk);
 
+    //Initialize all of the physical properties of the turtles
     setScale(5.5f);
 
     int numWalls = Walls::NumWalls();
@@ -34,7 +36,9 @@ SiegeTurtle::SiegeTurtle(
     hittingPile = false;
 }
 
+//Seige turtle update method
 void SiegeTurtle::onUpdateSelf(float dt) {
+    //Timer used for the animation loop
     timer += dt;
 
     float speed = 2.0f;
@@ -60,6 +64,7 @@ void SiegeTurtle::onUpdateSelf(float dt) {
     getChild(3)->setPosition(glm::vec3(0, amp * sin(timer * speed), 0));
     
 
+    //Turtle movement
     if (hittingPile) {
         //Do nothing any more 
     }

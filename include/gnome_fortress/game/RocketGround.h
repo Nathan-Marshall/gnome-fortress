@@ -24,6 +24,7 @@ public:
 private:
     static model::PointSet *CreateSphereParticles(int num_particles);
 
+    //The point set, texture, and technique used for rendering this effect
     const model::PointSet *pointSet;
     const model::Texture *texture;
     RocketGroundTechnique *technique;

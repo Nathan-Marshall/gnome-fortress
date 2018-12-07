@@ -19,12 +19,15 @@ public:
     Enemy(const model::MeshGroup *meshGroup,
         renderer::BasicMeshNodeTechnique *technique);
 
+    //Get radius, health, and attack sounds for the enemy
     float GetBoundingRadius();
     float GetHealth();
     const char* GetAttackSound();
 
+    //Take damage from projectiles
     void DoDamage(float damage);
 
+    //Play this enemiy's attack sound
     void PlayAttackSound();
 protected:
     void onUpdateSelf(float dt) override;

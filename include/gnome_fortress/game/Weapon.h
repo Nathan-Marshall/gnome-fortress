@@ -34,6 +34,7 @@ public:
     //Creating bullets 
     virtual std::vector<Projectile*> fireBullet(glm::vec3 position);
 
+    //Play the sound for the weapon when the user fires it
     void PlayWeaponSound();
 
 protected:

@@ -21,8 +21,10 @@ public:
     void setPower(float power);
 
 private:
+    //Create particles for the shotgun stream effect
     static model::PointSet *CreateConeParticles(int num_particles);
 
+    //Point set, texture, and technique to use for rendering this particle effect
     const model::PointSet *pointSet;
     const model::Texture *texture;
     ShotgunStreamTechnique *technique;

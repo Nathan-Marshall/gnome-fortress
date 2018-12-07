@@ -18,14 +18,16 @@ public:
     Acorn(resource::ResourceManager &resourceManager,
         renderer::BasicMeshNodeTechnique *technique);
 
-    //Whether or not the acorn is being eaten at the moment 
-
     float getScale();
     void vanishScale();
 
+    //Get the current acorn health
     float getCurrentHealth();
+
+    //Have the acorn take damage from outside sources
     void takeDamage(float delta_time);
 
+    //Max health for the acorn
     const static float MAX_HEALTH;
 
 protected: 

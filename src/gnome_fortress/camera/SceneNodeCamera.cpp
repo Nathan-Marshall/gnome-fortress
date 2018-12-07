@@ -19,6 +19,7 @@ SceneNodeCamera::CameraUpdaterNode::CameraUpdaterNode(SceneNodeCamera *camera)
 
 }
 
+//Update the camera view matrix based on the current transformations of the camera node
 void SceneNodeCamera::CameraUpdaterNode::onUpdateSelf(float delta_time) {
     glm::mat4 transform = getGlobalInverseTransform();
 

@@ -15,11 +15,14 @@ Squirrel::Squirrel(
         technique
       ) {
 
+    //Set references to the main sound engine and the attack sound clip
     this->soundEngine = soundEngine;
     attackSoundByte = resourceManager.getOrLoadAudioClip(resources::audioClips::squirrel_atk);
 
+    //Set the reference to the walls which the squirrel will use for pathfinding
     this->walls = walls;
 
+    //Initialize the physical properties of the squirrels
     setScale(2.0f);
 
     int numWalls = Walls::NumWalls();
@@ -37,7 +40,9 @@ Squirrel::Squirrel(
     hittingPile = false;
 }
 
+//Squirrel update metthod
 void Squirrel::onUpdateSelf(float dt) {
+    //Update the timer used for animation loops
     timer += dt;
 
     float speed = 2.0f;
@@ -56,6 +61,7 @@ void Squirrel::onUpdateSelf(float dt) {
     getChild(2)->setOrbit(glm::angleAxis(glm::pi<float>() / 8 * sin(timer * speed), glm::vec3(1, 0, 0)), glm::vec3(0, 0.1, 0), getChild(2)->getPosition());
 
 
+    //Squirrel movement
     if (hittingPile){ 
         //Do nothing anymore 
     }

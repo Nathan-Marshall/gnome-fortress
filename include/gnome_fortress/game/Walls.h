@@ -14,6 +14,7 @@ namespace game {
 class Walls : public model::SceneNode {
 
 public:
+    //Wall variables determining how our walls structure is built
     const static float OUTER_RADIUS;
     const static float INNER_RADIUS;
     const static int WALLS_PER_RING;
@@ -36,6 +37,7 @@ public:
 protected:
             
 private:
+    //Create the actual walls
     void FillWalls(
             resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique,

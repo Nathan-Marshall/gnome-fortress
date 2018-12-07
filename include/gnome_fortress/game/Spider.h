@@ -23,19 +23,30 @@ public:
             renderer::BasicMeshNodeTechnique *technique,
             irrklang::ISoundEngine *soundEngine);
 
+    //Booleans to track whether the spider is hitting a wall, hitting the acorn pile, or is currently over/on top of a wall
     bool hittingWall;
 
     bool hittingPile;
 
     bool overWall;
 
-    int currentRot = 0;
+    
 
 protected:
     void onUpdateSelf(float dt) override;
 
 private:
+    //Enum to keep track of the spider state
+    enum state
+    {
+        INIT = 0,
+        CLIMBING = 1,
+        ON_WALL = 2,
+        DESCENDING = 3
+    };
 
+    //The current movement/rotation state of the spider
+    state state;
 };
 
 

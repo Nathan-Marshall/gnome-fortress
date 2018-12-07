@@ -8,18 +8,20 @@ Acorns::Acorns() {
     //Nothing right now 
 }
 
+//Process enemies colliding with the acorns
 void Acorns::ProcessEnemyCollisions(Enemies* enemies, float delta_time) {
 
+    //Iterator for each enemy type
     std::vector<SiegeTurtle*>::iterator turtleIter;
     std::vector<Spider*>::iterator spiderIter;
     std::vector<Squirrel*>::iterator squirrelIter;
 
+    //Process collisions with the acorns for each enemy type
     for (turtleIter = enemies->turtles.begin(); turtleIter < enemies->turtles.end();) {
     
         if (acorns.size() > 0) {
             if (glm::length((*turtleIter)->getPosition() - glm::vec3(0, 0, 0)) < 4.0) {
                 acorns.back()->takeDamage(delta_time);
-                //(*turtleIter)->PlayAttackSound();
                 (*turtleIter)->hittingPile = true;
             }
             
@@ -36,7 +38,6 @@ void Acorns::ProcessEnemyCollisions(Enemies* enemies, float delta_time) {
         if (acorns.size() > 0) {
             if (glm::length((*spiderIter)->getPosition() - glm::vec3(0, 0, 0)) < 1.3) {
                 acorns.back()->takeDamage(delta_time);
-                //(*spiderIter)->PlayAttackSound();
                 (*spiderIter)->hittingPile = true; 
             }
 
@@ -53,7 +54,6 @@ void Acorns::ProcessEnemyCollisions(Enemies* enemies, float delta_time) {
         if (acorns.size() > 0) {
             if (glm::length((*squirrelIter)->getPosition() - glm::vec3(0, 0, 0)) < 1.3) {
                 acorns.back()->takeDamage(delta_time);
-                //(*squirrelIter)->PlayAttackSound();
                 (*squirrelIter)->hittingPile = true; 
             }
 
@@ -67,5 +67,5 @@ void Acorns::ProcessEnemyCollisions(Enemies* enemies, float delta_time) {
     }
 
 }
-} //namespace game
-} //namespace gnome_fortress 
+}
+} 
