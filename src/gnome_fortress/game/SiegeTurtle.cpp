@@ -35,6 +35,31 @@ SiegeTurtle::SiegeTurtle(
 }
 
 void SiegeTurtle::onUpdateSelf(float dt) {
+    timer += dt;
+
+    float speed = 2.0f;
+    float amp = 0.02f;
+
+    //Front legs
+    getChild(1)->setPosition(glm::vec3(0, amp * sin((timer * speed) + glm::pi<float>()), amp * cos((timer * speed) + glm::pi<float>())));
+    getChild(1)->setOrbit(glm::angleAxis(glm::pi<float>() / 4 * sin(timer * speed + glm::pi<float>()), glm::vec3(1, 0, 0)), glm::vec3(0, 0.125, -0.22), getChild(1)->getPosition());
+
+    getChild(4)->setPosition(glm::vec3(0, amp * sin(timer * speed), amp * cos(timer * speed)));
+    getChild(4)->setOrbit(glm::angleAxis(glm::pi<float>() / 4 * sin(timer * speed), glm::vec3(1, 0, 0)), glm::vec3(0, 0.125, -0.22), getChild(4)->getPosition());
+    
+
+    //Back legs
+    getChild(0)->setPosition(glm::vec3(0, amp * sin((timer * speed) + glm::pi<float>()), amp * cos((timer * speed) + glm::pi<float>())));
+    getChild(0)->setOrbit(glm::angleAxis(glm::pi<float>() / 4 * sin(timer * speed + glm::pi<float>()), glm::vec3(1, 0, 0)), glm::vec3(0, 0.125, 0.22), getChild(0)->getPosition());
+
+    getChild(2)->setPosition(glm::vec3(0, amp * sin(timer * speed), amp * cos(timer * speed)));
+    getChild(2)->setOrbit(glm::angleAxis(glm::pi<float>() / 4 * sin(timer * speed), glm::vec3(1, 0, 0)), glm::vec3(0, 0.125, 0.22), getChild(2)->getPosition());
+
+
+    //Turtle shell
+    getChild(3)->setPosition(glm::vec3(0, amp * sin(timer * speed), 0));
+    
+
     if (hittingPile) {
         //Do nothing any more 
     }

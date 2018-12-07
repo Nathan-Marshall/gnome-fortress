@@ -38,6 +38,7 @@ Squirrel::Squirrel(
 }
 
 void Squirrel::onUpdateSelf(float dt) {
+    timer += dt;
 
     if (hittingPile){ 
         //Do nothing anymore 

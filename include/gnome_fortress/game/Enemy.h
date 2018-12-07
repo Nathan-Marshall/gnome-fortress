@@ -36,8 +36,10 @@ protected:
     const char* attackSoundByte;
     irrklang::ISoundEngine *soundEngine;
 
-private:
+    float timer;
 
+private:
+    
 };
 
 

@@ -35,6 +35,7 @@ namespace game {
 }
 
 void Spider::onUpdateSelf(float dt) {
+    timer += dt;
 
     //Rotation of the spider
     if (hittingWall && currentRot != 1) {
