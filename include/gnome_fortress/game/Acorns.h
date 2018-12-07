@@ -26,6 +26,8 @@ public:
 
     void ProcessEnemyCollisions(Enemies* turtles);
 
+    float getRemainingAcornCount() const;
+
 private:
 
 };

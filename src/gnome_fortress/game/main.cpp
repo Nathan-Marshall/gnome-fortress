@@ -25,6 +25,7 @@
 #include <irrKlang\irrKlang.h>
 using namespace irrklang;
 
+#include "gnome_fortress/game/AcornMeter.h"
 #include "gnome_fortress/game/Acorns.h"
 #include "gnome_fortress/game/Enemies.h"
 #include "gnome_fortress/game/MushroomGun.h"
@@ -83,7 +84,6 @@ game::Enemies* enemies;
 game::Projectiles* playerProjectiles;
 
 game::Acorns *acorns;
-std::vector <ui::SpriteNode *> acornIcons;
 
 //A vector for swapping through weapons 
 std::vector<Weapon*> weapons;
@@ -528,23 +528,17 @@ int MainFunction(void){
 
         // set up 2D UI shaders and techniques
         GLuint spriteShader = resource_manager_g.getOrLoadShaderProgram(resources::shaders::ui_sprite);
-        auto spriteTechnqiue = new renderer::SpriteTechnique(spriteShader);
+        auto spriteTechnique = new renderer::SpriteTechnique(spriteShader);
 
         // create UI
         uiNode = new ui::UINode();
 
         // create UI acorns
-        for (int i = 0; i < Acorns::NUM_ACORNS; i++) {
-            ui::SpriteNode *acorn = new ui::SpriteNode(resource_manager_g.getOrLoadTexture(resources::textures::ui_acorn), screenQuadVBO, spriteTechnqiue);
-            acornIcons.push_back(acorn);
-            acorn->setScale(0.04f, 0.05f);
-            acorn->setPosition(-1 + acorn->getScale().x + 0.01f + (acorn->getScale().x + 0.01f) * i, 1 - acorn->getScale().y - 0.01f);
-            uiNode->appendChild(acorn);
-        }
+        AcornMeter *acornMeter = new AcornMeter(acorns, resource_manager_g, screenQuadVBO, spriteTechnique);
+        uiNode->appendChild(acornMeter);
 
         // create crosshair
-        ui::SpriteNode *crosshair = new ui::SpriteNode(resource_manager_g.getOrLoadTexture(resources::textures::ui_crosshair), screenQuadVBO, spriteTechnqiue);
-        acornIcons.push_back(crosshair);
+        ui::SpriteNode *crosshair = new ui::SpriteNode(resource_manager_g.getOrLoadTexture(resources::textures::ui_crosshair), screenQuadVBO, spriteTechnique);
         crosshair->setScale(0.08f, 0.1f);
         uiNode->appendChild(crosshair);
 
@@ -598,9 +592,10 @@ int MainFunction(void){
 
             acorns->ProcessEnemyCollisions(enemies);
 
-            // Update the scene nodes
+            // Update the scene
             papaNode->update(delta_time);
-
+            // Update the UI
+            uiNode->update(delta_time);
 
             // Clear background
             glClearColor(viewport_background_color_g[0], 
@@ -637,7 +632,7 @@ int MainFunction(void){
         delete mtlThreeTermTechnique;
         delete skyboxTechnique;
         delete rocketStreamTechnique;
-        delete spriteTechnqiue;
+        delete spriteTechnique;
 
         // delete scene nodes
         delete papaNode;
@@ -658,9 +653,7 @@ int MainFunction(void){
 
         // delete UI nodes
         delete uiNode;
-        for each (auto icon in acornIcons) {
-            delete icon;
-        }
+        delete acornMeter;
         delete crosshair;
 
         glDeleteBuffers(1, &screenQuadVBO);

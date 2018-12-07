@@ -158,7 +158,7 @@ public:
     // Nodes that are not visible do not have their draw function called
     bool isVisibile() const;
     // Nodes that are not visible do not have their draw function called
-    void setVisibile(bool visible);
+    void setVisible(bool visible);
 
 protected:
     // Uses the gl functions to transform the top of the matrix stack by the local transformations

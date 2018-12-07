@@ -318,7 +318,7 @@ bool SceneNode::isVisibile() const {
     return visible;
 }
 
-void SceneNode::setVisibile(bool v) {
+void SceneNode::setVisible(bool v) {
     visible = v;
 }
 

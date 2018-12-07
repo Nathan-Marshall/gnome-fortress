@@ -288,7 +288,7 @@ bool UINode::isVisibile() const {
     return visible;
 }
 
-void UINode::setVisibile(bool v) {
+void UINode::setVisible(bool v) {
     visible = v;
 }
 

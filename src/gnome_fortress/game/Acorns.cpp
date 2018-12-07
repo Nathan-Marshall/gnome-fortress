@@ -92,5 +92,13 @@ void Acorns::ProcessEnemyCollisions(Enemies* enemies) {
     }
 
 }
+
+float Acorns::getRemainingAcornCount() const {
+    if (acorns.size() == 0) {
+        return 0;
+    }
+    return acorns.size() - 1 + acorns.back()->getCurrentHealth() / Acorn::MAX_HEALTH;
+}
+
 } //namespace game
 } //namespace gnome_fortress 
