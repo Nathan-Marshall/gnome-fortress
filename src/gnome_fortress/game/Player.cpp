@@ -260,7 +260,7 @@ namespace game {
         for (wallIt = walls->walls.begin(); wallIt < walls->walls.end(); wallIt++) {
             glm::vec3 playerPos = getPosition();
 
-            if ((*wallIt)[0]) {
+            if ((*wallIt).size() > 0) {
                 glm::vec3 wallPos = (*wallIt)[0]->getPosition();
 
                 float wallDist = glm::length(wallPos - glm::vec3(0, 0, 0));
