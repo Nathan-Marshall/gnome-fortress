@@ -13,7 +13,7 @@
 #include "SiegeTurtle.h"
 #include "Squirrel.h"
 #include "Spider.h"
-#include "irrKlang\irrKlang.h"
+#include <irrKlang.h>
 #include "Spore.h"
 #include "Rocket.h"
 

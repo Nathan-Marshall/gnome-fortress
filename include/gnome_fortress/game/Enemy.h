@@ -7,7 +7,7 @@
 #include <glm/gtc/constants.hpp>
 
 #include "gnome_fortress/model/BasicMeshGroupNode.h"
-#include "irrKlang\irrKlang.h"
+#include <irrKlang.h>
 
 namespace gnome_fortress {
 namespace game {

@@ -8,7 +8,7 @@
 
 #include "gnome_fortress/game/Player.h"
 #include "gnome_fortress/game/Projectiles.h"
-#include "irrKlang\irrKlang.h"
+#include <irrKlang.h>
 
 namespace gnome_fortress {
 namespace game {

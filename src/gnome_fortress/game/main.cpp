@@ -22,7 +22,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
 
-#include <irrKlang\irrKlang.h>
+#include <irrKlang.h>
 using namespace irrklang;
 
 #include "gnome_fortress/game/Acorns.h"
