@@ -162,7 +162,7 @@ namespace gnome_fortress {
             bool atHole = false;
 
             for (wallIt = walls->walls.begin(); wallIt < walls->walls.end(); wallIt++) {
-                if ((*wallIt)[0]) {
+                if ((*wallIt).size() > 0) {
                     for (projecIt = projectiles.begin(); projecIt < projectiles.end();) {
                         glm::vec3 projecPos = (*projecIt)->getPosition();
 
