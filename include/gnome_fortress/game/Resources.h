@@ -50,6 +50,7 @@ namespace shaders {
     const std::string shotgun_stream = shaders::dirname + "shotgun_stream";
     const std::string spore_ground = shaders::dirname + "spore_ground";
     const std::string skybox = shaders::dirname + "skybox";
+    const std::string ui_sprite = shaders::dirname + "ui_sprite";
     const std::string textured_material = shaders::dirname + "textured_material";
 }
 
@@ -59,6 +60,9 @@ namespace textures {
 
     const std::string noon_grass = textures::dirname + "skyboxes/noon_grass/noon_grass.png";
     const std::string flame4x4 = textures::dirname + "particles/flame4x4.png";
+    const std::string ui_acorn = textures::dirname + "ui/acorn_icon.png";
+    const std::string ui_crosshair = textures::dirname + "ui/crosshair.png";
+    const std::string ui_font = textures::dirname + "ui/font.png";
 }
 
 //Filepath values for all of our audio clips

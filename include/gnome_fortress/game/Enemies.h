@@ -7,6 +7,8 @@
 #include <glm/gtc/constants.hpp>
 #include <vector>
 
+#include <functional>
+
 #include "Enemy.h"
 #include "Projectiles.h"
 #include "Walls.h"
@@ -24,7 +26,9 @@ namespace game {
 class Enemies : public model::SceneNode {
 
 public:
-    Enemies(Walls* walls, irrklang::ISoundEngine *soundEngine);
+    using IncreaseScoreHandler = std::function<void(int)>;
+
+    Enemies(Walls* walls, const IncreaseScoreHandler &increaseScoreHandler, irrklang::ISoundEngine *soundEngine);
 
     //Reference to the walls to be used for collisions
     Walls* walls;
@@ -44,6 +48,8 @@ protected:
 
 
 private:
+    // Callback to update the score
+    IncreaseScoreHandler increaseScoreHandler;
 
     //Reference to the main sound engine so we can play attack sounds
     irrklang::ISoundEngine *soundEngine;

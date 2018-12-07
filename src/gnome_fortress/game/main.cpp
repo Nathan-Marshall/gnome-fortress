@@ -25,6 +25,7 @@
 #include <irrKlang.h>
 using namespace irrklang;
 
+#include "gnome_fortress/game/AcornMeter.h"
 #include "gnome_fortress/game/Acorns.h"
 #include "gnome_fortress/game/Enemies.h"
 #include "gnome_fortress/game/MushroomGun.h"
@@ -37,12 +38,14 @@ using namespace irrklang;
 #include "gnome_fortress/game/ShotgunStream.h"
 #include "gnome_fortress/game/RocketGround.h"
 #include "gnome_fortress/game/SporeGround.h"
+#include "gnome_fortress/game/TextNode.h"
 #include "gnome_fortress/game/Walls.h"
 #include "gnome_fortress/game/Wall.h"
 #include "gnome_fortress/camera/SceneNodeCamera.h"
 #include "gnome_fortress/model/Mesh.h"
 #include "gnome_fortress/model/Skybox.h"
 #include "gnome_fortress/resource/ResourceManager.h"
+#include "gnome_fortress/ui/SpriteNode.h"
 
 #include "resources_config.h"
 
@@ -54,6 +57,7 @@ const std::string window_title_g = "Gnome Fortress";
 const unsigned int window_width_g = 800;
 const unsigned int window_height_g = 600;
 const glm::vec3 viewport_background_color_g(0.5, 0.5, 0.5);
+GLuint screenQuadVBO;
 
 // Globals that define the OpenGL camera view and projection
 camera::Camera debug_camera_g(
@@ -72,6 +76,8 @@ ISoundEngine *SoundEngine;
 
 //The root scene node
 model::SceneNode *papaNode;
+//The root ui node
+ui::UINode *uiNode;
 
 //References to the player, weapons, walls, and enemies
 game::Player *player;
@@ -83,6 +89,8 @@ game::Enemies* enemies;
 game::Projectiles* playerProjectiles;
 
 game::Acorns *acorns;
+
+int score = 0;
 
 //A vector for swapping through weapons 
 std::vector<Weapon*> weapons;
@@ -218,71 +226,6 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     }
 }
 
-//Create the center pile of acorns
-void CreateAcornPile(resource::ResourceManager &resourceManager, renderer::BasicMeshNodeTechnique *technique) {
-    //Acorns to be added to pile) 
-    Acorn* acorn1 = new Acorn(resource_manager_g, technique);
-    acorn1->setPosition(0, 0.3, 0);
-    acorns->acorns.push_back(acorn1);
-    acorns->appendChild(acorn1);
-
-    Acorn* acorn2 = new Acorn(resource_manager_g, technique);
-    acorn2->setPosition(.45, 0.3, 0.45); //.25, 0.3, .25
-    acorns->acorns.push_back(acorn2);
-    acorns->appendChild(acorn2);
-
-    Acorn* acorn3 = new Acorn(resource_manager_g, technique);
-    acorn3->setPosition(-.40, 0.3, 0.55);
-    acorns->acorns.push_back(acorn3);
-    acorns->appendChild(acorn3);
-
-    Acorn* acorn4 = new Acorn(resource_manager_g, technique);
-    acorn4->setPosition(-.40, 0.3, -0.55);
-    acorns->acorns.push_back(acorn4);
-    acorns->appendChild(acorn4);
-
-    Acorn* acorn5 = new Acorn(resource_manager_g, technique);
-    acorn5->setPosition(.43, 0.3, -0.63);
-    acorns->acorns.push_back(acorn5);
-    acorns->appendChild(acorn5);
-
-    Acorn* acorn6 = new Acorn(resource_manager_g, technique);
-    acorn6->setPosition(.87, 0.3, -0.10); //.45, .3, -.12
-    acorns->acorns.push_back(acorn6);
-    acorns->appendChild(acorn6);
-
-    Acorn* acorn7 = new Acorn(resource_manager_g, technique);
-    acorn7->setPosition(-.87, 0.3, 0);
-    acorns->acorns.push_back(acorn7);
-    acorns->appendChild(acorn7);
-
-    Acorn* acorn8 = new Acorn(resource_manager_g, technique);
-    acorn8->setPosition(-.48, 0.75, -0.025);
-    acorns->acorns.push_back(acorn8);
-    acorns->appendChild(acorn8);
-
-    Acorn* acorn9 = new Acorn(resource_manager_g, technique);
-    acorn9->setPosition(.48, 0.75, -0.025);
-    acorns->acorns.push_back(acorn9);
-    acorns->appendChild(acorn9);
-
-    Acorn* acorn10 = new Acorn(resource_manager_g, technique);
-    acorn10->setPosition(0, 0.75, 0.45);
-    acorns->acorns.push_back(acorn10);
-    acorns->appendChild(acorn10);
-
-    Acorn* acorn11 = new Acorn(resource_manager_g, technique);
-    acorn11->setPosition(0.1, 0.75, -0.55);
-    acorns->acorns.push_back(acorn11);
-    acorns->appendChild(acorn11);
-
-    Acorn* acorn12 = new Acorn(resource_manager_g, technique);
-    acorn12->setPosition(0, 1.15, 0);
-    acorns->acorns.push_back(acorn12);
-    acorns->appendChild(acorn12);
-}
-
-//Create the outer picket fence
 void createOuterFences(std::vector<model::BasicMeshGroupNode *> &fences, renderer::BasicMeshNodeTechnique *technique) {
     int fencesPerSide = 14;
     float sideLength = 70.0f;
@@ -464,6 +407,20 @@ int MainFunction(void){
         glfwSetFramebufferSizeCallback(window, ResizeCallback);
         glfwSetScrollCallback(window, SetScrollCallback);
 
+
+        // set up screen quad vbo for UI
+        glGenBuffers(1, &screenQuadVBO);
+        glBindBuffer(GL_ARRAY_BUFFER, screenQuadVBO);
+        // POSITION (2)
+        GLfloat screenQuadData [] = {
+            -1, -1,
+             1, -1,
+             1,  1,
+            -1,  1,
+        };
+        glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(GLfloat), &screenQuadData, GL_STATIC_DRAW);
+
+
         // Create geometry of the cube and cylinder
         model::MeshGroup *plane = resource_manager_g.getOrLoadMeshGroup(resources::models::ground);
 
@@ -530,8 +487,10 @@ int MainFunction(void){
         weapons.push_back(mushroomGun);
         weapons.push_back(pineconeGun);
 
-        //Create the enemies and append the collection class to the root node
-        Enemies* enemies = new Enemies(walls, SoundEngine);
+        //Create the enemies
+        Enemies* enemies = new Enemies(walls, [](int change) {
+            score += change;
+        }, SoundEngine);
         papaNode->appendChild(enemies);
 
         //Spawn some turtles
@@ -598,10 +557,32 @@ int MainFunction(void){
         distributeTrees(trees, player->XBOUND_POS + 10, player->XBOUND_POS + 30, 2.0f);
 
         //Create our acorns collection structure and append to the root node
-        acorns = new Acorns();
+        acorns = new Acorns(resource_manager_g, mtlThreeTermTechnique);
         papaNode->appendChild(acorns);
 
-        CreateAcornPile(resource_manager_g, mtlThreeTermTechnique);
+        // set up 2D UI shaders and techniques
+        GLuint spriteShader = resource_manager_g.getOrLoadShaderProgram(resources::shaders::ui_sprite);
+        auto spriteTechnique = new renderer::SpriteTechnique(spriteShader, screenQuadVBO);
+
+        // create UI
+        uiNode = new ui::UINode();
+
+        // create UI acorns
+        AcornMeter *acornMeter = new AcornMeter(acorns, resource_manager_g, spriteTechnique);
+        uiNode->appendChild(acornMeter);
+
+        // create UI score text
+        TextNode *scoreText = new TextNode(resource_manager_g, spriteTechnique);
+        scoreText->setPosition(0.99f, 0.925f);
+        scoreText->setScale(0.05f);
+        scoreText->setAlignment(TextNode::Alignment::RIGHT);
+        uiNode->appendChild(scoreText);
+
+        // create crosshair
+        ui::SpriteNode *crosshair = new ui::SpriteNode(resource_manager_g.getOrLoadTexture(resources::textures::ui_crosshair), spriteTechnique);
+        crosshair->setScale(0.08f, 0.1f);
+        uiNode->appendChild(crosshair);
+
 
         double spawnTime = glfwGetTime();
         double startTime = glfwGetTime();
@@ -669,8 +650,12 @@ int MainFunction(void){
             //Process acorn collisions
             acorns->ProcessEnemyCollisions(enemies, delta_time);
 
-            // Update the scene nodes
+            scoreText->setText(std::to_string(score));
+
+            // Update the scene
             papaNode->update(delta_time);
+            // Update the UI
+            uiNode->update(delta_time);
 
             // Clear background
             glClearColor(viewport_background_color_g[0], 
@@ -708,6 +693,9 @@ int MainFunction(void){
             // Second pass (usually for blending)
             papaNode->draw(glm::mat4(), 1);
 
+            // Render UI / HUD
+            uiNode->draw(glm::mat3(), 0);
+
             // Push buffer drawn in the background onto the display
             glfwSwapBuffers(window);
 
@@ -715,15 +703,20 @@ int MainFunction(void){
             glfwPollEvents();
         }
 
+        // delete techniques
+        delete mtlThreeTermTechnique;
+        delete skyboxTechnique;
+        delete rocketStreamTechnique;
+        delete spriteTechnique;
+
+        // delete scene nodes
+        delete papaNode;
         for each (auto fence in outerFences) {
             delete fence;
         }
         for each (auto tree in trees) {
             delete tree;
         }
-        delete mtlThreeTermTechnique;
-        delete skyboxTechnique;
-        delete rocketStreamTechnique;
         delete skybox;
         delete player;
         delete enemies;
@@ -732,6 +725,14 @@ int MainFunction(void){
         delete pineconeGun;
         delete walls;
         delete acorns;
+
+        // delete UI nodes
+        delete uiNode;
+        delete acornMeter;
+        delete crosshair;
+        delete scoreText;
+
+        glDeleteBuffers(1, &screenQuadVBO);
 
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;

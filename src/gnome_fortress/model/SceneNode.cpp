@@ -320,7 +320,7 @@ bool SceneNode::isVisibile() const {
     return visible;
 }
 
-void SceneNode::setVisibile(bool v) {
+void SceneNode::setVisible(bool v) {
     visible = v;
 }
 
@@ -333,7 +333,7 @@ void SceneNode::applyTransform() const {
 
     // SRT transform
     glTranslatef(position.x, position.y, position.z);
-    glRotatef(glm::degrees(angle), axis.x, axis.y, axis.z);
+    glRotatef(angle, axis.x, axis.y, axis.z);
     glScalef(scale_vec.x, scale_vec.y, scale_vec.z);
 }
 

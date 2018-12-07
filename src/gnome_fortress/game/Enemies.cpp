@@ -4,9 +4,13 @@ namespace gnome_fortress {
 namespace game {
 
 
-Enemies::Enemies(Walls* walls, irrklang::ISoundEngine *soundEngine) {
-    this->walls = walls;
-    this->soundEngine = soundEngine;
+Enemies::Enemies(Walls* walls, const IncreaseScoreHandler &increaseScoreHandler, irrklang::ISoundEngine *soundEngine)
+    : walls(walls),
+      turtles(),
+      squirrels(),
+      spiders(),
+      increaseScoreHandler(increaseScoreHandler),
+      soundEngine(soundEngine) {
 }
 
 //Process enemy collisions witth projectiles (and their AOE damage areas) and walls
@@ -70,6 +74,9 @@ void Enemies::ProcessProjectileCollisions(Projectiles *projectiles) {
         if ((*turtleIt)->GetHealth() <= 0.0f) {
             (*turtleIt)->removeFromParent();
             turtleIt = turtles.erase(turtleIt);
+            if (increaseScoreHandler) {
+                increaseScoreHandler(100);
+            }
         }
         else {
             turtleIt++;
@@ -112,6 +119,9 @@ void Enemies::ProcessProjectileCollisions(Projectiles *projectiles) {
         if ((*squirrelIt)->GetHealth() <= 0.0f) {
             (*squirrelIt)->removeFromParent();
             squirrelIt = squirrels.erase(squirrelIt);
+            if (increaseScoreHandler) {
+                increaseScoreHandler(100);
+            }
         }
         else {
             squirrelIt++;
@@ -154,6 +164,9 @@ void Enemies::ProcessProjectileCollisions(Projectiles *projectiles) {
         if ((*spiderIt)->GetHealth() <= 0.0f) {
             (*spiderIt)->removeFromParent();
             spiderIt = spiders.erase(spiderIt);
+            if (increaseScoreHandler) {
+                increaseScoreHandler(100);
+            }
         }
         else {
             spiderIt++;
@@ -309,6 +322,9 @@ void Enemies::ProcessAOECollisions(std::vector<std::pair<SporeGround*, float>> *
         if ((*turtleIt)->GetHealth() <= 0.0f) {
             (*turtleIt)->removeFromParent();
             turtleIt = turtles.erase(turtleIt);
+            if (increaseScoreHandler) {
+                increaseScoreHandler(100);
+            }
         }
         else {
             turtleIt++;
@@ -332,6 +348,9 @@ void Enemies::ProcessAOECollisions(std::vector<std::pair<SporeGround*, float>> *
         if ((*squirrelIt)->GetHealth() <= 0.0f) {
             (*squirrelIt)->removeFromParent();
             squirrelIt = squirrels.erase(squirrelIt);
+            if (increaseScoreHandler) {
+                increaseScoreHandler(100);
+            }
         }
         else {
             squirrelIt++;
@@ -355,6 +374,9 @@ void Enemies::ProcessAOECollisions(std::vector<std::pair<SporeGround*, float>> *
         if ((*spiderIt)->GetHealth() <= 0.0f) {
             (*spiderIt)->removeFromParent();
             spiderIt = spiders.erase(spiderIt);
+            if (increaseScoreHandler) {
+                increaseScoreHandler(100);
+            }
         }
         else {
             spiderIt++;
