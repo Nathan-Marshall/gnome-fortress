@@ -50,6 +50,8 @@ void SiegeTurtle::onUpdateSelf(float dt) {
         translate(glm::vec3(moveDir.x, moveDir.y, moveDir.z) * 1.0f);
         hittingWall = false;
     }
+
+    Enemy::onUpdateSelf(dt);
 }
 
 

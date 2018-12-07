@@ -28,11 +28,13 @@ public:
     void PlayAttackSound();
 protected:
     void onUpdateSelf(float dt) override;
-
+   
     float health;
     float boundingRadius;
     float moveSpeed;
 
+    float tintAlpha; 
+    
     const char* attackSoundByte;
     irrklang::ISoundEngine *soundEngine;
 

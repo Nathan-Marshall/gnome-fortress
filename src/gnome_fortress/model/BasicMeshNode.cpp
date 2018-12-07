@@ -14,7 +14,9 @@ BasicMeshNode::BasicMeshNode(
       blendingEnabled(false),
       ambient_factor(0.3),
       env_map_factor(0),
-      technique(technique) {
+      technique(technique), 
+      tint(0,0,0,0)
+{
 
 }
 
@@ -65,6 +67,8 @@ void BasicMeshNode::onDrawSelf(const glm::mat4 &parent_transform, unsigned int p
         technique->bindGlossTexture(mesh->material->map_Ks);
         technique->bindAlphaTexture(mesh->material->map_d);
 
+        technique->setTint(tint);
+
         // if env_map_factor is higher than 0, then bind the texture for environment mapping
         technique->setEnvMapFactor(env_map_factor);
         if (env_map_factor > 0) {
@@ -103,6 +107,10 @@ void BasicMeshNode::setAmbientFactor(float factor) {
 
 void BasicMeshNode::setEnvMapFactor(float factor) {
     env_map_factor = factor;
+}
+
+void BasicMeshNode::setTint(glm::vec4 color) {
+    tint = color;
 }
 
 }

@@ -12,6 +12,7 @@ BasicMeshNodeTechnique::BasicMeshNodeTechnique(GLuint program)
       specular_color(0, 0, 0),
       specular_exponent(0),
       alpha(1),
+      tint(0, 0, 0, 0), 
       diffuse_map_index(0),
       diffuse_map_on(0),
       gloss_map_index(1),
@@ -27,6 +28,7 @@ BasicMeshNodeTechnique::BasicMeshNodeTechnique(GLuint program)
     addUniform(Uniform(program, "specular_color", GL_FLOAT, 1, 3, 1), glm::value_ptr(specular_color));
     addUniform(Uniform(program, "specular_exponent", GL_FLOAT, 1, 1, 1), &specular_exponent);
     addUniform(Uniform(program, "alpha", GL_FLOAT, 1, 1, 1), &alpha);
+    addUniform(Uniform(program, "tint", GL_FLOAT, 1, 4, 1), glm::value_ptr(tint)); 
     addUniform(Uniform(program, "diffuse_map", GL_INT, 1, 1, 1), &diffuse_map_index);
     addUniform(Uniform(program, "diffuse_map_on", GL_INT, 1, 1, 1), &diffuse_map_on);
     addUniform(Uniform(program, "gloss_map", GL_INT, 1, 1, 1), &gloss_map_index);
@@ -60,6 +62,10 @@ void BasicMeshNodeTechnique::setSpecularExponent(GLfloat exponent) {
 
 void BasicMeshNodeTechnique::setAlpha(GLfloat a) {
     alpha = a;
+}
+
+void BasicMeshNodeTechnique::setTint(const glm::vec4 &color) {
+    tint = color;
 }
 
 void BasicMeshNodeTechnique::bindDiffuseTexture(const model::Texture *texture) {

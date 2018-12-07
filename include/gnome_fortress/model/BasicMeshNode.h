@@ -27,12 +27,17 @@ public:
     void setAmbientFactor(float factor);
     void setEnvMapFactor(float factor);
 
+    void setTint(glm::vec4 color);
+
 private:
     const model::Mesh *mesh;
     bool backCulling;
     bool blendingEnabled;
     float ambient_factor;
     float env_map_factor;
+
+    glm::vec4 tint;
+
     renderer::BasicMeshNodeTechnique *technique;
 };
 

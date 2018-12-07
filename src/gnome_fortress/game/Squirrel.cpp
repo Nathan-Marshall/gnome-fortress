@@ -118,6 +118,8 @@ void Squirrel::onUpdateSelf(float dt) {
         translate(glm::vec3(moveDir.x, 0.0, moveDir.z) * 1.0f);
         hittingWall = false;
     }
+
+    Enemy::onUpdateSelf(dt);
 }
 
 
