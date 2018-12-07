@@ -12,8 +12,10 @@ class SporeGroundTechnique : public renderer::BasicProjectionTechnique {
 public:
     SporeGroundTechnique(GLuint program);
 
+    //Set the timer for the technique
     void setTimer(float time);
 
+    //Set thhe power for the technique
     void setPower(float power);
 
     void bindMainTexture(const model::Texture *texture);

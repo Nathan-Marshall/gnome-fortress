@@ -20,17 +20,14 @@ public:
         renderer::BasicMeshNodeTechnique *technique,
         glm::vec3 pointOfOrigin,
         glm::vec3 velocity);
-    /*Rock(
-        resource::ResourceManager &resourceManager,
-        renderer::BasicMeshNodeTechnique *technique,
-        glm::vec3 pointOfOrigin,
-        glm::vec3 velocity);*/
 
+    //Get the damage that a rock should do
     float GetDamage() override;
 
     void onUpdateSelf(float delta_time) override;
 
 private:
+    //Damage value for a rock projectile
     const static float DAMAGE;
 };
 }

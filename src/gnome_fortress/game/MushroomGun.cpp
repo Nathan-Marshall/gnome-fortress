@@ -13,6 +13,7 @@ MushroomGun::MushroomGun(
         technique,
         player
     ) {
+    //Initialize references to the sound engine and sound byte to be used when firing this weapon
     this->soundEngine = soundEngine;
     fireSoundByte = resourceManager.getOrLoadAudioClip(resources::audioClips::mushroom);
 
@@ -20,11 +21,14 @@ MushroomGun::MushroomGun(
     bullets = vector;
 }
 
+//Set the firing velocity for this weapon
 const float MushroomGun::FIRING_VELOCITY = 10.0f;
 
+//Update method for the mushroom gun
 void MushroomGun::onUpdateSelf(float delta_time) {
     cooldown -= delta_time;
 
+    //Fire if the the gun is no longer on cooldown
     if (pressed && cooldown < 0) {
         setCooldown(0.7f);
         std::vector<Projectile*> p = fireBullet(getPosition());
@@ -37,16 +41,19 @@ void MushroomGun::onUpdateSelf(float delta_time) {
     }
 }
 
+//Projectile firing from the mushroom gun
 std::vector<Projectile*> MushroomGun::fireBullet(glm::vec3 position) {
     glm::vec3 vel = glm::normalize(glm::vec3(getGlobalTransform() * glm::vec4(0, 0, -1, 0)));
-    vel.x *= FIRING_VELOCITY;
-    vel.y *= FIRING_VELOCITY;
-    vel.z *= FIRING_VELOCITY;
+    vel *= FIRING_VELOCITY;
+
+    //Create a new spore when the gun is fired
     Spore *s = new Spore(bulletMeshGroup, getTechnique(),
         glm::vec3(getGlobalTransform() * glm::vec4(0.03, 0.5, -0.25, 1)), vel);
     
+    //Play the firing sound
     PlayWeaponSound();
 
+    //Append the trail effect for the spore
     s->appendChild(bullets->CreatePoisonTrail(s));
 
     std::vector<Projectile*> projecs;

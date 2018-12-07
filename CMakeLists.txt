@@ -143,7 +143,10 @@ target_link_libraries(${MAIN_EXECUTABLE} ${OPENGL_gl_LIBRARY})
 
 # Other libraries needed
 set(LIBRARY_PATH "" CACHE PATH "Folder with GLEW, GLFW, GLM, and SOIL libraries")
+set(IRRKLANG_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include/irrKlang)
+
 include_directories(${LIBRARY_PATH}/include)
+include_directories(${IRRKLANG_PATH}/include)
 if(NOT WIN32)
     find_library(GLEW_LIBRARY GLEW)
     find_library(GLFW_LIBRARY glfw)
@@ -153,7 +156,7 @@ elseif(WIN32)
     find_library(GLEW_LIBRARY glew32s HINTS ${LIBRARY_PATH}/lib)
     find_library(GLFW_LIBRARY glfw3 HINTS ${LIBRARY_PATH}/lib)
     find_library(SOIL_LIBRARY SOIL HINTS ${LIBRARY_PATH}/lib)
-    find_library(IK_LIBRARY irrKlang HINTS ${LIBRARY_PATH}/lib)
+    find_library(IK_LIBRARY irrKlang HINTS ${IRRKLANG_PATH}/lib)
 endif(NOT WIN32)
 target_link_libraries(${MAIN_EXECUTABLE} ${GLEW_LIBRARY})
 target_link_libraries(${MAIN_EXECUTABLE} ${GLFW_LIBRARY})
@@ -172,14 +175,14 @@ endif(${CMAKE_BUILD_TYPE} MATCHES Debug)
 add_custom_command(
         TARGET irrKlangCopy PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy
-                ${LIBRARY_PATH}/lib/irrKlang.dll
+                ${IRRKLANG_PATH}/lib/irrKlang.dll
                 ${CMAKE_CURRENT_BINARY_DIR}/${BUILD_DIR}/irrKlang.dll)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_custom_command(
         TARGET irrKlangMP3Copy PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy
-                ${LIBRARY_PATH}/lib/ikpMP3.dll
+                ${IRRKLANG_PATH}/lib/ikpMP3.dll
                 ${CMAKE_CURRENT_BINARY_DIR}/${BUILD_DIR}/ikpMP3.dll)
 
 add_dependencies(${MAIN_EXECUTABLE} irrKlangCopy)

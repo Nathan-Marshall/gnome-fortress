@@ -22,7 +22,10 @@ public:
         Player *player, Projectiles* vector, irrklang::ISoundEngine *soundEngine);
 
 protected:
+    //How fast does the bullet travel
     const static float FIRING_VELOCITY;
+
+    //How quickly can shots be fired from this gun
     const static int FIRING_RATE;
 
     Projectiles* bullets;

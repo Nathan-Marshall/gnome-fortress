@@ -16,13 +16,16 @@ public:
     void onUpdateSelf(float delta_time) override;
     const model::PointSet *getPointSet() const;
 
+    //Get the technique used by this effect
     SporeGroundTechnique *getTechnique() const;
 
+    //Set the power for the effect
     void setPower(float power);
 
 private:
     static model::PointSet *CreateSphericalParticles(int num_particles);
 
+    //The point set, texture, and technique used to render this particle effect
     const model::PointSet *pointSet;
     const model::Texture *texture;
     SporeGroundTechnique *technique;

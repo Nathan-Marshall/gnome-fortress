@@ -19,11 +19,13 @@ SceneNode::SceneNode()
       visible(true) {    
 }
 
+//Update self and all children whenever a scene node is updated
 void SceneNode::update(float delta_time) {
     onUpdateSelf(delta_time);
     onUpdateChildren(delta_time);
 }
 
+//Draw self and all children when a scene node is updated
 void SceneNode::draw(const glm::mat4 &parent_transform, unsigned int pass/* = 0*/) const {
     onDrawSelf(parent_transform, pass);
     onDrawChildren(parent_transform, pass);

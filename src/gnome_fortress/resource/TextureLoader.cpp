@@ -5,6 +5,7 @@
 namespace gnome_fortress {
 namespace resource {
 
+//Load a texture from the given filepath using soil
 model::Texture *TextureLoader::LoadTexture(const std::string &filepath) {
     GLuint id = SOIL_load_OGL_texture(filepath.c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
     if (!id) {
@@ -36,6 +37,7 @@ model::Texture *TextureLoader::LoadSkyboxTexture(const std::string &filepath) {
     return new model::Texture(id);
 }
 
+//Delete the texture
 void TextureLoader::UnloadTexture(model::Texture *texture) {
     glDeleteTextures(1, &texture->id);
     delete texture;

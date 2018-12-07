@@ -3,7 +3,7 @@
 namespace gnome_fortress {
 namespace game {
 
-
+//Wall constants determining the layout for our walls
 const float Walls::INNER_RADIUS = 7.0f;
 const float Walls::OUTER_RADIUS = 22.0f;
 const int Walls::WALLS_PER_RING = 15;

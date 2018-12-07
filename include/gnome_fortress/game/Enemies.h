@@ -13,7 +13,7 @@
 #include "SiegeTurtle.h"
 #include "Squirrel.h"
 #include "Spider.h"
-#include "irrKlang\irrKlang.h"
+#include <irrKlang.h>
 #include "Spore.h"
 #include "Rocket.h"
 
@@ -26,20 +26,26 @@ class Enemies : public model::SceneNode {
 public:
     Enemies(Walls* walls, irrklang::ISoundEngine *soundEngine);
 
+    //Reference to the walls to be used for collisions
     Walls* walls;
 
+    //Vectors to keep track of all the different enemies that we have
     std::vector<SiegeTurtle*> turtles;
     std::vector<Squirrel*> squirrels;
     std::vector<Spider*> spiders;
 
+    //Methods to process enemy collisions
     void ProcessCollisions(Projectiles *projectiles, float delta_time);
     void ProcessProjectileCollisions(Projectiles *projectiles);
     void ProcessAOECollisions(std::vector<std::pair<SporeGround*, float>>* poisons, std::vector<std::pair<RocketGround*, float>>* explosions, float delta_time);
     void ProcessWallCollisions();
+
 protected:
 
 
 private:
+
+    //Reference to the main sound engine so we can play attack sounds
     irrklang::ISoundEngine *soundEngine;
 };
 

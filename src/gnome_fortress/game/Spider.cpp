@@ -15,9 +15,11 @@ namespace game {
         technique
       ) {
 
+    //Set references to the sound engine and our attack sound
     this->soundEngine = soundEngine;
     attackSoundByte = resourceManager.getOrLoadAudioClip(resources::audioClips::spider_atk);
 
+    //Initialize physical properties for the spiders
     setScale(2.0f);
 
     int numWalls = Walls::NumWalls();
@@ -31,49 +33,56 @@ namespace game {
     hittingWall = false;
     hittingPile = false;
 
-    currentRot = 0;
+    state = INIT;
 }
 
+//Update method for the spiders
 void Spider::onUpdateSelf(float dt) {
+    //Timer to be used for animation loops (currently no animation)
+    timer += dt;
 
-    //Rotation of the spider
-    if (hittingWall && currentRot != 1) {
+    //Rotation of the spider, as well as the state changes and logic
+    //The variables hittingWall and overWall are coming from the collision detection code in enemies.cpp
+    if (hittingWall && state != CLIMBING) {
         translateY(0.2);
         rotate(glm::angleAxis(90 * glm::pi<float>() / 180.0f, glm::vec3(1, 0, 0)));
-        currentRot = 1;
+        state = CLIMBING;
     }
-    if (overWall && currentRot == 1) {
+    if (overWall && state == CLIMBING) {
         rotate(glm::angleAxis(-90 * glm::pi<float>() / 180.0f, glm::vec3(1, 0, 0)));
-        currentRot = 2;
+        state = ON_WALL;
     }
-    else if (getPosition().y > 0.1 && !overWall && currentRot == 2) {
+    else if (getPosition().y > 0.1 && !overWall && state == ON_WALL) {
         rotate(glm::angleAxis(-90 * glm::pi<float>() / 180.0f, glm::vec3(1,0,0)));
-        currentRot = 3;
+        state = DESCENDING;
     }
-    else if (getPosition().y < 0.1 && currentRot == 3){
+    else if (getPosition().y < 0.1 && state == DESCENDING){
         rotate(glm::angleAxis(90 * glm::pi<float>() / 180.0f, glm::vec3(1, 0, 0)));
-        currentRot = 0;
+        state = INIT;
     }
 
+
+    //Spider movement
     if (hittingPile) {
         //Do nothing any more 
     }
     else {
         glm::vec3 moveDir = glm::normalize(getPosition() - glm::vec3(0, 0.1, 0));
 
-        if (currentRot == 0) {
+        //Move based on the current state of the spider
+        if (state == INIT) {
             glm::vec3 vel = moveDir * moveSpeed;
             translate(glm::vec3(-vel.x, -vel.y, -vel.z) * dt);
         }
-        else if (currentRot == 1) {
+        else if (state == CLIMBING) {
             translate(glm::vec3(0, 1, 0) * dt);
             hittingWall = false;
         }
-        else if (currentRot == 2) {
+        else if (state == ON_WALL) {
             translate(glm::vec3(-moveDir.x, 0, -moveDir.z) * dt);
             overWall = false;
         }
-        else if (currentRot == 3) {
+        else if (state == DESCENDING) {
             translate(glm::vec3(0, -1, 0) * dt);
             hittingWall = false;
         }

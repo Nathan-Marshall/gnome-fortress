@@ -22,6 +22,7 @@ public:
         Player *player, Projectiles* vector, irrklang::ISoundEngine *soundEngine);
 
 protected:
+    //Firing velocity and fire rate for the mushroom gun
     const static float FIRING_VELOCITY;
     const static int FIRING_RATE;
 

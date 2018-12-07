@@ -36,15 +36,21 @@ namespace gnome_fortress {
 
             std::vector<Projectile*> projectiles;
 
+            //Get the current poisons and explosions
             std::vector<std::pair<SporeGround*, float>>* GetPoisons();
             std::vector<std::pair<RocketGround*, float>>* GetExplosions();
 
+            //Create poison AOE effect where the given spore is located
             void CreatePoison(Spore* spore);
             PurpleRocketStream* Projectiles::CreatePoisonTrail(Spore* spore);
 
+            //Create an explosion where the given rocket is located
             void CreateExplosion(Rocket* rocket);
+
+            //Create a rocket trail effect
             RocketStream* Projectiles::CreateRocketTrail(Rocket* rocket);
 
+            //Create a shotgun trail effect
             ShotgunStream* Projectiles::CreateShotgunTrail(Rock* rock);
 
             void ProcessCollisions(Walls* walls);
@@ -52,11 +58,14 @@ namespace gnome_fortress {
 
 
         private:
+            //Reference to our resource manager
             resource::ResourceManager *res_man;
 
+            //Vectors to keep track of our AOE effects
             std::vector<std::pair<SporeGround*, float>>* poisonPositions;
             std::vector<std::pair<RocketGround*, float>>* explosPositions;
 
+            //References for all of the effects our guns can create
             SporeGroundTechnique *sporeGroundEffect;
             RocketGroundTechnique *rocketGroundEffect;
             RocketStreamTechnique *rocketStreamEffect;

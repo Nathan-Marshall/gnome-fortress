@@ -8,6 +8,7 @@ namespace model {
 struct Texture {
     Texture();
 
+    //The int value for the texture
     Texture(GLuint id);
 
     // OpenGL texture ID

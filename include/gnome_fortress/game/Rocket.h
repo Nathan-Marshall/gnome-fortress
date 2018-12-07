@@ -25,7 +25,10 @@ public:
         glm::vec3 pointOfOrigin,
         glm::vec3 velocity);
 
+    //Get the damage of a rocket
     float GetDamage() override;
+
+    //Get the damage radius for a rocket explosion
     static float GetDamageRad();
 
     void onUpdateSelf(float delta_time) override;

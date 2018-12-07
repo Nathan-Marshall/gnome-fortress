@@ -12,8 +12,10 @@ class PurpleRocketStreamTechnique : public renderer::BasicProjectionTechnique {
 public:
     PurpleRocketStreamTechnique(GLuint program);
 
+    //Set the timer
     void setTimer(float time);
 
+    //Set the power of the rocket stream
     void setPower(float power);
 
     void bindMainTexture(const model::Texture *texture);
