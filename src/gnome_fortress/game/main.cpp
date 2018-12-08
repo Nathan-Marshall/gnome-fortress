@@ -10,14 +10,10 @@ int main(void) {
         // Initialize game
         app.Init();
 
-        // Setup the scene in the game
-        app.SetupScene();
         // Run game
         app.MainLoop();
-        // Clean up the scene in the game
-        app.CleanupScene();
 
-        // Destroy the game
+        // Destroy game
         app.Destroy();
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;

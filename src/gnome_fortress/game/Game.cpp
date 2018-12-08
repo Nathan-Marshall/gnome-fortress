@@ -34,9 +34,14 @@ void Game::Init() {
 
     // initialize IrrKlang sound engine
     soundEngine = createIrrKlangDevice();
+    soundEngine->setSoundVolume(0.2);
 
     // initialize resource manager to the resource directory defined in resources_config.h
     resourceManager = new resource::ResourceManager(RESOURCES_DIRECTORY);
+
+    currentScene = NONE;
+
+    score = 0;
 }
 
 void Game::Destroy() {
@@ -48,7 +53,7 @@ void Game::InitWindow() {
     windowTitle = "Gnome Fortress";
     viewportWidth = 800;
     viewportHeight = 600;
-    viewportBackgroundColor = glm::vec3(0.5, 0.5, 0.5);
+    viewportBackgroundColor = glm::vec3(0, 0, 0);
 
     // Initialize the window management library (GLFW)
     if (!glfwInit()) {
@@ -100,10 +105,191 @@ void Game::InitWindow() {
     });
 }
 
+void Game::MainLoop(void) {
+    // pre-load resources that will be needed when the game starts
+    SetupScene();
+    CleanupScene();
+
+    switchToScene(Scene::TITLE);
+
+    // Run the main loop
+    double prev_time = glfwGetTime();
+    while (!glfwWindowShouldClose(window)) {
+        // calculate delta time
+        double delta_time = glfwGetTime() - prev_time;
+        prev_time = glfwGetTime();
+
+        if (currentScene == Scene::TITLE) {
+            TitleLoop(delta_time);
+        } else if (currentScene == Scene::GAME) {
+            SceneLoop(delta_time);
+        }
+    }
+
+    switchToScene(Scene::NONE);
+}
+
+void Game::switchToScene(Scene newScene) {
+    if (currentScene == Scene::TITLE) {
+        CleanupTitle();
+    } else if (currentScene == Scene::GAME) {
+        CleanupScene();
+    }
+
+    if (newScene == Scene::TITLE) {
+        SetupTitle();
+    } else if (newScene == Scene::GAME) {
+        SetupScene();
+    }
+
+    currentScene = newScene;
+}
+
+void Game::SetupTitle() {
+    // Play the background track
+    irrklang::ISound *backgroundTrack = soundEngine->play2D(resourceManager->getOrLoadAudioClip(resources::audioClips::breakout), GL_TRUE);
+
+    GLuint spriteShader = resourceManager->getOrLoadShaderProgram(resources::shaders::ui_sprite);
+    spriteTechnique = new renderer::SpriteTechnique(spriteShader, screenQuadVBO);
+
+    uiNode = new ui::UINode();
+
+    titleText = new TextNode(*resourceManager, spriteTechnique);
+    titleText->setText("GNOME FORTRESS");
+    titleText->setPosition(0, 0.6);
+    titleText->setScale(0.06);
+    titleText->setAlignment(TextNode::Alignment::CENTER);
+    uiNode->appendChild(titleText);
+
+    titleCreditsText = new TextNode(*resourceManager, spriteTechnique);
+    titleCreditsText->setText("BY MITCHELL BLANCHARD");
+    titleCreditsText->setPosition(0, 0.45);
+    titleCreditsText->setScale(0.02);
+    titleCreditsText->setAlignment(TextNode::Alignment::CENTER);
+    uiNode->appendChild(titleCreditsText);
+
+    titleCreditsText2 = new TextNode(*resourceManager, spriteTechnique);
+    titleCreditsText2->setText("NATHAN MARSHALL  MEGAN PERERA");
+    titleCreditsText2->setPosition(0, 0.35);
+    titleCreditsText2->setScale(0.02);
+    titleCreditsText2->setAlignment(TextNode::Alignment::CENTER);
+    uiNode->appendChild(titleCreditsText2);
+
+    titleSpaceToStartText = new TextNode(*resourceManager, spriteTechnique);
+    titleSpaceToStartText->setText("PRESS SPACE TO START!");
+    titleSpaceToStartText->setPosition(0, 0.1);
+    titleSpaceToStartText->setScale(0.04);
+    titleSpaceToStartText->setAlignment(TextNode::Alignment::CENTER);
+    uiNode->appendChild(titleSpaceToStartText);
+
+    titleControlsText = new TextNode(*resourceManager, spriteTechnique);
+    titleControlsText->setText("CONTROLS");
+    titleControlsText->setPosition(-0.9, -0.1);
+    titleControlsText->setScale(0.03);
+    titleControlsText->setAlignment(TextNode::Alignment::LEFT);
+    uiNode->appendChild(titleControlsText);
+
+    titleControlsTextWASD = new TextNode(*resourceManager, spriteTechnique);
+    titleControlsTextWASD->setText("W A S D  = MOVE");
+    titleControlsTextWASD->setPosition(-0.9, -0.17);
+    titleControlsTextWASD->setScale(0.02);
+    titleControlsTextWASD->setAlignment(TextNode::Alignment::LEFT);
+    uiNode->appendChild(titleControlsTextWASD);
+
+    titleControlsTextSpace = new TextNode(*resourceManager, spriteTechnique);
+    titleControlsTextSpace->setText("SPACE    = FLY HIGHER");
+    titleControlsTextSpace->setPosition(-0.9, -0.24);
+    titleControlsTextSpace->setScale(0.02);
+    titleControlsTextSpace->setAlignment(TextNode::Alignment::LEFT);
+    uiNode->appendChild(titleControlsTextSpace);
+
+    titleControlsTextShift = new TextNode(*resourceManager, spriteTechnique);
+    titleControlsTextShift->setText("L SHIFT  = FLY LOWER");
+    titleControlsTextShift->setPosition(-0.9, -0.31);
+    titleControlsTextShift->setScale(0.02);
+    titleControlsTextShift->setAlignment(TextNode::Alignment::LEFT);
+    uiNode->appendChild(titleControlsTextShift);
+
+    titleControlsTextClick = new TextNode(*resourceManager, spriteTechnique);
+    titleControlsTextClick->setText("L CLICK  = SHOOT");
+    titleControlsTextClick->setPosition(-0.9, -0.38);
+    titleControlsTextClick->setScale(0.02);
+    titleControlsTextClick->setAlignment(TextNode::Alignment::LEFT);
+    uiNode->appendChild(titleControlsTextClick);
+
+    titleControlsTextScroll = new TextNode(*resourceManager, spriteTechnique);
+    titleControlsTextScroll->setText("SCROLL   = SWITCH WEAPON");
+    titleControlsTextScroll->setPosition(-0.9, -0.45);
+    titleControlsTextScroll->setScale(0.02);
+    titleControlsTextScroll->setAlignment(TextNode::Alignment::LEFT);
+    uiNode->appendChild(titleControlsTextScroll);
+
+    titleControlsTextC = new TextNode(*resourceManager, spriteTechnique);
+    titleControlsTextC->setText("C        = SWITCH CAMERA");
+    titleControlsTextC->setPosition(-0.9, -0.52);
+    titleControlsTextC->setScale(0.02);
+    titleControlsTextC->setAlignment(TextNode::Alignment::LEFT);
+    uiNode->appendChild(titleControlsTextC);
+
+    titleControlsTextESC = new TextNode(*resourceManager, spriteTechnique);
+    titleControlsTextESC->setText("ESC      = QUIT TO MENU");
+    titleControlsTextESC->setPosition(-0.9, -0.59);
+    titleControlsTextESC->setScale(0.02);
+    titleControlsTextESC->setAlignment(TextNode::Alignment::LEFT);
+    uiNode->appendChild(titleControlsTextESC);
+
+    titleYourScoreText = new TextNode(*resourceManager, spriteTechnique);
+    titleYourScoreText->setText(std::string("SCORE:") + std::to_string(score));
+    titleYourScoreText->setPosition(0.95f, 0.925f);
+    titleYourScoreText->setScale(0.05f);
+    titleYourScoreText->setAlignment(TextNode::Alignment::RIGHT);
+    uiNode->appendChild(titleYourScoreText);
+}
+
+void Game::CleanupTitle() {
+    soundEngine->stopAllSounds();
+
+    delete spriteTechnique;
+
+    delete uiNode;
+    delete titleText;
+    delete titleCreditsText;
+    delete titleCreditsText2;
+    delete titleSpaceToStartText;
+    delete titleControlsText;
+    delete titleControlsTextWASD;
+    delete titleControlsTextSpace;
+    delete titleControlsTextShift;
+    delete titleControlsTextClick;
+    delete titleControlsTextScroll;
+    delete titleControlsTextC;
+    delete titleControlsTextESC;
+    delete titleYourScoreText;
+}
+
+void Game::TitleLoop(float deltaTime) {
+    // Clear background
+    glClearColor(viewportBackgroundColor[0], viewportBackgroundColor[1], viewportBackgroundColor[2], 0.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Render UI / HUD
+    uiNode->draw(glm::mat3(), 0);
+
+    // Push buffer drawn in the background onto the display
+    glfwSwapBuffers(window);
+
+    // Update other events like input handling
+    glfwPollEvents();
+}
+
 void Game::SetupScene() {
+    startTime = glfwGetTime();
+    spawnTime = glfwGetTime();
+    difficultyTime = 5.0;
     score = 0;
 
-    soundEngine->setSoundVolume(0.1);
+    // Play the background track
+    irrklang::ISound *backgroundTrack = soundEngine->play2D(resourceManager->getOrLoadAudioClip(resources::audioClips::bit_builders), GL_TRUE);
 
     // Set up shaders and techniques
     GLuint mtlThreeTermProgram = resourceManager->getOrLoadShaderProgram(resources::shaders::textured_material);
@@ -127,9 +313,6 @@ void Game::SetupScene() {
 
     GLuint rocketGroundProgram = resourceManager->getOrLoadShaderProgram(resources::shaders::rocket_ground);
     rocketGroundTechnique = new RocketGroundTechnique(rocketGroundProgram);
-
-    // Play the background track
-    irrklang::ISound *backgroundTrack = soundEngine->play2D(resourceManager->getOrLoadAudioClip(resources::audioClips::bit_builders), GL_TRUE);
 
     // Create the root scene node for the game
     papaNode = new model::SceneNode();
@@ -160,6 +343,7 @@ void Game::SetupScene() {
     player->setCurrentWeapon(peanutGun);
 
     // Add weapons to vector
+    weapons.clear();
     weapons.push_back(peanutGun);
     weapons.push_back(mushroomGun);
     weapons.push_back(pineconeGun);
@@ -236,6 +420,8 @@ void Game::SetupScene() {
 }
 
 void Game::CleanupScene() {
+    soundEngine->stopAllSounds();
+
     // delete techniques
     delete mtlThreeTermTechnique;
     delete skyboxTechnique;
@@ -270,6 +456,7 @@ void Game::CleanupScene() {
         delete tree;
     }
     trees.clear();
+    weapons.clear();
 
     // delete UI nodes
     delete uiNode;
@@ -278,254 +465,260 @@ void Game::CleanupScene() {
     delete scoreText;
 }
 
-void Game::MainLoop(void) {
-    double spawnTime = glfwGetTime();
-    double startTime = glfwGetTime();
+void Game::SceneLoop(float deltaTime) {
+    if (acorns->getRemainingAcornCount() <= 0.0001f) {
+        switchToScene(Scene::TITLE);
+        return;
+    }
 
-    double prev_time = glfwGetTime();
+    double current_time = glfwGetTime();
 
-    double difficultyTime = 5.0;
+    // Get the player position, look at and up vectors
+    glm::vec3 playerPos = player->getPosition();
+    glm::vec3 lookAt = thirdPersonCamera->getNode()->getRotation() * glm::vec3(0, 0, -1);
+    glm::vec3 upVec = thirdPersonCamera->getNode()->getRotation() * glm::vec3(0, 1, 0);
 
-    // Run the main loop
-    while (!glfwWindowShouldClose(window)) {
-        // calculate delta time
-        double current_time = glfwGetTime();
-        double delta_time = current_time - prev_time;
-        prev_time = glfwGetTime();
+    //Update the listener position of the player every frame
+    soundEngine->setListenerPosition(irrklang::vec3df(playerPos.x, playerPos.y, playerPos.z), irrklang::vec3df(lookAt.x, lookAt.y, lookAt.z));
 
-        //Get the player position, look at and up vectors
-        glm::vec3 playerPos = player->getPosition();
-        glm::vec3 lookAt = thirdPersonCamera->getNode()->getRotation() * glm::vec3(0, 0, -1);
-        glm::vec3 upVec = thirdPersonCamera->getNode()->getRotation() * glm::vec3(0, 1, 0);
+    if (current_time - spawnTime > difficultyTime && current_time - startTime > 10.0) {
+        int randEnemy = (rand() % 6) + 1;
 
-        //Update the listener position of the player every frame
-        soundEngine->setListenerPosition(irrklang::vec3df(playerPos.x, playerPos.y, playerPos.z), irrklang::vec3df(lookAt.x, lookAt.y, lookAt.z));
+        if (randEnemy == 1) {
+            //Spawn a turtle
+            SiegeTurtle* turt = new SiegeTurtle(*resourceManager, mtlThreeTermTechnique, soundEngine);
 
-        if (current_time - spawnTime > difficultyTime && current_time - startTime > 10.0) {
-            int randEnemy = (rand() % 6) + 1;
+            enemies->turtles.push_back(turt);
+            enemies->appendChild(turt);
+        } else if (randEnemy == 2) {
+            //Spawn a squirrel
+            Squirrel* squir = new Squirrel(*resourceManager, mtlThreeTermTechnique, enemies->walls, soundEngine);
 
-            if (randEnemy == 1) {
-                //Spawn a turtle
-                SiegeTurtle* turt = new SiegeTurtle(*resourceManager, mtlThreeTermTechnique, soundEngine);
+            enemies->squirrels.push_back(squir);
+            enemies->appendChild(squir);
+        } else if (randEnemy == 3) {
+            //Spawn a spider
+            Spider* spidey = new Spider(*resourceManager, mtlThreeTermTechnique, soundEngine);
 
-                enemies->turtles.push_back(turt);
-                enemies->appendChild(turt);
-            } else if (randEnemy == 2) {
-                //Spawn a squirrel
-                Squirrel* squir = new Squirrel(*resourceManager, mtlThreeTermTechnique, enemies->walls, soundEngine);
-
-                enemies->squirrels.push_back(squir);
-                enemies->appendChild(squir);
-            } else if (randEnemy == 3) {
-                //Spawn a spider
-                Spider* spidey = new Spider(*resourceManager, mtlThreeTermTechnique, soundEngine);
-
-                enemies->spiders.push_back(spidey);
-                enemies->appendChild(spidey);
-            }
-
-            spawnTime = glfwGetTime();
-
-            if (difficultyTime > 1.2) {
-                difficultyTime -= 0.1;
-            }
+            enemies->spiders.push_back(spidey);
+            enemies->appendChild(spidey);
         }
 
-        //Process collisions with enemies
-        enemies->ProcessCollisions(playerProjectiles, delta_time);
+        spawnTime = glfwGetTime();
 
-        //Process player collisions
-        player->ProcessCollisions(walls, enemies);
-
-        //Process projectile collisions
-        playerProjectiles->ProcessCollisions(walls);
-
-        //Process acorn collisions
-        acorns->ProcessEnemyCollisions(enemies, delta_time);
-
-        scoreText->setText(std::to_string(score));
-
-        // Update the scene
-        papaNode->update(delta_time);
-        // Update the UI
-        uiNode->update(delta_time);
-
-        // Clear background
-        glClearColor(viewportBackgroundColor[0], viewportBackgroundColor[1], viewportBackgroundColor[2], 0.0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // Update projection matrix
-        debugCamera->setViewport(viewportWidth, viewportHeight);
-        firstPersonCamera->setViewport(viewportWidth, viewportHeight);
-        thirdPersonCamera->setViewport(viewportWidth, viewportHeight);
-
-        //Set the projection and view matrices for the techniques
-        mtlThreeTermTechnique->setProjectionMatrix(activeCamera->getProjection());
-        mtlThreeTermTechnique->setViewMatrix(activeCamera->getView());
-
-        skyboxTechnique->setProjectionMatrix(activeCamera->getProjection());
-        skyboxTechnique->setViewMatrix(activeCamera->getView());
-
-        rocketStreamTechnique->setProjectionMatrix(activeCamera->getProjection());
-        rocketStreamTechnique->setViewMatrix(activeCamera->getView());
-        rocketStreamTechnique->setTimer(current_time);
-
-        purpleRocketStreamTechnique->setProjectionMatrix(activeCamera->getProjection());
-        purpleRocketStreamTechnique->setViewMatrix(activeCamera->getView());
-        purpleRocketStreamTechnique->setTimer(current_time);
-
-        shotgunStreamTechnique->setProjectionMatrix(activeCamera->getProjection());
-        shotgunStreamTechnique->setViewMatrix(activeCamera->getView());
-        shotgunStreamTechnique->setTimer(current_time);
-
-        sporeGroundTechnique->setProjectionMatrix(activeCamera->getProjection());
-        sporeGroundTechnique->setViewMatrix(activeCamera->getView());
-
-        rocketGroundTechnique->setProjectionMatrix(activeCamera->getProjection());
-        rocketGroundTechnique->setViewMatrix(activeCamera->getView());
-
-        // Draw the scene nodes (first pass)
-        papaNode->draw(glm::mat4(), 0);
-        // Second pass (usually for blending)
-        papaNode->draw(glm::mat4(), 1);
-
-        // Render UI / HUD
-        uiNode->draw(glm::mat3(), 0);
-
-        // Push buffer drawn in the background onto the display
-        glfwSwapBuffers(window);
-
-        // Update other events like input handling
-        glfwPollEvents();
+        if (difficultyTime > 1.2) {
+            difficultyTime -= 0.1;
+        }
     }
+
+    //Process collisions with enemies
+    enemies->ProcessCollisions(playerProjectiles, deltaTime);
+
+    //Process player collisions
+    player->ProcessCollisions(walls, enemies);
+
+    //Process projectile collisions
+    playerProjectiles->ProcessCollisions(walls);
+
+    //Process acorn collisions
+    acorns->ProcessEnemyCollisions(enemies, deltaTime);
+
+    scoreText->setText(std::to_string(score));
+
+    // Update the scene
+    papaNode->update(deltaTime);
+    // Update the UI
+    uiNode->update(deltaTime);
+
+    // Clear background
+    glClearColor(viewportBackgroundColor[0], viewportBackgroundColor[1], viewportBackgroundColor[2], 0.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Update projection matrix
+    debugCamera->setViewport(viewportWidth, viewportHeight);
+    firstPersonCamera->setViewport(viewportWidth, viewportHeight);
+    thirdPersonCamera->setViewport(viewportWidth, viewportHeight);
+
+    //Set the projection and view matrices for the techniques
+    mtlThreeTermTechnique->setProjectionMatrix(activeCamera->getProjection());
+    mtlThreeTermTechnique->setViewMatrix(activeCamera->getView());
+
+    skyboxTechnique->setProjectionMatrix(activeCamera->getProjection());
+    skyboxTechnique->setViewMatrix(activeCamera->getView());
+
+    rocketStreamTechnique->setProjectionMatrix(activeCamera->getProjection());
+    rocketStreamTechnique->setViewMatrix(activeCamera->getView());
+    rocketStreamTechnique->setTimer(current_time);
+
+    purpleRocketStreamTechnique->setProjectionMatrix(activeCamera->getProjection());
+    purpleRocketStreamTechnique->setViewMatrix(activeCamera->getView());
+    purpleRocketStreamTechnique->setTimer(current_time);
+
+    shotgunStreamTechnique->setProjectionMatrix(activeCamera->getProjection());
+    shotgunStreamTechnique->setViewMatrix(activeCamera->getView());
+    shotgunStreamTechnique->setTimer(current_time);
+
+    sporeGroundTechnique->setProjectionMatrix(activeCamera->getProjection());
+    sporeGroundTechnique->setViewMatrix(activeCamera->getView());
+
+    rocketGroundTechnique->setProjectionMatrix(activeCamera->getProjection());
+    rocketGroundTechnique->setViewMatrix(activeCamera->getView());
+
+    // Draw the scene nodes (first pass)
+    papaNode->draw(glm::mat4(), 0);
+    // Second pass (usually for blending)
+    papaNode->draw(glm::mat4(), 1);
+
+    // Render UI / HUD
+    uiNode->draw(glm::mat3(), 0);
+
+    // Push buffer drawn in the background onto the display
+    glfwSwapBuffers(window);
+
+    // Update other events like input handling
+    glfwPollEvents();
 }
 
 //Cursor callback function, called whenever the cursor position is updated
 void Game::CursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
-    //Get the halfway coordinated in the window to use to find our cursor offset
-    double half_x = viewportWidth / 2;
-    double half_y = viewportHeight / 2;
+    if (currentScene == Scene::GAME) {
+        //Get the halfway coordinated in the window to use to find our cursor offset
+        double half_x = viewportWidth / 2;
+        double half_y = viewportHeight / 2;
 
-    //We get an angle to move for x and y
-    float x_angle = half_x - xpos;
-    float y_angle = half_y - ypos;
+        //We get an angle to move for x and y
+        float x_angle = half_x - xpos;
+        float y_angle = half_y - ypos;
 
-    //We want to set the cursor back to the middle each time
-    glfwSetCursorPos(window, half_x, half_y);
+        //We want to set the cursor back to the middle each time
+        glfwSetCursorPos(window, half_x, half_y);
 
-    cameraAngle += y_angle * 0.0005;
+        cameraAngle += y_angle * 0.0005;
 
-    if (cameraAngle > glm::pi<float>() / 2 || cameraAngle < -glm::pi<float>() / 2) {
-        cameraAngle -= y_angle * 0.0005;
-        y_angle = 0.0f;
+        if (cameraAngle > glm::pi<float>() / 2 || cameraAngle < -glm::pi<float>() / 2) {
+            cameraAngle -= y_angle * 0.0005;
+            y_angle = 0.0f;
+        }
+
+        //Then we can rotate the camera based off of the calculated value
+        //The offset from the middle will be larger based on how far they push the cursor to rotate
+        player->rotate(x_angle * 0.001, glm::vec3(0, 1, 0));
+        player->getArm()->orbit(y_angle * 0.0005, glm::vec3(1, 0, 0), glm::vec3(0, 0.49f, 0.02f));
+
+        //Adjust both cameras so that there won't be any shift when we toggle between the two
+        //Rotate the first person camera
+        firstPersonCamera->getNode()->rotate(y_angle * 0.0005, glm::vec3(1.0, 0, 0));
+        //Orbit the third person camera about the origin to keep the player centered on the screen
+        thirdPersonCamera->getNode()->orbit(y_angle * 0.0005, glm::vec3(1.0, 0, 0), glm::vec3(0, 0, 0));
     }
-
-    //Then we can rotate the camera based off of the calculated value
-    //The offset from the middle will be larger based on how far they push the cursor to rotate
-    player->rotate(x_angle * 0.001, glm::vec3(0, 1, 0));
-    player->getArm()->orbit(y_angle * 0.0005, glm::vec3(1, 0, 0), glm::vec3(0, 0.49f, 0.02f));
-
-    //Adjust both cameras so that there won't be any shift when we toggle between the two
-    //Rotate the first person camera
-    firstPersonCamera->getNode()->rotate(y_angle * 0.0005, glm::vec3(1.0, 0, 0));
-    //Orbit the third person camera about the origin to keep the player centered on the screen
-    thirdPersonCamera->getNode()->orbit(y_angle * 0.0005, glm::vec3(1.0, 0, 0), glm::vec3(0, 0, 0));
 }
 
 //Capture mouse button presses
-void Game::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
-{
-    // Fire gun when player left clicks
-    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-        player->getCurrentWeapon()->setPressed(true);
-    }
-    else { 
-        player->getCurrentWeapon()->setPressed(false);
+void Game::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+    if (currentScene == Scene::GAME) {
+        // Fire gun when player left clicks
+        if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+            player->getCurrentWeapon()->setPressed(true);
+        } else {
+            player->getCurrentWeapon()->setPressed(false);
+        }
     }
 }
 
 //Capture mouse scroll events to change weapons
 void Game::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
-    //If scrolling up
-    if (yoffset > 0) {
-        if (player->getWeaponIndex() < 2) {
-            player->incrementWeaponIndex();
+    if (currentScene == Scene::GAME) {
+        //If scrolling up
+        if (yoffset > 0) {
+            if (player->getWeaponIndex() < 2) {
+                player->incrementWeaponIndex();
+            } else if (player->getWeaponIndex() == 2) {
+                player->setWeaponIndex(0);
+            }
+            player->getCurrentWeapon()->setPressed(false);
+            player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
         }
-        else if (player->getWeaponIndex() == 2) {
-            player->setWeaponIndex(0);
+        //If scrolling down
+        if (yoffset < 0) {
+            if (player->getWeaponIndex() > 0) {
+                player->decrementWeaponIndex();
+            } else if (player->getWeaponIndex() == 0) {
+                player->setWeaponIndex(2);
+            }
+            player->getCurrentWeapon()->setPressed(false);
+            player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
         }
-        player->getCurrentWeapon()->setPressed(false);
-        player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
-    }
-    //If scrolling down
-    if (yoffset < 0) {
-        if (player->getWeaponIndex() > 0) {
-            player->decrementWeaponIndex();
-        }
-        else if (player->getWeaponIndex() == 0) {
-            player->setWeaponIndex(2);
-        }
-        player->getCurrentWeapon()->setPressed(false);
-        player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
     }
 }
 
 // Callback for when a key is pressed
-void Game::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods){
-    // Toggle the camera (first/third person) when pressing 'c'
-    if (key == GLFW_KEY_C && action == GLFW_PRESS) {
-        if (activeCamera == firstPersonCamera) {
-            activeCamera = thirdPersonCamera;
-        } else {
-            activeCamera = firstPersonCamera;
+void Game::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if (currentScene == Scene::TITLE) {
+        // Start the game!
+        if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+            switchToScene(Scene::GAME);
         }
-    }
 
-    // Move the player forward when pressing 'w'
-    if (key == GLFW_KEY_W && action == GLFW_PRESS) {
-        player->SetForwardPressed(true);
-    } else if (key == GLFW_KEY_W && action == GLFW_RELEASE) {
-        player->SetForwardPressed(false);
-    }
+        // Exit the program when pressing 'esc'
+        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+            exit(0);
+        }
+    } else if (currentScene == Scene::GAME) {
+        // Toggle the camera (first/third person) when pressing 'c'
+        if (key == GLFW_KEY_C && action == GLFW_PRESS) {
+            if (activeCamera == firstPersonCamera) {
+                activeCamera = thirdPersonCamera;
+            } else {
+                activeCamera = firstPersonCamera;
+            }
+        }
 
-    // Move the player backwards when pressing 's'
-    if (key == GLFW_KEY_S && action == GLFW_PRESS) {
-        player->SetBackPressed(true);
-    } else if (key == GLFW_KEY_S && action == GLFW_RELEASE) {
-        player->SetBackPressed(false);
-    }
+        // Move the player forward when pressing 'w'
+        if (key == GLFW_KEY_W && action == GLFW_PRESS) {
+            player->SetForwardPressed(true);
+        } else if (key == GLFW_KEY_W && action == GLFW_RELEASE) {
+            player->SetForwardPressed(false);
+        }
 
-    // Move the player left when pressing 'a'
-    if (key == GLFW_KEY_A && action == GLFW_PRESS) {
-        player->SetLeftPressed(true);
-    } else if (key == GLFW_KEY_A && action == GLFW_RELEASE) {
-        player->SetLeftPressed(false);
-    }
+        // Move the player backwards when pressing 's'
+        if (key == GLFW_KEY_S && action == GLFW_PRESS) {
+            player->SetBackPressed(true);
+        } else if (key == GLFW_KEY_S && action == GLFW_RELEASE) {
+            player->SetBackPressed(false);
+        }
 
-    // Move the player right when pressing 'd'
-    if (key == GLFW_KEY_D && action == GLFW_PRESS) {
-        player->SetRightPressed(true);
-    } else if (key == GLFW_KEY_D && action == GLFW_RELEASE) {
-        player->SetRightPressed(false);
-    }
+        // Move the player left when pressing 'a'
+        if (key == GLFW_KEY_A && action == GLFW_PRESS) {
+            player->SetLeftPressed(true);
+        } else if (key == GLFW_KEY_A && action == GLFW_RELEASE) {
+            player->SetLeftPressed(false);
+        }
 
-    // Move the player up when pressing 'left shift'
-    if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS) {
-        player->SetDownPressed(true);
-    } else if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE) {
-        player->SetDownPressed(false);
-    }
+        // Move the player right when pressing 'd'
+        if (key == GLFW_KEY_D && action == GLFW_PRESS) {
+            player->SetRightPressed(true);
+        } else if (key == GLFW_KEY_D && action == GLFW_RELEASE) {
+            player->SetRightPressed(false);
+        }
 
-    // Move the player down when pressing 'space'
-    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
-        player->SetUpPressed(true);
-    } else if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE) {
-        player->SetUpPressed(false);
-    }
+        // Move the player down when pressing 'left shift'
+        if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS) {
+            player->SetDownPressed(true);
+        } else if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE) {
+            player->SetDownPressed(false);
+        }
 
-    // Exit the program when pressing 'esc'
-    if (key == GLFW_KEY_ESCAPE) {
-        exit(0);
+        // Move the player up when pressing 'space'
+        if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+            player->SetUpPressed(true);
+        } else if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE) {
+            player->SetUpPressed(false);
+        }
+
+        // Exit to the title screen when pressing 'esc'
+        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+            switchToScene(Scene::TITLE);
+        }
     }
 }
 

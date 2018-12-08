@@ -83,7 +83,7 @@ void TextNode::positionSprites() {
 }
 
 glm::vec4 TextNode::getCharacterUVs(char c) {
-    float w = 235.0f;
+    float w = 247.0f;
     float h = 50.0f;
     float bottom = 26.0f / h;
     float top = 33.0f / h;
@@ -125,6 +125,11 @@ glm::vec4 TextNode::getCharacterUVs(char c) {
     case '8': return glm::vec4(205.0f / w, bottom, 210.0f / w, top);
     case '9': return glm::vec4(211.0f / w, bottom, 216.0f / w, top);
     case '0': return glm::vec4(217.0f / w, bottom, 222.0f / w, top);
+    case '!': return glm::vec4(223.0f / w, bottom, 226.0f / w, top);
+    case '?': return glm::vec4(227.0f / w, bottom, 232.0f / w, top);
+    case ':': return glm::vec4(233.0f / w, bottom, 236.0f / w, top);
+    case '=': return glm::vec4(237.0f / w, bottom, 242.0f / w, top);
+    case ',': return glm::vec4(243.0f / w, bottom, 246.0f / w, top);
     default: return glm::vec4();
     }
 }

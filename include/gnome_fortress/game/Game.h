@@ -46,19 +46,19 @@ namespace game {
 class Game {
 public:
     // Constructor and destructor
-    Game(void);
+    Game();
+
+    enum Scene {
+        NONE,
+        TITLE,
+        GAME
+    };
 
     // Call Init() before calling any other method
     void Init();
 
     // Call Destroy() before after everything else
     void Destroy();
-
-    // Set up initial scene
-    void SetupScene();
-
-    // Clean up scene
-    void CleanupScene();
 
     // Run the game: keep the application active
     void MainLoop();
@@ -82,6 +82,27 @@ private:
     // Methods to initialize the game
     void InitWindow();
 
+    // clean up the current scene and switch to the given scene
+    void switchToScene(Scene newScene);
+
+    // Set up the title screen
+    void SetupTitle();
+
+    // Set up the title screen
+    void CleanupTitle();
+
+    // Call every frame during the title
+    void TitleLoop(float deltaTime);
+
+    // Set up the game scene
+    void SetupScene();
+
+    // Clean up the game scene
+    void CleanupScene();
+
+    // Call every frame during the game
+    void SceneLoop(float deltaTime);
+
     // Create a fence around the perimeter of the playing area
     void createOuterFences(std::vector<model::BasicMeshGroupNode *> &fences, renderer::BasicMeshNodeTechnique *technique);
 
@@ -93,9 +114,6 @@ private:
 
     void Game::spawnInitialEnemies();
 
-    // Main function that builds and runs the game
-    int MainFunction(void);
-
 
     // GLFW window and viewport
     GLFWwindow *window;
@@ -106,6 +124,15 @@ private:
 
     // Geometry to use for all UI
     GLuint screenQuadVBO;
+
+    // Current scene
+    Scene currentScene;
+
+    // game variables
+    double startTime;
+    double spawnTime;
+    double difficultyTime;
+    int score;
 
     // Cameras
     camera::Camera *debugCamera;
@@ -160,8 +187,20 @@ private:
     ui::SpriteNode *crosshair;
     game::TextNode *scoreText;
 
-    // game score
-    int score;
+    // Title screen UI nodes
+    game::TextNode *titleText;
+    game::TextNode *titleCreditsText;
+    game::TextNode *titleCreditsText2;
+    game::TextNode *titleSpaceToStartText;
+    game::TextNode *titleControlsText;
+    game::TextNode *titleControlsTextWASD;
+    game::TextNode *titleControlsTextSpace;
+    game::TextNode *titleControlsTextShift;
+    game::TextNode *titleControlsTextClick;
+    game::TextNode *titleControlsTextScroll;
+    game::TextNode *titleControlsTextC;
+    game::TextNode *titleControlsTextESC;
+    game::TextNode *titleYourScoreText;
 };
 
 }
