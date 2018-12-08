@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Mitchell Blanchard, Nathan Marshall, Megan Perera,
+ * Copyright (c) 2018 Nathan Marshall <NathanMarshall@cmail.carleton.ca>, Mitchell Blanchard <MiitchellBlanchard@cmail.carleton.ca>, Megan Perera <MeganPerera@cmail.carleton.ca>,
  * Oliver van Kaick <Oliver.vanKaick@carleton.ca>, David Mould <mould@scs.carleton.ca>
  */
 

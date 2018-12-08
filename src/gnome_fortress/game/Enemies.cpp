@@ -13,6 +13,18 @@ Enemies::Enemies(Walls* walls, const IncreaseScoreHandler &increaseScoreHandler,
       soundEngine(soundEngine) {
 }
 
+Enemies::~Enemies() {
+    for each (auto turtle in turtles) {
+        delete turtle;
+    }
+    for each (auto squirrel in squirrels) {
+        delete squirrel;
+    }
+    for each (auto spider in spiders) {
+        delete spider;
+    }
+}
+
 //Process enemy collisions witth projectiles (and their AOE damage areas) and walls
 void Enemies::ProcessCollisions(Projectiles *projectiles, float delta_time) {
 

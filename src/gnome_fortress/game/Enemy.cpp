@@ -13,10 +13,12 @@ Enemy::Enemy(const model::MeshGroup *meshGroup, renderer::BasicMeshNodeTechnique
 
 
 void Enemy::onUpdateSelf(float dt) {
+    //Fade away the damage effect a little 
+    tintAlpha -= dt * 2;
+
     //If the tintAlpha is > 0, the enemy has taken damage
-    if (tintAlpha > 0) {
-        //Fade away the damage effect a little 
-        tintAlpha -= dt * 2;
+    if (tintAlpha < 0) {
+        tintAlpha = 0;
     }
 
     //Set the tint accordingly for children
