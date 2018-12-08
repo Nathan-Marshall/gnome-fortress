@@ -30,6 +30,8 @@ public:
 
     Enemies(Walls* walls, const IncreaseScoreHandler &increaseScoreHandler, irrklang::ISoundEngine *soundEngine);
 
+    ~Enemies();
+
     //Reference to the walls to be used for collisions
     Walls* walls;
 

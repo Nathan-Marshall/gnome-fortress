@@ -14,6 +14,7 @@ set(HDRS
     include/gnome_fortress/game/Acorns.h
     include/gnome_fortress/game/Enemies.h
     include/gnome_fortress/game/Enemy.h
+    include/gnome_fortress/game/Game.h
     include/gnome_fortress/game/MushroomGun.h
     include/gnome_fortress/game/PeanutGun.h
     include/gnome_fortress/game/PineconeGun.h
@@ -82,6 +83,7 @@ set(SRCS
     src/gnome_fortress/game/Acorns.cpp
     src/gnome_fortress/game/Enemies.cpp
     src/gnome_fortress/game/Enemy.cpp
+    src/gnome_fortress/game/Game.cpp
     src/gnome_fortress/game/main.cpp
     src/gnome_fortress/game/MushroomGun.cpp
     src/gnome_fortress/game/PeanutGun.cpp
