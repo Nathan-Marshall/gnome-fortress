@@ -345,28 +345,15 @@ void Game::SetupScene() {
     walls = new Walls(*resourceManager, mtlThreeTermTechnique);
     papaNode->appendChild(walls);
 
-    // Create our player, set initial position, and append to the root node
-    player = new game::Player(*resourceManager, mtlThreeTermTechnique, rocketStreamTechnique);
-    player->setPosition(0, 0.7f, 3.0f);
-    papaNode->appendChild(player);
-
     // Create the player projectiles collection node and append to the root node
     playerProjectiles = new Projectiles(resourceManager, sporeGroundTechnique, rocketGroundTechnique, rocketStreamTechnique, purpleRocketStreamTechnique, shotgunStreamTechnique);
     papaNode->appendChild(playerProjectiles);
 
-    // Create weapons
-    peanutGun = new PeanutGun(*resourceManager, mtlThreeTermTechnique, player, playerProjectiles, soundEngine);
-    mushroomGun = new MushroomGun(*resourceManager, mtlThreeTermTechnique, player, playerProjectiles, soundEngine);
-    pineconeGun = new PineconeGun(*resourceManager, mtlThreeTermTechnique, player, playerProjectiles, soundEngine);
+    // Create our player, set initial position, and append to the root node
+    player = new game::Player(*resourceManager, mtlThreeTermTechnique, rocketStreamTechnique, playerProjectiles, soundEngine);
+    player->setPosition(0, 0.7f, 3.0f);
+    papaNode->appendChild(player);
 
-    // setCurrentWeapon also appends as the gun as a child to player
-    player->setCurrentWeapon(peanutGun);
-
-    // Add weapons to vector
-    weapons.clear();
-    weapons.push_back(peanutGun);
-    weapons.push_back(mushroomGun);
-    weapons.push_back(pineconeGun);
 
     // Create the enemies
     enemies = new Enemies(walls, [this](int change) {
@@ -460,9 +447,6 @@ void Game::CleanupScene() {
     delete ground;
     delete player;
     delete enemies;
-    delete peanutGun;
-    delete mushroomGun;
-    delete pineconeGun;
     delete walls;
     delete acorns;
     delete skybox;
@@ -474,7 +458,6 @@ void Game::CleanupScene() {
         delete tree;
     }
     trees.clear();
-    weapons.clear();
 
     // delete UI nodes
     delete uiNode;
@@ -650,27 +633,11 @@ void Game::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
     if (currentScene == Scene::GAME) {
         //If scrolling up
         if (yoffset > 0) {
-            if (player->getWeaponIndex() < 2) {
-                player->incrementWeaponIndex();
-            } else if (player->getWeaponIndex() == 2) {
-                player->setWeaponIndex(0);
-            }
-            bool wasPressed = player->getCurrentWeapon()->isPressed();
-            player->getCurrentWeapon()->setPressed(false);
-            player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
-            player->getCurrentWeapon()->setPressed(wasPressed);
+            player->nextWeapon();
         }
         //If scrolling down
         if (yoffset < 0) {
-            if (player->getWeaponIndex() > 0) {
-                player->decrementWeaponIndex();
-            } else if (player->getWeaponIndex() == 0) {
-                player->setWeaponIndex(2);
-            }
-            bool wasPressed = player->getCurrentWeapon()->isPressed();
-            player->getCurrentWeapon()->setPressed(false);
-            player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
-            player->getCurrentWeapon()->setPressed(wasPressed);
+            player->prevWeapon();
         }
     }
 }

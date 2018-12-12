@@ -1,4 +1,8 @@
 #include "gnome_fortress/game/Player.h"
+
+#include "gnome_fortress/game/MushroomGun.h"
+#include "gnome_fortress/game/PeanutGun.h"
+#include "gnome_fortress/game/PineconeGun.h"
 #include "gnome_fortress/game/Weapon.h"
 #include "gnome_fortress/game/Resources.h"
 
@@ -7,7 +11,9 @@ namespace game {
     Player::Player(
             resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique,
-            RocketStreamTechnique *rocketStreamTechnique)
+            RocketStreamTechnique *rocketStreamTechnique,
+            Projectiles* projectiles,
+            irrklang::ISoundEngine *soundEngine)
         : model::SceneNode(),
           //Create rocket streams for the jetpack
           rocketStream1(
@@ -44,11 +50,32 @@ namespace game {
         //Append the weapon to the arm so that it appears in the players hand and not the player origin
         getArm()->appendChild(weaponContainer);
         weaponContainer->setPosition(0.14f, 0.48f, -0.15f);
+
+        // Create weapons
+        peanutGun = new PeanutGun(resourceManager, technique, this, projectiles, soundEngine);
+        peanutGun->setVisible(false);
+        weapons.push_back(peanutGun);
+        weaponContainer->appendChild(peanutGun);
+
+        mushroomGun = new MushroomGun(resourceManager, technique, this, projectiles, soundEngine);
+        mushroomGun->setVisible(false);
+        weapons.push_back(mushroomGun);
+        weaponContainer->appendChild(mushroomGun);
+
+        pineconeGun = new PineconeGun(resourceManager, technique, this, projectiles, soundEngine);
+        pineconeGun->setVisible(false);
+        weapons.push_back(pineconeGun);
+        weaponContainer->appendChild(pineconeGun);
+
+        setCurrentWeapon(peanutGun);
     }
 
     Player::~Player() {
         delete playerModel;
         delete weaponContainer;
+        delete peanutGun;
+        delete mushroomGun;
+        delete pineconeGun;
     }
 
     //Set the scene boundaries for the player
@@ -97,13 +124,16 @@ namespace game {
 
     //Select the players weapon
     void Player::setCurrentWeapon(Weapon *newWeapon) {
-        if (!currentWeapon) {
-            weaponContainer->appendChild(newWeapon);
-        }
-        else {
-            weaponContainer->replaceChild(newWeapon, weaponContainer->indexOf(currentWeapon));
+        bool wasPressed = false;
+        if (currentWeapon) {
+            wasPressed = currentWeapon->isPressed();
+            currentWeapon->setVisible(false);
+            currentWeapon->setPressed(false);
         }
         
+        newWeapon->setVisible(true);
+        newWeapon->setPressed(wasPressed);
+        newWeapon->setCooldown(glm::max(newWeapon->getCooldown(), 0.5f));
         currentWeapon = newWeapon;
     }
 
@@ -119,20 +149,20 @@ namespace game {
         return weaponContainer;
     }
 
-    void Player::incrementWeaponIndex() {
-            weaponIndex++;
+    void Player::nextWeapon() {
+        weaponIndex++;
+        if (weaponIndex >= weapons.size()) {
+            weaponIndex = 0;
+        }
+        setCurrentWeapon(weapons[weaponIndex]);
     }
 
-    void Player::decrementWeaponIndex() {
-            weaponIndex--;
-    }
-
-    void Player::setWeaponIndex(int index) {
-        weaponIndex = index;
-    }
-
-    const int Player::getWeaponIndex() {
-        return weaponIndex;
+    void Player::prevWeapon() {
+        weaponIndex--;
+        if (weaponIndex < 0) {
+            weaponIndex = weapons.size() - 1;
+        }
+        setCurrentWeapon(weapons[weaponIndex]);
     }
 
     //Update method for the player

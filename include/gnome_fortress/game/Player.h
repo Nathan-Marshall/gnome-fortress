@@ -24,7 +24,9 @@ class Player : public model::SceneNode {
 public:
     Player(resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique,
-            RocketStreamTechnique *rocketStreamTechnique);
+            RocketStreamTechnique *rocketStreamTechnique,
+            Projectiles* projectiles,
+            irrklang::ISoundEngine *soundEngine);
 
     ~Player();
 
@@ -57,17 +59,14 @@ public:
     void SetDownPressed(bool isPressed);
 
     //Selecting and getting the player weapon
-    void setCurrentWeapon(Weapon *weapon);
     Weapon *getCurrentWeapon() const;
 
     model::SceneNode *getArm() const;
     model::SceneNode *getWeaponContainer() const;
 
     //Methods for changing weapons
-    void incrementWeaponIndex();
-    void decrementWeaponIndex();
-    void setWeaponIndex(int index);
-    const int getWeaponIndex();
+    void nextWeapon();
+    void prevWeapon();
 
     //Process player collisions
     void ProcessCollisions(Walls* walls, Enemies* enemies);
@@ -76,6 +75,8 @@ protected:
     void onUpdateSelf(float dt) override;
 
 private:
+    void setCurrentWeapon(Weapon *weapon);
+
     //Rocket streams to be used for our jetpack
     RocketStream *rocketStream1;
     RocketStream *rocketStream2;
@@ -98,8 +99,13 @@ private:
     //Player and weapon nodes
     model::BasicMeshGroupNode *playerModel;
     SceneNode *weaponContainer;
-    Weapon *currentWeapon;
 
+    std::vector<Weapon*> weapons;
+    game::Weapon *peanutGun;
+    game::Weapon *mushroomGun;
+    game::Weapon *pineconeGun;
+
+    Weapon *currentWeapon;
     int weaponIndex;
 
     //Check that the player respects the scene boundaries

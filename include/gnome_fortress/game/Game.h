@@ -21,9 +21,6 @@ using namespace irrklang;
 #include "gnome_fortress/game/AcornMeter.h"
 #include "gnome_fortress/game/Acorns.h"
 #include "gnome_fortress/game/Enemies.h"
-#include "gnome_fortress/game/MushroomGun.h"
-#include "gnome_fortress/game/PeanutGun.h"
-#include "gnome_fortress/game/PineconeGun.h"
 #include "gnome_fortress/game/Player.h"
 #include "gnome_fortress/game/Resources.h"
 #include "gnome_fortress/game/RocketStream.h"
@@ -34,6 +31,7 @@ using namespace irrklang;
 #include "gnome_fortress/game/TextNode.h"
 #include "gnome_fortress/game/Walls.h"
 #include "gnome_fortress/game/Wall.h"
+#include "gnome_fortress/game/Weapon.h"
 #include "gnome_fortress/camera/SceneNodeCamera.h"
 #include "gnome_fortress/model/Mesh.h"
 #include "gnome_fortress/model/Skybox.h"
@@ -176,9 +174,6 @@ private:
     // Nodes in the scene
     model::BasicMeshNode *ground;
     game::Player *player;
-    game::Weapon *peanutGun;
-    game::Weapon *mushroomGun;
-    game::Weapon *pineconeGun;
     game::Walls *walls;
     game::Enemies *enemies;
     game::Projectiles *playerProjectiles;
@@ -186,7 +181,6 @@ private:
     model::Skybox *skybox;
     std::vector<model::BasicMeshGroupNode *> outerFences;
     std::vector<model::BasicMeshGroupNode *> trees;
-    std::vector<Weapon*> weapons;
 
     // Nodes in the UI
     game::AcornMeter *acornMeter;
