@@ -54,6 +54,8 @@ public:
         GAME
     };
 
+    const static float FIXED_UPDATE_STEP;
+
     // Call Init() before calling any other method
     void Init();
 
@@ -91,8 +93,11 @@ private:
     // Set up the title screen
     void CleanupTitle();
 
-    // Call every frame during the title
-    void TitleLoop(float deltaTime);
+    // Call every fixed update frame during the title
+    void TitleUpdate(float deltaTime);
+
+    // Call every draw frame during the title
+    void TitleDraw(float deltaTime);
 
     // Set up the game scene
     void SetupScene();
@@ -100,8 +105,11 @@ private:
     // Clean up the game scene
     void CleanupScene();
 
-    // Call every frame during the game
-    void SceneLoop(float deltaTime);
+    // Call every fixed update frame during the game
+    void SceneUpdate(float deltaTime);
+
+    // Call every draw frame during the game
+    void SceneDraw(float deltaTime);
 
     // Create a fence around the perimeter of the playing area
     void createOuterFences(std::vector<model::BasicMeshGroupNode *> &fences, renderer::BasicMeshNodeTechnique *technique);

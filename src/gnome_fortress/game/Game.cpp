@@ -15,6 +15,8 @@ Game::Game() {
 
 }
 
+const float Game::FIXED_UPDATE_STEP = 0.01f;
+
 void Game::Init() {
     srand(time(0));
 
@@ -113,16 +115,27 @@ void Game::MainLoop(void) {
     switchToScene(Scene::TITLE);
 
     // Run the main loop
-    double prev_time = glfwGetTime();
+    double update_time = glfwGetTime();
+    double draw_time = glfwGetTime();
     while (!glfwWindowShouldClose(window)) {
-        // calculate delta time
-        double delta_time = glfwGetTime() - prev_time;
-        prev_time = glfwGetTime();
+        // fixed update step
+        while (glfwGetTime() - update_time >= FIXED_UPDATE_STEP) {
+            update_time += FIXED_UPDATE_STEP;
 
+            if (currentScene == Scene::TITLE) {
+                TitleUpdate(FIXED_UPDATE_STEP);
+            } else if (currentScene == Scene::GAME) {
+                SceneUpdate(FIXED_UPDATE_STEP);
+            }
+        }
+
+        // draw step
+        double draw_delta = glfwGetTime() - draw_time;
+        draw_time += draw_delta;
         if (currentScene == Scene::TITLE) {
-            TitleLoop(delta_time);
+            TitleDraw(draw_delta);
         } else if (currentScene == Scene::GAME) {
-            SceneLoop(delta_time);
+            SceneDraw(draw_delta);
         }
     }
 
@@ -267,7 +280,12 @@ void Game::CleanupTitle() {
     delete titleYourScoreText;
 }
 
-void Game::TitleLoop(float deltaTime) {
+void Game::TitleUpdate(float deltaTime) {
+    // Update other events like input handling
+    glfwPollEvents();
+}
+
+void Game::TitleDraw(float deltaTime) {
     // Clear background
     glClearColor(viewportBackgroundColor[0], viewportBackgroundColor[1], viewportBackgroundColor[2], 0.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -277,9 +295,6 @@ void Game::TitleLoop(float deltaTime) {
 
     // Push buffer drawn in the background onto the display
     glfwSwapBuffers(window);
-
-    // Update other events like input handling
-    glfwPollEvents();
 }
 
 void Game::SetupScene() {
@@ -468,7 +483,7 @@ void Game::CleanupScene() {
     delete scoreText;
 }
 
-void Game::SceneLoop(float deltaTime) {
+void Game::SceneUpdate(float deltaTime) {
     if (acorns->getRemainingAcornCount() <= 0.0001f) {
         switchToScene(Scene::TITLE);
         return;
@@ -531,6 +546,13 @@ void Game::SceneLoop(float deltaTime) {
     // Update the UI
     uiNode->update(deltaTime);
 
+    // Update other events like input handling
+    glfwPollEvents();
+}
+
+void Game::SceneDraw(float deltaTime) {
+    double current_time = glfwGetTime();
+
     // Clear background
     glClearColor(viewportBackgroundColor[0], viewportBackgroundColor[1], viewportBackgroundColor[2], 0.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -575,9 +597,6 @@ void Game::SceneLoop(float deltaTime) {
 
     // Push buffer drawn in the background onto the display
     glfwSwapBuffers(window);
-
-    // Update other events like input handling
-    glfwPollEvents();
 }
 
 //Cursor callback function, called whenever the cursor position is updated
@@ -636,8 +655,10 @@ void Game::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
             } else if (player->getWeaponIndex() == 2) {
                 player->setWeaponIndex(0);
             }
+            bool wasPressed = player->getCurrentWeapon()->isPressed();
             player->getCurrentWeapon()->setPressed(false);
             player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
+            player->getCurrentWeapon()->setPressed(wasPressed);
         }
         //If scrolling down
         if (yoffset < 0) {
@@ -646,8 +667,10 @@ void Game::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
             } else if (player->getWeaponIndex() == 0) {
                 player->setWeaponIndex(2);
             }
+            bool wasPressed = player->getCurrentWeapon()->isPressed();
             player->getCurrentWeapon()->setPressed(false);
             player->setCurrentWeapon(weapons.at(player->getWeaponIndex()));
+            player->getCurrentWeapon()->setPressed(wasPressed);
         }
     }
 }

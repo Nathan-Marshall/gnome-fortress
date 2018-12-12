@@ -41,7 +41,7 @@ namespace game {
         rocketStream2->setPosition(0.1, 0.44, 0.1);
         rocketStream2->setRotation(glm::pi<float>(), glm::vec3(1, 0, 0));
 
-        //Appen the weapon to the arm so that it appears in the players hand and not the player origin
+        //Append the weapon to the arm so that it appears in the players hand and not the player origin
         getArm()->appendChild(weaponContainer);
         weaponContainer->setPosition(0.14f, 0.48f, -0.15f);
     }
@@ -60,7 +60,7 @@ namespace game {
     const float Player::ZBOUND_NEG = -35.0f;
 
     //Set the player acceleration and decay factors
-    const float Player::ACCELERATION = 12.0f;
+    const float Player::ACCELERATION = 8.0f;
     const float Player::DECAY = 0.5f;
 
     bool Player::IsForwardPressed() const {
