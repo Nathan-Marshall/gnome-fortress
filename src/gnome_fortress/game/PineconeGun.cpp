@@ -28,7 +28,7 @@ void PineconeGun::onUpdateSelf(float delta_time) {
 
     //Fire projectiles if the weapon is not on cooldown
     if (pressed && cooldown < 0) {
-        setCooldown(1.4f);
+        setCooldown(3.5f);
         
         std::vector<Projectile*> p = fireBullet(getPosition());
 

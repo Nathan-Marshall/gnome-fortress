@@ -21,7 +21,8 @@ public:
     Spider(
             resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique,
-            irrklang::ISoundEngine *soundEngine);
+            irrklang::ISoundEngine *soundEngine,
+            float healthMultiplier);
 
     //Booleans to track whether the spider is hitting a wall, hitting the acorn pile, or is currently over/on top of a wall
     bool hittingWall;

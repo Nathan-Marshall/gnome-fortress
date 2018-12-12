@@ -9,7 +9,8 @@ namespace game {
 SiegeTurtle::SiegeTurtle(
         resource::ResourceManager &resourceManager,
         renderer::BasicMeshNodeTechnique *technique,
-        irrklang::ISoundEngine *soundEngine)
+        irrklang::ISoundEngine *soundEngine,
+        float healthMultiplier)
     : game::Enemy(
         resourceManager.getOrLoadMeshGroup(resources::models::siege_turtle),
         technique
@@ -27,7 +28,7 @@ SiegeTurtle::SiegeTurtle(
     setPosition(glm::vec3(30 * cos(angle), 0.1, -30 * sin(angle)));
     rotate(glm::angleAxis((glm::pi<float>() / 2) + angle, glm::vec3(0, 1, 0)));
 
-    health = 30.0f;
+    health = 30.0f * healthMultiplier;
     boundingRadius = 2.0;
     hittingWall = false;
     damageOnHit = 20.0f;

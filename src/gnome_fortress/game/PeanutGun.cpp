@@ -55,7 +55,7 @@ std::vector<Projectile*> PeanutGun::fireBullet(glm::vec3 position) {
     std::vector<Projectile*> projecs;
 
     //Create the shotgun bullets based on a cone distribution
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 12; i++) {
         distAngle = rand() / (float)RAND_MAX * (glm::pi<float>() * 2);
         circDist = rand() / (float)RAND_MAX * circleRad;
         circDist *= circDist / circleRad;

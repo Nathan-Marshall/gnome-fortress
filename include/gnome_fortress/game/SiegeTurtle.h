@@ -21,7 +21,8 @@ public:
     SiegeTurtle(
             resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique,
-            irrklang::ISoundEngine *soundEngine);
+            irrklang::ISoundEngine *soundEngine,
+            float healthMultiplier);
 
     //Whether or not the turtle is hitting a wall
     bool hittingWall;

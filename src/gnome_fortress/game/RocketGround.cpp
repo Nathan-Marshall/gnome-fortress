@@ -7,7 +7,7 @@ namespace gnome_fortress {
 namespace game {
 
     RocketGround::RocketGround(const model::Texture *texture, RocketGroundTechnique *technique)
-    : pointSet(CreateSphereParticles(3000)),
+    : pointSet(CreateSphereParticles(8000)),
       texture(texture),
       technique(technique),
       power(1.0f),

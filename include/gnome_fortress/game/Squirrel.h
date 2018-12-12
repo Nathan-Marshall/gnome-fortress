@@ -21,7 +21,9 @@ public:
     Squirrel(
             resource::ResourceManager &resourceManager,
             renderer::BasicMeshNodeTechnique *technique,
-            Walls* walls, irrklang::ISoundEngine *soundEngine);
+            Walls* walls,
+            irrklang::ISoundEngine *soundEngine,
+            float healthMultiplier);
 
     //Whether or not the squirrel is hitting a wall
     bool hittingWall;

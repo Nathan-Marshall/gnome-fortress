@@ -60,8 +60,8 @@ namespace game {
     const float Player::ZBOUND_NEG = -35.0f;
 
     //Set the player acceleration and decay factors
-    const float Player::ACCELERATION = 7.0f;
-    const float Player::DECAY = 0.20f;
+    const float Player::ACCELERATION = 12.0f;
+    const float Player::DECAY = 0.5f;
 
     bool Player::IsForwardPressed() const {
         return forward;

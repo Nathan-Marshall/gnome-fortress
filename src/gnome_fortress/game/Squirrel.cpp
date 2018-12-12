@@ -9,7 +9,9 @@ namespace game {
 Squirrel::Squirrel(
         resource::ResourceManager &resourceManager,
         renderer::BasicMeshNodeTechnique *technique,
-        Walls* walls, irrklang::ISoundEngine *soundEngine)
+        Walls* walls,
+        irrklang::ISoundEngine *soundEngine,
+        float healthMultiplier)
     : game::Enemy(
         resourceManager.getOrLoadMeshGroup(resources::models::squirrel),
         technique
@@ -30,7 +32,7 @@ Squirrel::Squirrel(
     setPosition(glm::vec3(30 * cos(angle), 0.2, -30 * sin(angle)));
     rotate(glm::angleAxis((glm::pi<float>() / 2) + angle, glm::vec3(0, 1, 0)));
 
-    health = 10.0f;
+    health = 15.0f * healthMultiplier;
     boundingRadius = (sqrt(3) / 1.5);
     hittingWall = false;
     damageOnHit = 10.0f;

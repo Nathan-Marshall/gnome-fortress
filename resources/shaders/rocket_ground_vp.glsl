@@ -17,8 +17,8 @@ out vec4 particle_color;
 out float particle_id;
 
 // Simulation parameters (constants)
-float accel = 0.5; // An acceleration applied to the particles coming from some attraction force
-float speed = 9.0; // Control the speed of the motion
+float accel = -2.0; // An acceleration applied to the particles coming from some attraction force
+float speed = 24; // Control the speed of the motion
 float duration = 5.0;
 
 // Define some useful constants

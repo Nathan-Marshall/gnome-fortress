@@ -22,7 +22,7 @@ MushroomGun::MushroomGun(
 }
 
 //Set the firing velocity for this weapon
-const float MushroomGun::FIRING_VELOCITY = 10.0f;
+const float MushroomGun::FIRING_VELOCITY = 20.0f;
 
 //Update method for the mushroom gun
 void MushroomGun::onUpdateSelf(float delta_time) {

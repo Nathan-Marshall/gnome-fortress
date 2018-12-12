@@ -9,7 +9,8 @@ namespace game {
     Spider::Spider(
         resource::ResourceManager &resourceManager,
         renderer::BasicMeshNodeTechnique *technique,
-        irrklang::ISoundEngine *soundEngine)
+        irrklang::ISoundEngine *soundEngine,
+        float healthMultiplier)
     : game::Enemy(
         resourceManager.getOrLoadMeshGroup(resources::models::spider),
         technique
@@ -27,7 +28,7 @@ namespace game {
     setPosition(glm::vec3(30 * cos(angle), -0.2, -30 * sin(angle)));
     rotate(glm::angleAxis((glm::pi<float>() / 2) + angle, glm::vec3(0, 1, 0)));
 
-    health = 10.0f;
+    health = 10.0f * healthMultiplier;
     boundingRadius = (sqrt(3) / 2);
     moveSpeed = 2.0f;
     hittingWall = false;

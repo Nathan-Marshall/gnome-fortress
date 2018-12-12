@@ -19,10 +19,10 @@ Rocket::Rocket(
 }
 
 //Damage and explosion damage, lifespan, and radius variables
-const float Rocket::DAMAGE = 20.0f;
-const float Rocket::DAMAGE_RAD = 4.0f;
-const float Rocket::EXPLOSION_DAMAGE = 50.0f;
-const float Rocket::EXPLOSION_LIFESPAN = 0.5f;
+const float Rocket::DAMAGE = 300.0f;
+const float Rocket::DAMAGE_RAD = 7.0f;
+const float Rocket::EXPLOSION_DAMAGE = 200.0f;
+const float Rocket::EXPLOSION_LIFESPAN = 0.8f;
 
 //Get the amount of damage the rocket does
 float Rocket::GetDamage() {

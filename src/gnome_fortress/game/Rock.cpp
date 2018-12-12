@@ -14,11 +14,11 @@ Rock::Rock(
         velocity
     ) {
 
-    threshold = 0.5;
+    threshold = 2;
 }
 
 //Damage value for the rock (shotgun projectile)
-const float Rock::DAMAGE = 4.0f;
+const float Rock::DAMAGE = 10.0f;
 
 //Get the damage that a rock will do
 float Rock::GetDamage() {

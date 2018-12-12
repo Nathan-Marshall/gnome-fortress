@@ -346,12 +346,12 @@ void Enemies::ProcessAOECollisions(std::vector<std::pair<SporeGround*, float>> *
     for (squirrelIt = squirrels.begin(); squirrelIt < squirrels.end();) {
         glm::vec3 squirPos = (*squirrelIt)->getPosition();
         for (poisonIt = poisons->begin(); poisonIt < poisons->end(); poisonIt++) {
-            if (glm::length(squirPos - (*poisonIt).first->getPosition()) < pRad) {
+            if (glm::length(squirPos - (*poisonIt).first->getPosition()) < pRad + (*squirrelIt)->GetBoundingRadius()) {
                 (*squirrelIt)->DoDamage(pDmg * delta_time);
             }
         }
         for (exploIt = explosions->begin(); exploIt < explosions->end(); exploIt++) {
-            if (glm::length(squirPos - (*exploIt).first->getPosition()) < pRad) {
+            if (glm::length(squirPos - (*exploIt).first->getPosition()) < rRad + (*squirrelIt)->GetBoundingRadius()) {
                 (*squirrelIt)->DoDamage(rDmg * delta_time);
             }
         }
@@ -372,12 +372,12 @@ void Enemies::ProcessAOECollisions(std::vector<std::pair<SporeGround*, float>> *
     for (spiderIt = spiders.begin(); spiderIt < spiders.end();) {
         glm::vec3 spiPos = (*spiderIt)->getPosition();
         for (poisonIt = poisons->begin(); poisonIt < poisons->end(); poisonIt++) {
-            if (glm::length(spiPos - (*poisonIt).first->getPosition()) < pRad) {
+            if (glm::length(spiPos - (*poisonIt).first->getPosition()) < pRad + (*spiderIt)->GetBoundingRadius()) {
                 (*spiderIt)->DoDamage(pDmg * delta_time);
             }
         }
         for (exploIt = explosions->begin(); exploIt < explosions->end(); exploIt++) {
-            if (glm::length(spiPos - (*exploIt).first->getPosition()) < pRad) {
+            if (glm::length(spiPos - (*exploIt).first->getPosition()) < rRad + (*spiderIt)->GetBoundingRadius()) {
                 (*spiderIt)->DoDamage(rDmg * delta_time);
             }
         }

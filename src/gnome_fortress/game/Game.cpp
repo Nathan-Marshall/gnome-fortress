@@ -285,8 +285,13 @@ void Game::TitleLoop(float deltaTime) {
 void Game::SetupScene() {
     startTime = glfwGetTime();
     spawnTime = glfwGetTime();
-    difficultyTime = 3;
+    difficultyTime = 1;
     score = 0;
+
+    // load enemy resources
+    resourceManager->getOrLoadMeshGroup(resources::models::siege_turtle);
+    resourceManager->getOrLoadMeshGroup(resources::models::squirrel);
+    resourceManager->getOrLoadMeshGroup(resources::models::spider);
 
     // Play the background track
     irrklang::ISound *backgroundTrack = soundEngine->play2D(resourceManager->getOrLoadAudioClip(resources::audioClips::bit_builders), GL_TRUE);
@@ -479,24 +484,24 @@ void Game::SceneLoop(float deltaTime) {
     //Update the listener position of the player every frame
     soundEngine->setListenerPosition(irrklang::vec3df(playerPos.x, playerPos.y, playerPos.z), irrklang::vec3df(lookAt.x, lookAt.y, lookAt.z));
 
-    if (current_time - spawnTime > difficultyTime) {
-        int randEnemy = (rand() % 6) + 1;
+    if (current_time - spawnTime > 5 * difficultyTime) {
+        int randEnemy = rand() % 3;
 
-        if (randEnemy == 1) {
+        if (randEnemy == 0) {
             //Spawn a turtle
-            SiegeTurtle* turt = new SiegeTurtle(*resourceManager, mtlThreeTermTechnique, soundEngine);
+            SiegeTurtle* turt = new SiegeTurtle(*resourceManager, mtlThreeTermTechnique, soundEngine, 1.0f / difficultyTime);
 
             enemies->turtles.push_back(turt);
             enemies->appendChild(turt);
-        } else if (randEnemy == 2) {
+        } else if (randEnemy == 1) {
             //Spawn a squirrel
-            Squirrel* squir = new Squirrel(*resourceManager, mtlThreeTermTechnique, enemies->walls, soundEngine);
+            Squirrel* squir = new Squirrel(*resourceManager, mtlThreeTermTechnique, enemies->walls, soundEngine, 1.0f / difficultyTime);
 
             enemies->squirrels.push_back(squir);
             enemies->appendChild(squir);
-        } else if (randEnemy == 3) {
+        } else if (randEnemy == 2) {
             //Spawn a spider
-            Spider* spidey = new Spider(*resourceManager, mtlThreeTermTechnique, soundEngine);
+            Spider* spidey = new Spider(*resourceManager, mtlThreeTermTechnique, soundEngine, 1.0f / difficultyTime);
 
             enemies->spiders.push_back(spidey);
             enemies->appendChild(spidey);
@@ -504,7 +509,7 @@ void Game::SceneLoop(float deltaTime) {
 
         spawnTime = glfwGetTime();
 
-        difficultyTime *= 0.98;
+        difficultyTime *= 0.99;
     }
 
     //Process collisions with enemies
