@@ -285,7 +285,7 @@ void Game::TitleLoop(float deltaTime) {
 void Game::SetupScene() {
     startTime = glfwGetTime();
     spawnTime = glfwGetTime();
-    difficultyTime = 5.0;
+    difficultyTime = 3;
     score = 0;
 
     // Play the background track
@@ -353,8 +353,6 @@ void Game::SetupScene() {
         score += change;
     }, soundEngine);
     papaNode->appendChild(enemies);
-
-    spawnInitialEnemies();
 
     // create and position the cameras
     debugCamera = new camera::Camera(
@@ -481,7 +479,7 @@ void Game::SceneLoop(float deltaTime) {
     //Update the listener position of the player every frame
     soundEngine->setListenerPosition(irrklang::vec3df(playerPos.x, playerPos.y, playerPos.z), irrklang::vec3df(lookAt.x, lookAt.y, lookAt.z));
 
-    if (current_time - spawnTime > difficultyTime && current_time - startTime > 10.0) {
+    if (current_time - spawnTime > difficultyTime) {
         int randEnemy = (rand() % 6) + 1;
 
         if (randEnemy == 1) {
@@ -506,9 +504,7 @@ void Game::SceneLoop(float deltaTime) {
 
         spawnTime = glfwGetTime();
 
-        if (difficultyTime > 1.2) {
-            difficultyTime -= 0.1;
-        }
+        difficultyTime *= 0.98;
     }
 
     //Process collisions with enemies
@@ -859,41 +855,6 @@ void Game::distributeTrees(const std::vector<model::BasicMeshGroupNode *> &trees
         tree->setPosition(pos);
         treePositions.push_back(pos);
     }
-}
-
-void Game::spawnInitialEnemies() {
-    // Spawn some turtles
-    SiegeTurtle* turt1 = new SiegeTurtle(*resourceManager, mtlThreeTermTechnique, soundEngine);
-    SiegeTurtle* turt2 = new SiegeTurtle(*resourceManager, mtlThreeTermTechnique, soundEngine);
-
-    // Add the turtles to our enemies
-    enemies->turtles.push_back(turt1);
-    enemies->appendChild(turt1);
-
-    enemies->turtles.push_back(turt2);
-    enemies->appendChild(turt2);
-
-    // Spawn some spiders
-    Spider* spi1 = new Spider(*resourceManager, mtlThreeTermTechnique, soundEngine);
-    Spider* spi2 = new Spider(*resourceManager, mtlThreeTermTechnique, soundEngine);
-
-    // Add the spiders to our enemies
-    enemies->spiders.push_back(spi1);
-    enemies->appendChild(spi1);
-
-    enemies->spiders.push_back(spi2);
-    enemies->appendChild(spi2);
-
-    // Spawn some squirrels
-    Squirrel* squir1 = new Squirrel(*resourceManager, mtlThreeTermTechnique, enemies->walls, soundEngine);
-    Squirrel* squir2 = new Squirrel(*resourceManager, mtlThreeTermTechnique, enemies->walls, soundEngine);
-
-    // Add the squirrels to our enemies
-    enemies->squirrels.push_back(squir1);
-    enemies->appendChild(squir1);
-
-    enemies->squirrels.push_back(squir2);
-    enemies->appendChild(squir2);
 }
 
 }

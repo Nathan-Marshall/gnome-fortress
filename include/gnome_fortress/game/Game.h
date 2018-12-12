@@ -112,8 +112,6 @@ private:
     // Distribute the trees around the outside of the scene
     void distributeTrees(const std::vector<model::BasicMeshGroupNode *> &trees, float minDist, float maxDist, float collisionRadius);
 
-    void Game::spawnInitialEnemies();
-
 
     // GLFW window and viewport
     GLFWwindow *window;
