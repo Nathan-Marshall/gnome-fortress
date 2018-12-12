@@ -122,6 +122,10 @@ namespace game {
         down = isPressed;
     }
 
+    glm::vec3 Player::getVelocity() const {
+        return velocity;
+    }
+
     //Select the players weapon
     void Player::setCurrentWeapon(Weapon *newWeapon) {
         bool wasPressed = false;

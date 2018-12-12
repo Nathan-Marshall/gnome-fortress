@@ -58,6 +58,8 @@ public:
     void SetUpPressed(bool isPressed);
     void SetDownPressed(bool isPressed);
 
+    glm::vec3 getVelocity() const;
+
     //Selecting and getting the player weapon
     Weapon *getCurrentWeapon() const;
 

@@ -62,9 +62,7 @@ std::vector<Projectile*> PeanutGun::fireBullet(glm::vec3 position) {
 
         glm::vec3 dir = glm::normalize(glm::vec3(circDist * cos(distAngle), circDist * sin(distAngle), -1));
         
-        glm::vec3 vel = glm::normalize(glm::vec3(getGlobalTransform() * glm::vec4(dir, 0)));
-
-        vel *= FIRING_VELOCITY;
+        glm::vec3 vel = player->getVelocity() + glm::normalize(glm::vec3(getGlobalTransform() * glm::vec4(dir, 0))) * FIRING_VELOCITY;
 
         Rock *p = new Rock(bulletMeshGroup, getTechnique(),
             glm::vec3(getGlobalTransform() * glm::vec4(0.03, 0.5, -0.25, 1)), vel);

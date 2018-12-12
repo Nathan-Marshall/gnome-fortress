@@ -14,8 +14,9 @@ namespace game {
         renderer::BasicMeshNodeTechnique *technique,
         Player *player)
         : model::BasicMeshGroupNode(gunMeshGroup, technique),
-        pressed(false),
-        bulletMeshGroup(bMeshGroup) {
+          player(player),
+          pressed(false),
+          bulletMeshGroup(bMeshGroup) {
     }
 
     Weapon::~Weapon() {

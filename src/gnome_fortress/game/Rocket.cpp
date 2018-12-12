@@ -7,13 +7,27 @@ Rocket::Rocket(
     const model::MeshGroup *bulletMeshGroup,
     renderer::BasicMeshNodeTechnique *technique,
     glm::vec3 pointOfOrigin,
-    glm::vec3 velocity) : game::Projectile(
+    glm::vec3 velocity,
+    glm::vec3 accelerationDir) : game::Projectile(
         bulletMeshGroup,
         technique,
         pointOfOrigin,
-        velocity
+        velocity*0.3f
     ), 
-    acceleration(1.0f) {
+    accelerationDir(accelerationDir) {
+
+
+    //Get the axis we should rotate around
+    glm::vec3 axis = glm::cross(glm::vec3(0, 0, -1), accelerationDir); //axis to rotate around 
+
+    //Get the angle we should rotate around this axis
+    float angle = acos((glm::dot(accelerationDir, glm::vec3(0, 0, -1))) / glm::length(accelerationDir));
+
+    //Rotate around the axis
+    setRotation(angle, glm::normalize(axis));
+
+    //Rotate by 90 degrees so the cylinder is 'facing forward'
+    rotate(90 * (glm::pi<float>() / 180.0f), glm::vec3(1.0, 0.0, 0.0));
 
     threshold = 10;
 }
@@ -23,6 +37,8 @@ const float Rocket::DAMAGE = 300.0f;
 const float Rocket::DAMAGE_RAD = 7.0f;
 const float Rocket::EXPLOSION_DAMAGE = 200.0f;
 const float Rocket::EXPLOSION_LIFESPAN = 0.8f;
+
+const float Rocket::ACCELERATION = 8.0f;
 
 //Get the amount of damage the rocket does
 float Rocket::GetDamage() {
@@ -39,11 +55,7 @@ float Rocket::GetDamageRad() {
 void Rocket::onUpdateSelf(float dt) {
     lifespan += dt;
 
-    setPosition(getPosition() + (velocity * dt * acceleration));
-
-    if (lifespan > 1) {
-        acceleration += 0.5f;
-    }
+    velocity += accelerationDir * ACCELERATION * dt;
     setPosition(getPosition() + (velocity * dt));
 }
 }

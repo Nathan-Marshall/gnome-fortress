@@ -19,11 +19,14 @@ public:
     const static float EXPLOSION_LIFESPAN;
     const static float EXPLOSION_DAMAGE;
 
+    const static float ACCELERATION;
+
     Rocket(
         const model::MeshGroup *bulletMeshGroup,
         renderer::BasicMeshNodeTechnique *technique,
         glm::vec3 pointOfOrigin,
-        glm::vec3 velocity);
+        glm::vec3 velocity,
+        glm::vec3 accelerationDir);
 
     //Get the damage of a rocket
     float GetDamage() override;
@@ -34,7 +37,7 @@ public:
     void onUpdateSelf(float delta_time) override;
 
 private:
-    float acceleration; 
+    glm::vec3 accelerationDir;
 };
 }
 }

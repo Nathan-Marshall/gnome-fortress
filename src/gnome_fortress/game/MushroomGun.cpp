@@ -43,8 +43,7 @@ void MushroomGun::onUpdateSelf(float delta_time) {
 
 //Projectile firing from the mushroom gun
 std::vector<Projectile*> MushroomGun::fireBullet(glm::vec3 position) {
-    glm::vec3 vel = glm::normalize(glm::vec3(getGlobalTransform() * glm::vec4(0, 0, -1, 0)));
-    vel *= FIRING_VELOCITY;
+    glm::vec3 vel = player->getVelocity() + glm::normalize(glm::vec3(getGlobalTransform() * glm::vec4(0, 0, -1, 0))) * FIRING_VELOCITY;
 
     //Create a new spore when the gun is fired
     Spore *s = new Spore(bulletMeshGroup, getTechnique(),

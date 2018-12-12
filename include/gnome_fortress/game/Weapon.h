@@ -38,6 +38,7 @@ public:
     void PlayWeaponSound();
 
 protected:
+    Player *player;
     const model::MeshGroup *bulletMeshGroup;
     
     bool pressed;

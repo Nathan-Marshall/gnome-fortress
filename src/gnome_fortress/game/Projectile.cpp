@@ -29,7 +29,7 @@ Projectile::Projectile(
     float angle = acos((glm::dot(velocity, glm::vec3(0, 0, -1))) / glm::length(velocity));
         
     //Rotate around the axis
-    rotate(angle, glm::normalize(axis));
+    setRotation(angle, glm::normalize(axis));
 
     //Rotate by 90 degrees so the cylinder is 'facing forward'
     rotate(90 * (glm::pi<float>() / 180.0f), glm::vec3(1.0, 0.0, 0.0));

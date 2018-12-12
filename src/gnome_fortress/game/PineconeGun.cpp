@@ -45,12 +45,12 @@ const float PineconeGun::FIRING_VELOCITY = 5.0f;
 
 //Fire a rocket from the pinecone gun
 std::vector<Projectile*> PineconeGun::fireBullet(glm::vec3 position) {
-    glm::vec3 vel = glm::normalize(glm::vec3(getGlobalTransform() * glm::vec4(0, 0, -1, 0)));
-    vel *= FIRING_VELOCITY;
+    glm::vec3 accelDir = glm::normalize(glm::vec3(getGlobalTransform() * glm::vec4(0, 0, -1, 0)));
+    glm::vec3 vel = player->getVelocity() + accelDir * FIRING_VELOCITY;
 
     //Create a new rocket
     Rocket *p = new Rocket(bulletMeshGroup, getTechnique(),
-        glm::vec3(getGlobalTransform() * glm::vec4(0.03, 0.5, -0.25, 1)), vel);
+        glm::vec3(getGlobalTransform() * glm::vec4(0.03, 0.5, -0.25, 1)), vel, accelDir);
     
     std::vector<Projectile*> projecs;
 
